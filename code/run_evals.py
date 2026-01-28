@@ -18,15 +18,18 @@ from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
 from messages.messages_writer import MessagesWriter
 from states.writer.state_writer import StateWriter
+from reviews.review_writer import ReviewWriter
+from agents.reviewer.reviewer import Reviewer
+from typing import cast
 
 # Set agents
 agent_names = [
     # "baseline",
     # "plus-tasker",
     # "plus-reasoner",
-    "minus-tasker",
+    # "minus-tasker",
     # "minus-reasoner",
-    # "topline"
+    "topline"
 ]
 
 # Set models
@@ -38,7 +41,7 @@ model_names = [
 # Set evals
 eval_size = 1
 eval_env_names = [
-    ("tw-simple-1", "textworld"),
+    # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -47,7 +50,7 @@ eval_env_names = [
     # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -78,6 +81,7 @@ env_factory = EnvFactory()
 cost_calculator = CostCalculator()
 agent_writer = MessagesWriter()
 state_writer = StateWriter()
+review_writer = ReviewWriter()
 
 for params in runs:
     print(f"--- Running {params.agent_name} - {params.model_name} - {params.eval_name} ---")
@@ -119,6 +123,9 @@ for params in runs:
         tasker = agent_factory.create("tasker", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
+        reviewer_model = model_factory.create(params)
+        reviewer = agent_factory.create("reviewer", params, reviewer_model)
+        reviewer = cast(Reviewer, reviewer)
         details_manager = DetailsManager(params, episode_id)
         
         # Reset the variables
@@ -153,35 +160,37 @@ for params in runs:
                 step_state.step_id = step_id + 1
                 step_state.agent_state = agent_state
                 global_state.step_history.append(step_state)
-                global_state.current_step_id = step_id + 1
 
                 # Get the environment's state
                 if step_id == 0:
-                    task, env_state = env.reset(episode_id)
-                    log.info(f"Task: {task}")
-                    global_state.task = task
-                    result_row.task = task
+                    task_state, env_state = env.reset(episode_id)
+                    log.info(f"Task: {task_state.task}")
+                    global_state.task_state = task_state
+                    result_row.task = task_state.task
 
                     # Get the revised task
                     if params.use_tasker:
                         task = tasker.execute(global_state)
                         agent_writer.write(params, episode_id, step_id + 1, "tasker", tasker.messages)
                         log.info(f"Revised task: {task}")
-                        global_state.task = task
+                        global_state.task_state.task = task
                         result_row.revised_task = task
                 else:
                     env_state = env.step(action)
 
                 # Set the state
+                global_state.task_state.step_id = step_id + 1
                 step_state.env_state = env_state
 
                 # Log the environment state
-                log.info(f"Env:")
+                log.info(f"Environment:")
                 log.info(f"  Feedback: {env_state.feedback}")
                 log.info(f"  Location: {env_state.location}")
                 log.info(f"  Description: {env_state.description}")
                 log.info(f"  Inventory: {env_state.inventory}")
-                log.info(f"  Score: {env_state.score} / {env_state.max_score}")
+                log.info(f"  Capacity: {env_state.items} of {global_state.task_state.max_items}")
+                log.info(f"  Score: {env_state.score} of {global_state.task_state.max_score}")
+                log.info(f"  Done: {env_state.is_done}")
 
                 # Log the agent state
                 log.info(f"Agent:")
@@ -221,6 +230,22 @@ for params in runs:
                 # Sleep for n seconds to avoid API throttling
                 time.sleep(sleep_time)
                 log.info("")
+
+            # Post-episode steps
+            review = reviewer.review(
+                global_state,
+                episode["task"],
+                episode["solution"])
+            agent_writer.write(params, episode_id, step_id + 1, "reviewer", reviewer.messages)
+            review_writer.write(review, params, episode_id)
+            log.info("# Review")
+            log.info("Steps: ")
+            for step_id, step_analysis in review.steps.items():
+                log.info(f"  {step_id}: {step_analysis}")
+            log.info(f"Loops: {review.loops}")
+            log.info(f"Summary: {review.summary}")
+            log.info(f"Category: {review.category}")
+            log.info(f"Advice: {review.advice}")
 
         except Exception as e:
             error_message = f"{type(e).__name__}: {e}\n" \

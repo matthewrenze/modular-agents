@@ -1,6 +1,9 @@
 import re
 import textworld.gym
+from states.task_state import TaskState
 from states.env_state import EnvState
+
+import json
 
 class TextWorldEnv:
     def __init__(self, params, evals):
@@ -11,10 +14,12 @@ class TextWorldEnv:
         self.episode_id = 0
         self.step_index = 0
 
-    def reset(self, episode_id: int) -> tuple[str, EnvState]:
+    def reset(self, episode_id: int) -> tuple[TaskState, EnvState]:
         self.episode_id = episode_id
         self.episode = self.evals.iloc[episode_id - 1].to_dict()
         game_file_path = self.episode["file_path"]
+        json_file_path = game_file_path.replace(".ulx", ".json")
+        json_data = json.load(open(json_file_path))
 
         # Set the env info (what info the player has access to)
         env_infos = textworld.EnvInfos(
@@ -45,6 +50,8 @@ class TextWorldEnv:
         description = infos["description"].strip()
         location = self.get_location(description)
         inventory = infos["inventory"].strip()
+        num_items = self.get_items(inventory)
+        max_items = self.get_max_items(json_data)
         score = 0
         max_score = infos["max_score"]
 
@@ -52,19 +59,28 @@ class TextWorldEnv:
         description = self.remove_location(description)
         description = self.clean_text(description)
 
+        # Create the task state
+        task_state = TaskState(
+            task=task,
+            step_id=0,
+            max_steps=self.params.max_steps,
+            max_items=max_items,
+            max_score=max_score,
+            max_reward=1.0,
+            success=False)
+
         # Create the state
-        state = EnvState(
+        step_state = EnvState(
             feedback="",
             location=location,
             description=description,
             inventory=inventory,
+            items=num_items,
             score=score,
-            max_score=max_score,
             reward=0,
-            max_reward=1.0,
             is_done=False)
 
-        return task, state
+        return task_state, step_state
 
     def render(self):
         self.env.render()
@@ -82,6 +98,7 @@ class TextWorldEnv:
         description = infos["description"].strip()
         location = self.get_location(description)
         inventory = infos["inventory"].strip()
+        items = self.get_items(inventory)
         max_score = infos["max_score"]
         reward = score / max_score
 
@@ -101,10 +118,9 @@ class TextWorldEnv:
             location=location,
             description=description,
             inventory=inventory,
+            items=items,
             score=score,
-            max_score=max_score,
             reward=reward,
-            max_reward=1.0,
             is_done=is_done)
 
         # Increment step index
@@ -127,3 +143,23 @@ class TextWorldEnv:
         text = re.sub('\n', ' ', text)
         text = re.sub(r'(?<!^)\s+', ' ', text)
         return text
+
+    @staticmethod
+    def get_items(inventory: str) -> int:
+        if inventory == "You are carrying nothing.":
+            return 0
+
+        if inventory == "You are carrying:" and "," not in inventory:
+            return 1
+
+        return len(inventory.split(",")) + 1
+
+    @staticmethod
+    def get_max_items(game_data: str) -> int:
+        metadata = game_data.get("metadata", {})
+        settings = metadata.get("settings", {})
+        if settings.get("drop", False):
+            return int(settings.get("recipe", 0))
+        return 10
+
+

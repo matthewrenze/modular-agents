@@ -1,5 +1,7 @@
 import io
 import yaml
+
+from states.task_state import TaskState
 from states.writer import state_writer
 from states.writer.state_writer import StateWriter
 from common.parameters import Parameters
@@ -8,16 +10,22 @@ from states.step_state import StepState
 from states.env_state import EnvState
 from states.agent_state import AgentState
 
-
 TEST_YAML = """
-task: Perform task 1.
-current_step_id: 3
+task_state:
+  task: Perform task 1.
+  step_id: 3
+  max_steps: 99
+  max_items: 1
+  max_score: 2
+  max_reward: 1.0
 step_history:
   - step_id: 1
     env_state:
       location: Room 1
       description: You are in room 1.
       inventory: "You are carrying: item 1"
+      items: 1
+      max_items: 5
       score: 1
       max_score: 2
       reward: 0.50
@@ -32,6 +40,8 @@ step_history:
       location: Room 2
       description: You are in room 2.
       inventory: "You are carrying: item 1 and item 2"
+      items: 2
+      max_items: 10
       score: 2
       max_score: 2
       reward: 1.0
@@ -57,8 +67,13 @@ class TestStateWriter:
 
         # Build a state equivalent to TEST_YAML
         state = GlobalState(
-            task="Perform task 1.",
-            current_step_id=3,
+            task_state=TaskState(
+                task="Perform task 1.",
+                step_id=3,
+                max_steps=99,
+                max_items=1,
+                max_score=2,
+                max_reward=1.0),
             step_history=[
                 StepState(
                     step_id=1,
@@ -66,10 +81,9 @@ class TestStateWriter:
                         location="Room 1",
                         description="You are in room 1.",
                         inventory="You are carrying: item 1",
+                        items=1,
                         score=1,
-                        max_score=2,
                         reward=0.50,
-                        max_reward=1.0,
                         is_done=False,
                     ),
                     agent_state=AgentState(
@@ -84,10 +98,9 @@ class TestStateWriter:
                         location="Room 2",
                         description="You are in room 2.",
                         inventory="You are carrying: item 1 and item 2",
+                        items=2,
                         score=2,
-                        max_score=2,
                         reward=1.0,
-                        max_reward=1.0,
                         is_done=True,
                     ),
                     agent_state=AgentState(
@@ -128,9 +141,16 @@ class TestStateWriter:
 
         data = yaml.safe_load(captured["yaml_text"])
 
-        # Verify top-level
-        assert data["task"] == "Perform task 1."
-        assert data["current_step_id"] == 3
+        # Verify task-state
+        t1 = data["task_state"]
+        assert t1["task"] == "Perform task 1."
+        assert t1["step_id"] == 3
+        assert t1["max_steps"] == 99
+        assert t1["max_items"] == 1
+        assert t1["max_score"] == 2
+        assert t1["max_reward"] == 1.0
+
+        # Verify step-history
         assert len(data["step_history"]) == 3
 
         # Verify step 1
@@ -141,10 +161,9 @@ class TestStateWriter:
         assert e1["location"] == "Room 1"
         assert e1["description"] == "You are in room 1."
         assert e1["inventory"] == "You are carrying: item 1"
+        assert e1["items"] == 1
         assert e1["score"] == 1
-        assert e1["max_score"] == 2
         assert e1["reward"] == 0.5
-        assert e1["max_reward"] == 1.0
         assert e1["is_done"] is False
         a1 = s1["agent_state"]
         assert a1["thought"] == "I should do action 1."
@@ -158,10 +177,9 @@ class TestStateWriter:
         assert e2["location"] == "Room 2"
         assert e2["description"] == "You are in room 2."
         assert e2["inventory"] == "You are carrying: item 1 and item 2"
+        assert e2["items"] == 2
         assert e2["score"] == 2
-        assert e2["max_score"] == 2
         assert e2["reward"] == 1.0
-        assert e2["max_reward"] == 1.0
         assert e2["is_done"] is True
         a2 = s2["agent_state"]
         assert a2["thought"] == "I should do action 2."
@@ -175,10 +193,9 @@ class TestStateWriter:
         assert e3["location"] == ""
         assert e3["description"] == ""
         assert e3["inventory"] == ""
+        assert e3["items"] == 0
         assert e3["score"] == 0
-        assert e3["max_score"] == 0
         assert e3["reward"] == 0.0
-        assert e3["max_reward"] == 1.0
         assert e3["is_done"] is False
         a3 = s3["agent_state"]
         assert a3["thought"] == ""

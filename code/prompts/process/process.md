@@ -14,7 +14,9 @@ At each step of the episode, the environment will provide us with:
     - Location - our current location in the environment.
     - Description - the current state of the environment.
     - Inventory - the items we are currently carrying.
+    - Capacity - the current and maximum number of items in inventory.
     - Score - our current score and maximum possible score.
+    - Done - whether the task is complete or not.
 Next, we will provide:
   - Thought (Reasoner) - a goal-oriented chain-of-reasoning from the current state to the best next action.
   - Action (Actor) - a command that we will execute in our environment.

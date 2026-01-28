@@ -13,22 +13,24 @@ class TaskerAgent(Agent):
         self.messages.append(system_message)
 
         # Add the task to the user prompt
-        user_content = f"Task: {state.task}\n"
+        task_state = state.task_state
+        user_content = f"Task: {task_state.task}\n"
 
         # Get initial step from the history
         step = state.step_history[0]
 
         # Get the initial state
         env_state = step.env_state
-        user_content += f"# Step: {step.step_id}\n"
+        user_content += f"# Step: {step.step_id} of {task_state.max_steps}\n"
 
         # Append the environment state
-        user_content += f"Env State:\n" \
-            + f"  Feedback: {step.env_state.feedback}\n" \
+        user_content += f"Environment:\n" \
             + f"  Location: {step.env_state.location}\n" \
             + f"  Description: {step.env_state.description}\n" \
             + f"  Inventory: {step.env_state.inventory}\n" \
-            + f"  Score: {env_state.score} of {env_state.max_score}\n" \
+            + f"  Capacity: {env_state.items} of {task_state.max_items} items\n" \
+            + f"  Score: {env_state.score} of {task_state.max_score}\n" \
+            + f"  Done: {env_state.is_done}\n" \
             + "\n"
 
         user_message = {"role": "user", "content": user_content}

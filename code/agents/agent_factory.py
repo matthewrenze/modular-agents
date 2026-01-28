@@ -4,6 +4,7 @@ from models.model import Model
 from agents.actor.actor_agent import ActorAgent
 from agents.tasker.tasker_agent import TaskerAgent
 from agents.reasoner.reasoner_agent import ReasonerAgent
+from agents.reviewer.reviewer import Reviewer
 from prompts.system_prompt_factory import SystemPromptFactory
 
 class AgentFactory:
@@ -27,5 +28,8 @@ class AgentFactory:
 
         if subagent == "reasoner":
             return ReasonerAgent(model, system_prompt)
+
+        if subagent == "reviewer":
+            return Reviewer(model, system_prompt)
 
         raise ValueError(f"Unknown subagent type: {subagent}")

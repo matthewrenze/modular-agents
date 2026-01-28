@@ -7,9 +7,8 @@ Environment:
     Description: You are in a cozy living room. There is an open door to the north leading to the kitchen. 
     Inventory: You are carrying nothing.
     Score: 0 of 4
-
 Agent:
-  Thought: I need to go to the kitchen.
+  Thought: I need to go to the kitchen, so I can find the carrot.
   Action: go north
 
 ## Step 2
@@ -20,7 +19,6 @@ Environment:
     Description: You are in a kitchen. On the counter, there is a carrot, a tomato, and an apple. On the table, you see a cookbook and a knife.
     Inventory: You are carrying nothing.
     Score: 1 of 4
-
 Agent:
   Thought: I need a knife to dice the carrot.
   Action: take knife from table
@@ -34,7 +32,6 @@ Environment:
     Description: You are in a kitchen. On the counter, there is a carrot, a tomato, and an apple. On the table, you see a cookbook.
     Inventory: You are carrying: a knife.
     Score: 2 of 4
-
 Agent:
   Thought: I need to dice the carrot with the knife.
   Action: dice carrot with knife
@@ -48,9 +45,8 @@ Environment:
     Description: You are in a kitchen. On the counter, there is a carrot, a tomato, and an apple. On the table, you see a cookbook.
     Inventory: You are carrying: a knife.
     Score: 2 of 4
-
 Agent:
-  Thought: I need to take the carrot from the counter first.
+  Thought: I need to take the carrot from the counter before I can dice it.
   Action: take carrot from counter
 
 ## Step 5
@@ -62,7 +58,6 @@ Environment:
     Description: You are in a kitchen. On the counter, there is a tomato and an apple. On the table, you see a cookbook.
     Inventory: You are carrying: a knife, a carrot.
     Score: 3 of 4
-
 Agent:
   Thought: I can now dice the carrot with the knife.
   Action: dice carrot with knife
@@ -76,7 +71,6 @@ Environment:
     Description: You are in a kitchen. On the counter, there is a tomato and an apple. On the table, you see a cookbook.
     Inventory: You are carrying: a knife, diced carrot.
     Score: 4 of 4
-
 Agent:
-    Thought: I have completed the task successfully.
+    Thought: I have completed the task successfully, so I should quit.
     Action: quit

@@ -13,7 +13,8 @@ class ReasonerAgent(Agent):
         self.messages.append(system_message)
 
         # Add the task to the user prompt
-        user_content = f"Task: {state.task}\n"
+        task_state = state.task_state
+        user_content = f"Task: {task_state.task}\n"
 
         # Get the previous five steps (plus current step) from the history
         previous_steps = state.step_history[-6:]
@@ -21,15 +22,17 @@ class ReasonerAgent(Agent):
         for index, step in enumerate(previous_steps):
             env_state = step.env_state
             agent_state = step.agent_state
-            user_content += f"# Step: {step.step_id}\n"
+            user_content += f"# Step: {step.step_id} of {task_state.max_steps}\n"
 
             # Append the environment state
-            user_content += f"Env State:\n" \
+            user_content += f"Environment:\n" \
                 + f"  Feedback: {step.env_state.feedback}\n" \
                 + f"  Location: {step.env_state.location}\n" \
                 + f"  Description: {step.env_state.description}\n" \
                 + f"  Inventory: {step.env_state.inventory}\n" \
-                + f"  Score: {env_state.score} of {env_state.max_score}\n" \
+                + f"  Capacity: {env_state.items} of {task_state.max_items} items\n" \
+                + f"  Score: {env_state.score} of {task_state.max_score}\n" \
+                + f"  Done: {env_state.is_done}\n" \
                 + "\n"
 
             # For the last step, don't include the observation
@@ -37,7 +40,7 @@ class ReasonerAgent(Agent):
                 continue
 
             # Append the agent state
-            user_content += f"Agent State:\n" \
+            user_content += f"Agent:\n" \
                 + f"  Thought: {agent_state.thought}\n" \
                 + f"  Action: {agent_state.action}\n" \
                 + "\n"

@@ -6,7 +6,7 @@ step_history:
       feedback: "You picked up the knife. Your score went up by 1 point."
       location: "Kitchen"
       description: "You are in a kitchen. There is a carrot on the counter."
-      inventory: "You ar carrying: a knife."
+      inventory: "You are carrying: a knife."
       score: 1
       max_score: 3
     agent_state:
@@ -16,7 +16,7 @@ step_history:
       feedback: "You picked up the carrot. Your score went up by 1 point."
       location: "Kitchen"
       description: "You are in a kitchen."
-      inventory: "You ar carrying: a knife and a carrot."
+      inventory: "You are carrying: a knife and a carrot."
       score: 2
       max_score: 3
     agent_state: {}
