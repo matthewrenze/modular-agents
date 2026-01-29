@@ -12,9 +12,16 @@ class ParametersFactory:
             eval_size=eval_size,
             max_steps=0)
 
+        # Create the react agent
+        if agent_name == "react":
+            parameters = self.minus_all(parameters)
+            parameters.use_react = True
+            return parameters
+
         # Create baseline agent
         if agent_name == "baseline":
             parameters = self.minus_all(parameters)
+            parameters.use_actor = True
             return parameters
 
         # Create topline agent
@@ -43,12 +50,14 @@ class ParametersFactory:
     @staticmethod
     def plus_all(parameters: Parameters) -> Parameters:
         parameters.use_tasker = True
+        parameters.use_actor = True
         parameters.use_reasoner = True
         return parameters
 
     @staticmethod
     def minus_all(parameters: Parameters) -> Parameters:
         parameters.use_tasker = False
+        parameters.use_actor = False
         parameters.use_reasoner = False
         return parameters
 

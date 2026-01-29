@@ -24,12 +24,13 @@ from typing import cast
 
 # Set agents
 agent_names = [
-    # "baseline",
+    # "react",
+    "baseline",
     # "plus-tasker",
     # "plus-reasoner",
     # "minus-tasker",
     # "minus-reasoner",
-    "topline"
+    # "topline"
 ]
 
 # Set models
@@ -39,17 +40,17 @@ model_names = [
 ]
 
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
-    # ("tw-simple-1", "textworld"),
-    # ("tw-treasure-1", "textworld"),
-    # ("tw-treasure-2", "textworld"),
-    # ("tw-treasure-3", "textworld"),
-    # ("tw-coin-1", "textworld"),
-    # ("tw-coin-2", "textworld"),
-    # ("tw-coin-3", "textworld"),
-    # ("tw-cooking-1", "textworld"),
-    # ("tw-cooking-2", "textworld"),
+    ("tw-simple-1", "textworld"),
+    ("tw-treasure-1", "textworld"),
+    ("tw-treasure-2", "textworld"),
+    ("tw-treasure-3", "textworld"),
+    ("tw-coin-1", "textworld"),
+    ("tw-coin-2", "textworld"),
+    ("tw-coin-3", "textworld"),
+    ("tw-cooking-1", "textworld"),
+    ("tw-cooking-2", "textworld"),
     ("tw-cooking-3", "textworld"),
 ]
 
@@ -120,6 +121,7 @@ for params in runs:
         
         # Create entities
         model = model_factory.create(params)
+        react = agent_factory.create("react", params, model)
         tasker = agent_factory.create("tasker", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
@@ -143,7 +145,10 @@ for params in runs:
 
         try:
 
-            # Reset the agents
+            # Reset the model/agents
+            model.reset()
+            react.reset()
+            tasker.reset()
             reasoner.reset()
             actor.reset()
 
@@ -195,6 +200,16 @@ for params in runs:
                 # Log the agent state
                 log.info(f"Agent:")
 
+                # Use the ReAct agent
+                if params.use_react:
+                    # Get the agent's action using ReAct
+                    thought, action = react.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react", react.messages)
+                    agent_state.thought = thought
+                    agent_state.action = action
+                    log.info(f"  Thought: {thought}")
+                    log.info(f"  Action: {action}")
+
                 # Get the reasoner's thought
                 if params.use_reasoner:
                     thought = reasoner.execute(global_state)
@@ -203,10 +218,11 @@ for params in runs:
                     log.info(f"  Thought: {thought}")
 
                 # Get the agent's action
-                action = actor.execute(global_state)
-                agent_writer.write(params, episode_id, step_id + 1, "actor", actor.messages)
-                agent_state.action = action
-                log.info(f"  Action: {action}")
+                if params.use_actor:
+                    action = actor.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "actor", actor.messages)
+                    agent_state.action = action
+                    log.info(f"  Action: {action}")
 
                 # Create details row
                 details_row = details_manager.create()
@@ -238,14 +254,14 @@ for params in runs:
                 episode["solution"])
             agent_writer.write(params, episode_id, step_id + 1, "reviewer", reviewer.messages)
             review_writer.write(review, params, episode_id)
-            log.info("# Review")
-            log.info("Steps: ")
+            log.info("Review:")
+            log.info("  Steps: ")
             for step_id, step_analysis in review.steps.items():
-                log.info(f"  {step_id}: {step_analysis}")
-            log.info(f"Loops: {review.loops}")
-            log.info(f"Summary: {review.summary}")
-            log.info(f"Category: {review.category}")
-            log.info(f"Advice: {review.advice}")
+                log.info(f"    {step_id}: {step_analysis}")
+            log.info(f"  Loops: {review.loops}")
+            log.info(f"  Summary: {review.summary}")
+            log.info(f"  Category: {review.category}")
+            log.info(f"  Advice: {review.advice}")
 
         except Exception as e:
             error_message = f"{type(e).__name__}: {e}\n" \

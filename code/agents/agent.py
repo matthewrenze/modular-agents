@@ -9,7 +9,7 @@ class Agent:
         self.messages = []
 
     def reset(self):
-        self.model.reset()
+        pass
 
     def execute(self, state: GlobalState) -> str:
         pass

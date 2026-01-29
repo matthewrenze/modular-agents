@@ -1,22 +1,25 @@
-task: "Dice the carrot in the kitchen."
-current_step_id: 1
+task_state:
+  task: "Dice the carrot in the kitchen."
+  step_id: 2
+  max_steps: 10
+  max_items: 5
+  max_score: 3
+  max_reward: 1.0
 step_history:
-  - step_id: 0
+  - step_id: 1
     env_state:
       feedback: "You picked up the knife. Your score went up by 1 point."
       location: "Kitchen"
       description: "You are in a kitchen. There is a carrot on the counter."
       inventory: "You are carrying: a knife."
       score: 1
-      max_score: 3
     agent_state:
       action: "take carrot from counter"
-  - step_id: 1
+  - step_id: 2
     env_state:
       feedback: "You picked up the carrot. Your score went up by 1 point."
       location: "Kitchen"
       description: "You are in a kitchen."
       inventory: "You are carrying: a knife and a carrot."
       score: 2
-      max_score: 3
     agent_state: {}

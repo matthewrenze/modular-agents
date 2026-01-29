@@ -10,5 +10,7 @@ class Parameters:
     max_steps: int = 0
 
     # Feature toggles
+    use_react: bool = False
     use_tasker: bool = False
     use_reasoner: bool = False
+    use_actor: bool = True

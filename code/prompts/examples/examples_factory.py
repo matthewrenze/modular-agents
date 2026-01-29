@@ -8,9 +8,12 @@ class ExamplesFactory:
         with open(file_path, "r") as file:
             examples = file.read()
 
-        # Filter reasoner
-        if not params.use_reasoner:
+        # Filter thoughts
+        if not params.use_reasoner and not params.use_react:
             examples = self.remove_line(examples, "Thought")
+
+        # Filter action
+        # Note: Actor is always used, so no filtering needed
 
         return examples
 

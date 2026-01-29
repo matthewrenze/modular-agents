@@ -19,7 +19,7 @@ Any earlier steps are truncated and unavailable.
 
 # Review
 Your review will provide the following:
- - Steps: a step-by-step analysis of the episode indicating any step-wise failures or N/A for productive steps.
+ - Steps: a step-by-step analysis of any step-wise failures, inefficiencies, or N/A for productive steps.
  - Loops: the sequence of steps where the unproductive loops occurred and the cause of the loop, if any; or N/A.
  - Summary: if the task failed, a summary of the key cause of the failure; if the task succeeded, write N/A.
  - Category: A very short description of the failure mode, inefficiency, or loop that occurred; or N/A.
@@ -34,11 +34,13 @@ Possible categories of failure or inefficiency include, but are not limited to:
  - Inventory mismanagement
 
 # Format
+ - Your response should be in YAML format.
  - Your response should contain only Steps, Loops, Summary, Category, and Advice fields.
  - Use a new-line to separate each step in the steps section.
  - Each step should be formatted as "  {step-number}: {step-analysis}".
  - There should be two spaces before the step number.
  - Do not include any new lines within individual steps or other fields
+ - Do not include any colons in your response except after the field names and step numbers.
  - Do not include any other text in your response.
 
 # Constraints
