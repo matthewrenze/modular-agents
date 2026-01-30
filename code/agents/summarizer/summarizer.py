@@ -1,7 +1,7 @@
 from agents.agent import Agent
 from states.global_state import GlobalState
 
-class ActorAgent(Agent):
+class Summarizer(Agent):
 
     def execute(self, state: GlobalState) -> str:
 
@@ -24,7 +24,7 @@ class ActorAgent(Agent):
                 user_content += f"  Step {step.step_id}: {step.agent_state.summary}\n"
             user_content += "\n"
 
-        # Get the previous n steps (plus current step) from the history
+        # Get the previous five steps (plus current step) from the history
         previous_steps = state.step_history[-2:]
 
         for index, step in enumerate(previous_steps):
@@ -44,16 +44,10 @@ class ActorAgent(Agent):
                 + "\n"
 
             # Add the agent state
-            user_content += f"Agent:\n"
-
-            # Add the thought
-            if self.params.use_reasoner:
-                user_content += f"  Thought: {agent_state.thought}\n"
-
-            # Only include the action if it's not the last step
-            if index < len(previous_steps) - 1:
-                user_content += f"  Action: {agent_state.action}\n"
-                user_content += "\n"
+            user_content += f"Agent:\n" \
+                + f"  Thought: {agent_state.thought}\n" \
+                + f"  Action: {agent_state.action}\n" \
+                + "\n"
 
         user_message = {"role": "user", "content": user_content}
 

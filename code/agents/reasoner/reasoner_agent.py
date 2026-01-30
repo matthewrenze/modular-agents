@@ -15,9 +15,17 @@ class ReasonerAgent(Agent):
         # Add the task to the user prompt
         task_state = state.task_state
         user_content = f"Task: {task_state.task}\n"
+        user_content += "\n"
 
-        # Get the previous five steps (plus current step) from the history
-        previous_steps = state.step_history[-6:]
+        # Add the history
+        if self.params.use_summarizer:
+            user_content += "History:\n"
+            for step in state.step_history[:-2]:
+                user_content += f"  Step {step.step_id}: {step.agent_state.summary}\n"
+            user_content += "\n"
+
+        # Get the previous n steps (plus current step) from the history
+        previous_steps = state.step_history[-2:]
 
         for index, step in enumerate(previous_steps):
             env_state = step.env_state
@@ -35,15 +43,11 @@ class ReasonerAgent(Agent):
                 + f"  Done: {env_state.is_done}\n" \
                 + "\n"
 
-            # For the last step, don't include the observation
-            if index == len(previous_steps) - 1:
-                continue
-
-            # Append the agent state
-            user_content += f"Agent:\n" \
-                + f"  Thought: {agent_state.thought}\n" \
-                + f"  Action: {agent_state.action}\n" \
-                + "\n"
+            # Only include the agent state if it's not the last step
+            if index < len(previous_steps) - 1:
+                user_content += f"  Thought: {agent_state.thought}\n"
+                user_content += f"  Action: {agent_state.action}\n"
+                user_content += "\n"
 
         user_message = {"role": "user", "content": user_content}
 

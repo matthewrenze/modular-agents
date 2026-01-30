@@ -11,6 +11,7 @@ class TestParametersFactory:
         assert not params.use_tasker
         assert not params.use_reasoner
         assert not params.use_actor
+        assert not params.use_summarizer
 
     def test_create_baseline(self):
         factory = ParametersFactory()
@@ -20,6 +21,7 @@ class TestParametersFactory:
         assert not params.use_tasker
         assert not params.use_reasoner
         assert params.use_actor
+        assert not params.use_summarizer
 
     def test_create_topline(self):
         factory = ParametersFactory()
@@ -29,11 +31,13 @@ class TestParametersFactory:
         assert params.use_tasker
         assert params.use_reasoner
         assert params.use_actor
+        assert params.use_summarizer
 
     @pytest.mark.parametrize(
         "agent_name,true_param", [
         ("plus-tasker", "use_tasker"),
         ("plus-reasoner", "use_reasoner"),
+        ("plus-summarizer", "use_summarizer"),
     ])
     def test_create_with_plus(self, agent_name, true_param):
         factory = ParametersFactory()
@@ -49,6 +53,7 @@ class TestParametersFactory:
         "agent_name,false_param", [
         ("minus-tasker", "use_tasker"),
         ("minus-reasoner", "use_reasoner"),
+        ("minus-summarizer", "use_summarizer"),
     ])
     def test_create_with_minus(self, agent_name, false_param):
         factory = ParametersFactory()

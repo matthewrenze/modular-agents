@@ -15,6 +15,10 @@ class ExamplesFactory:
         # Filter action
         # Note: Actor is always used, so no filtering needed
 
+        # Filter summaries
+        if not params.use_summarizer:
+            examples = self.remove_line(examples, "Summary")
+
         return examples
 
     @staticmethod

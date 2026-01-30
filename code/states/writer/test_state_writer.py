@@ -1,6 +1,5 @@
 import io
 import yaml
-
 from states.task_state import TaskState
 from states.writer import state_writer
 from states.writer.state_writer import StateWriter
@@ -18,22 +17,22 @@ task_state:
   max_items: 1
   max_score: 2
   max_reward: 1.0
+  success: false
 step_history:
   - step_id: 1
     env_state:
+      feedback: ""
       location: Room 1
       description: You are in room 1.
       inventory: "You are carrying: item 1"
       items: 1
-      max_items: 5
       score: 1
-      max_score: 2
       reward: 0.50
-      max_reward: 1.0
-      is_done: false
+      is_done: False
     agent_state:
       thought: I should do action 1.
       action: do action 1
+      summary: Took action 1 in room 1.
   - step_id: 2
     env_state:
       feedback: You are now in room 2.
@@ -41,18 +40,27 @@ step_history:
       description: You are in room 2.
       inventory: "You are carrying: item 1 and item 2"
       items: 2
-      max_items: 10
       score: 2
-      max_score: 2
       reward: 1.0
-      max_reward: 1.0
-      is_done: true
+      is_done: True
     agent_state:
       thought: I should do action 2.
       action: do action 2
+      summary: Took action 2 in room 2.
   - step_id: 3
-    env_state: {}
-    agent_state: {}
+    env_state:
+      feedback: ""
+      location: ""
+      description: ""
+      inventory: ""
+      items: 0
+      score: 0
+      reward: 0.0
+      is_done: False
+    agent_state:
+      thought: ""
+      action: ""
+      summary: ""
 """
 
 class TestStateWriter:
@@ -89,6 +97,7 @@ class TestStateWriter:
                     agent_state=AgentState(
                         thought="I should do action 1.",
                         action="do action 1",
+                        summary="Took action 1 in room 1.",
                     ),
                 ),
                 StepState(
@@ -106,6 +115,7 @@ class TestStateWriter:
                     agent_state=AgentState(
                         thought="I should do action 2.",
                         action="do action 2",
+                        summary="Took action 2 in room 2.",
                     ),
                 ),
                 StepState(
@@ -139,67 +149,9 @@ class TestStateWriter:
         assert captured["makedirs"] == (expected_folder, True)
         assert captured["open"] == (expected_file, "w", "utf-8")
 
-        data = yaml.safe_load(captured["yaml_text"])
-
-        # Verify task-state
-        t1 = data["task_state"]
-        assert t1["task"] == "Perform task 1."
-        assert t1["step_id"] == 3
-        assert t1["max_steps"] == 99
-        assert t1["max_items"] == 1
-        assert t1["max_score"] == 2
-        assert t1["max_reward"] == 1.0
-
-        # Verify step-history
-        assert len(data["step_history"]) == 3
-
-        # Verify step 1
-        s1 = data["step_history"][0]
-        assert s1["step_id"] == 1
-        e1 = s1["env_state"]
-        assert e1["feedback"] == ""
-        assert e1["location"] == "Room 1"
-        assert e1["description"] == "You are in room 1."
-        assert e1["inventory"] == "You are carrying: item 1"
-        assert e1["items"] == 1
-        assert e1["score"] == 1
-        assert e1["reward"] == 0.5
-        assert e1["is_done"] is False
-        a1 = s1["agent_state"]
-        assert a1["thought"] == "I should do action 1."
-        assert a1["action"] == "do action 1"
-
-        # Verify step 2
-        s2 = data["step_history"][1]
-        assert s2["step_id"] == 2
-        e2 = s2["env_state"]
-        assert e2["feedback"] == "You are now in room 2."
-        assert e2["location"] == "Room 2"
-        assert e2["description"] == "You are in room 2."
-        assert e2["inventory"] == "You are carrying: item 1 and item 2"
-        assert e2["items"] == 2
-        assert e2["score"] == 2
-        assert e2["reward"] == 1.0
-        assert e2["is_done"] is True
-        a2 = s2["agent_state"]
-        assert a2["thought"] == "I should do action 2."
-        assert a2["action"] == "do action 2"
-
-        # Verify step 3 (defaults)
-        s3 = data["step_history"][2]
-        assert s3["step_id"] == 3
-        e3 = s3["env_state"]
-        assert e3["feedback"] == ""
-        assert e3["location"] == ""
-        assert e3["description"] == ""
-        assert e3["inventory"] == ""
-        assert e3["items"] == 0
-        assert e3["score"] == 0
-        assert e3["reward"] == 0.0
-        assert e3["is_done"] is False
-        a3 = s3["agent_state"]
-        assert a3["thought"] == ""
-        assert a3["action"] == ""
+        expected_data = yaml.safe_load(TEST_YAML)
+        actual_data = yaml.safe_load(captured["yaml_text"])
+        assert expected_data == actual_data
 
 class _CaptureWriter(io.StringIO):
     def __init__(self, on_close):

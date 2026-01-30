@@ -25,11 +25,13 @@ from typing import cast
 # Set agents
 agent_names = [
     # "react",
-    "baseline",
+    # "baseline",
     # "plus-tasker",
     # "plus-reasoner",
+    "plus-summarizer",
     # "minus-tasker",
     # "minus-reasoner",
+    # "minus-summarizer",
     # "topline"
 ]
 
@@ -40,17 +42,17 @@ model_names = [
 ]
 
 # Set evals
-eval_size = 10
+eval_size = 1
 eval_env_names = [
-    ("tw-simple-1", "textworld"),
-    ("tw-treasure-1", "textworld"),
-    ("tw-treasure-2", "textworld"),
-    ("tw-treasure-3", "textworld"),
-    ("tw-coin-1", "textworld"),
-    ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
-    ("tw-cooking-1", "textworld"),
-    ("tw-cooking-2", "textworld"),
+    # ("tw-simple-1", "textworld"),
+    # ("tw-treasure-1", "textworld"),
+    # ("tw-treasure-2", "textworld"),
+    # ("tw-treasure-3", "textworld"),
+    # ("tw-coin-1", "textworld"),
+    # ("tw-coin-2", "textworld"),
+    # ("tw-coin-3", "textworld"),
+    # ("tw-cooking-1", "textworld"),
+    # ("tw-cooking-2", "textworld"),
     ("tw-cooking-3", "textworld"),
 ]
 
@@ -125,6 +127,7 @@ for params in runs:
         tasker = agent_factory.create("tasker", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
+        summarizer = agent_factory.create("summarizer", params, model)
         reviewer_model = model_factory.create(params)
         reviewer = agent_factory.create("reviewer", params, reviewer_model)
         reviewer = cast(Reviewer, reviewer)
@@ -223,6 +226,13 @@ for params in runs:
                     agent_writer.write(params, episode_id, step_id + 1, "actor", actor.messages)
                     agent_state.action = action
                     log.info(f"  Action: {action}")
+
+                # Get the summarizer's summary
+                if params.use_summarizer:
+                    summary = summarizer.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "summarizer", summarizer.messages)
+                    agent_state.summary = summary
+                    log.info(f"  Summary: {summary}")
 
                 # Create details row
                 details_row = details_manager.create()

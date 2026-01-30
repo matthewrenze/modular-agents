@@ -16,6 +16,10 @@ class SystemFactory:
         if not params.use_reasoner:
             section = self.remove_line(section, "Reasoner")
 
+        # Filter summarizer
+        if not params.use_summarizer:
+            section = self.remove_line(section, "Summarizer")
+
         # Add "(you)" tag to the specified subagent
         subagent_name = subagent_name.capitalize()
         section = self.add_you_tag(section, subagent_name)
@@ -37,12 +41,3 @@ class SystemFactory:
         new_subagent_tag = f" - {subagent_name} (you) - "
         section = section.replace(subagent_tag, new_subagent_tag)
         return section
-
-
-if __name__ == "__main__":
-    factory = SystemFactory()
-    params = Parameters(
-        use_tasker=True,
-        use_reasoner=True)
-    system_prompt = factory.create(params, "Reasoner")
-    print(system_prompt)

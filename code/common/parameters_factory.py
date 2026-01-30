@@ -36,6 +36,9 @@ class ParametersFactory:
                 parameters.use_tasker = True
             if "reasoner" in agent_name:
                 parameters.use_reasoner = True
+            if "summarizer" in agent_name:
+                parameters.use_summarizer = True
+            parameters.use_actor = True
             return parameters
 
         # Create topline-minus agents
@@ -45,6 +48,9 @@ class ParametersFactory:
                 parameters.use_tasker = False
             if "reasoner" in agent_name:
                 parameters.use_reasoner = False
+            if "summarizer" in agent_name:
+                parameters.use_summarizer = False
+            parameters.use_actor = True
             return parameters
 
     @staticmethod
@@ -52,6 +58,7 @@ class ParametersFactory:
         parameters.use_tasker = True
         parameters.use_actor = True
         parameters.use_reasoner = True
+        parameters.use_summarizer = True
         return parameters
 
     @staticmethod
@@ -59,5 +66,6 @@ class ParametersFactory:
         parameters.use_tasker = False
         parameters.use_actor = False
         parameters.use_reasoner = False
+        parameters.use_summarizer = False
         return parameters
 

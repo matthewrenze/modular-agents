@@ -1,3 +1,4 @@
+from agents.summarizer.summarizer import Summarizer
 from common.parameters import Parameters
 from agents.agent import Agent
 from models.model import Model
@@ -22,18 +23,21 @@ class AgentFactory:
 
         # Create the appropriate agent
         if subagent == "react":
-            return ReactAgent(model, system_prompt)
-
-        if subagent == "actor":
-            return ActorAgent(model, system_prompt)
+            return ReactAgent(model, system_prompt, params)
 
         if subagent == "tasker":
-            return TaskerAgent(model, system_prompt)
+            return TaskerAgent(model, system_prompt, params)
 
         if subagent == "reasoner":
-            return ReasonerAgent(model, system_prompt)
+            return ReasonerAgent(model, system_prompt, params)
+
+        if subagent == "actor":
+            return ActorAgent(model, system_prompt, params)
+
+        if subagent == "summarizer":
+            return Summarizer(model, system_prompt, params)
 
         if subagent == "reviewer":
-            return Reviewer(model, system_prompt)
+            return Reviewer(model, system_prompt, params)
 
         raise ValueError(f"Unknown subagent type: {subagent}")

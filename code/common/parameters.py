@@ -14,3 +14,4 @@ class Parameters:
     use_tasker: bool = False
     use_reasoner: bool = False
     use_actor: bool = True
+    use_summarizer: bool = False

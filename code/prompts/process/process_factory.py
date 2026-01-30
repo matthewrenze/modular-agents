@@ -17,6 +17,10 @@ class ProcessFactory:
         if not params.use_reasoner:
             section = self.remove_line(section, "Reasoner")
 
+        # Filter summarizer
+        if not params.use_summarizer:
+            section = self.remove_line(section, "Summarizer")
+
         # Add "(you)" tag to the specified subagent
         subagent_name = subagent_name.capitalize()
         section = self.add_you_tag(section, subagent_name)

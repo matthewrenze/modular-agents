@@ -27,6 +27,7 @@ step_history:
     agent_state:
       thought: I should do action 1.
       action: do action 1
+      summary: Took action 1 in room 1.
   - step_id: 2
     env_state:
       feedback: You are now in room 2.
@@ -43,6 +44,7 @@ step_history:
     agent_state:
       thought: I should do action 2.
       action: do action 2
+      summary: Took action 2 in room 2.
   - step_id: 3
     env_state: {}
     agent_state: {}
@@ -90,6 +92,7 @@ class TestStateReader:
         assert s1.env_state.is_done is False
         assert s1.agent_state.thought == "I should do action 1."
         assert s1.agent_state.action == "do action 1"
+        assert s1.agent_state.summary == "Took action 1 in room 1."
 
         # Verify the second step
         s2 = state.step_history[1]
@@ -104,6 +107,7 @@ class TestStateReader:
         assert s2.env_state.is_done is True
         assert s2.agent_state.thought == "I should do action 2."
         assert s2.agent_state.action == "do action 2"
+        assert s2.agent_state.summary == "Took action 2 in room 2."
 
         # Verify the defaults (third step)
         s3 = state.step_history[2]
@@ -118,5 +122,6 @@ class TestStateReader:
         assert s3.env_state.is_done is False
         assert s3.agent_state.thought == ""
         assert s3.agent_state.action == ""
+        assert s3.agent_state.summary == ""
 
 
