@@ -1,9 +1,10 @@
 from __future__ import annotations
 from pydantic import BaseModel
-from typing import List
+from typing import Dict, List
 from states.task_state import TaskState
 from states.step_state import StepState
 
 class GlobalState(BaseModel):
     task_state: TaskState = None
+    memories: Dict[int, str] = {}
     step_history: List[StepState] = []

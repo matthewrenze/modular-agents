@@ -11,8 +11,8 @@ Your specific objective is to revise the raw task description provided by the en
 {process}
 
 # Memory
-Our context contains only the current state and the previous 5 steps (i.e., state-action pairs).
-Any earlier steps are truncated and unavailable.
+Our context contains only the full state information for the previous step and the current step.
+Environment or agent state from any earlier steps may be truncated and unavailable.
 So, the revised task description must be clear and comprehensive enough to guide us through to completion within the available context.
 Your revised task description will replace the raw task description provided by the environment so do not reference it or rely on it for future steps.
 

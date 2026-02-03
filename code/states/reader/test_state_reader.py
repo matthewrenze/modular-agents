@@ -4,19 +4,22 @@ from states.reader.state_reader import StateReader
 
 TEST_YAML = """
 task_state:
-    task: Perform task 1.
+    task: task 1
     step_id: 3
     max_steps: 99
     max_items: 10
     max_score: 2
     max_reward: 1.0
     success: false
+memories:
+ 1: memory 1
+ 2: memory 2
 step_history:
   - step_id: 1
     env_state:
-      location: Room 1
-      description: You are in room 1.
-      inventory: "You are carrying: item 1"
+      location: location 1
+      description: description 1
+      inventory: inventory 1
       items: 1
       max_items: 5
       score: 1
@@ -25,15 +28,18 @@ step_history:
       max_reward: 1.0
       is_done: false
     agent_state:
-      thought: I should do action 1.
-      action: do action 1
-      summary: Took action 1 in room 1.
+      summary: summary 1
+      memory: |
+        create: memory 1
+        delete: 1
+      thought: thought 1
+      action: action 1
   - step_id: 2
     env_state:
-      feedback: You are now in room 2.
-      location: Room 2
-      description: You are in room 2.
-      inventory: "You are carrying: item 1 and item 2"
+      feedback: feedback 2
+      location: location 2
+      description: description 2.
+      inventory: inventory 2
       items: 2
       max_items: 10
       score: 2
@@ -42,9 +48,14 @@ step_history:
       max_reward: 1.0
       is_done: true
     agent_state:
-      thought: I should do action 2.
-      action: do action 2
-      summary: Took action 2 in room 2.
+      summary: summary 2
+      memory: |
+        create: memory 2
+        create: memory 3
+        delete: 2
+        delete: 3
+      thought: thought 2
+      action: action 2
   - step_id: 3
     env_state: {}
     agent_state: {}
@@ -68,7 +79,7 @@ class TestStateReader:
 
         # Verify task state
         t1 = state.task_state
-        assert t1.task == "Perform task 1."
+        assert t1.task == "task 1"
         assert t1.step_id == 3
         assert t1.max_steps == 99
         assert t1.max_items == 10
@@ -83,31 +94,33 @@ class TestStateReader:
         s1 = state.step_history[0]
         assert s1.step_id == 1
         assert s1.env_state.feedback == ""
-        assert s1.env_state.location == "Room 1"
-        assert s1.env_state.description == "You are in room 1."
-        assert s1.env_state.inventory == "You are carrying: item 1"
+        assert s1.env_state.location == "location 1"
+        assert s1.env_state.description == "description 1"
+        assert s1.env_state.inventory == "inventory 1"
         assert s1.env_state.items == 1
         assert s1.env_state.score == 1
         assert s1.env_state.reward == 0.50
         assert s1.env_state.is_done is False
-        assert s1.agent_state.thought == "I should do action 1."
-        assert s1.agent_state.action == "do action 1"
-        assert s1.agent_state.summary == "Took action 1 in room 1."
+        assert s1.agent_state.summary == "summary 1"
+        assert s1.agent_state.memory == "create: memory 1\ndelete: 1\n"
+        assert s1.agent_state.thought == "thought 1"
+        assert s1.agent_state.action == "action 1"
 
         # Verify the second step
         s2 = state.step_history[1]
         assert s2.step_id == 2
-        assert s2.env_state.feedback == "You are now in room 2."
-        assert s2.env_state.location == "Room 2"
-        assert s2.env_state.description == "You are in room 2."
-        assert s2.env_state.inventory == "You are carrying: item 1 and item 2"
+        assert s2.env_state.feedback == "feedback 2"
+        assert s2.env_state.location == "location 2"
+        assert s2.env_state.description == "description 2."
+        assert s2.env_state.inventory == "inventory 2"
         assert s2.env_state.items == 2
         assert s2.env_state.score == 2
         assert s2.env_state.reward == 1.0
         assert s2.env_state.is_done is True
-        assert s2.agent_state.thought == "I should do action 2."
-        assert s2.agent_state.action == "do action 2"
-        assert s2.agent_state.summary == "Took action 2 in room 2."
+        assert s2.agent_state.summary == "summary 2"
+        assert s2.agent_state.memory == "create: memory 2\ncreate: memory 3\ndelete: 2\ndelete: 3\n"
+        assert s2.agent_state.thought == "thought 2"
+        assert s2.agent_state.action == "action 2"
 
         # Verify the defaults (third step)
         s3 = state.step_history[2]

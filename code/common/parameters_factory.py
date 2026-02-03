@@ -18,6 +18,11 @@ class ParametersFactory:
             parameters.use_react = True
             return parameters
 
+        if agent_name == "react-k1":
+            parameters = self.minus_all(parameters)
+            parameters.use_react_k1 = True
+            return parameters
+
         # Create baseline agent
         if agent_name == "baseline":
             parameters = self.minus_all(parameters)
@@ -34,10 +39,12 @@ class ParametersFactory:
             parameters = self.minus_all(parameters)
             if "tasker" in agent_name:
                 parameters.use_tasker = True
-            if "reasoner" in agent_name:
-                parameters.use_reasoner = True
             if "summarizer" in agent_name:
                 parameters.use_summarizer = True
+            if "memorizer" in agent_name:
+                parameters.use_memorizer = True
+            if "reasoner" in agent_name:
+                parameters.use_reasoner = True
             parameters.use_actor = True
             return parameters
 
@@ -46,26 +53,30 @@ class ParametersFactory:
             parameters = self.plus_all(parameters)
             if "tasker" in agent_name:
                 parameters.use_tasker = False
-            if "reasoner" in agent_name:
-                parameters.use_reasoner = False
             if "summarizer" in agent_name:
                 parameters.use_summarizer = False
+            if "memorizer" in agent_name:
+                parameters.use_memorizer = False
+            if "reasoner" in agent_name:
+                parameters.use_reasoner = False
             parameters.use_actor = True
             return parameters
 
     @staticmethod
     def plus_all(parameters: Parameters) -> Parameters:
         parameters.use_tasker = True
-        parameters.use_actor = True
-        parameters.use_reasoner = True
         parameters.use_summarizer = True
+        parameters.use_memorizer = True
+        parameters.use_reasoner = True
+        parameters.use_actor = True
         return parameters
 
     @staticmethod
     def minus_all(parameters: Parameters) -> Parameters:
         parameters.use_tasker = False
-        parameters.use_actor = False
-        parameters.use_reasoner = False
         parameters.use_summarizer = False
+        parameters.use_memorizer = False
+        parameters.use_reasoner = False
+        parameters.use_actor = False
         return parameters
 

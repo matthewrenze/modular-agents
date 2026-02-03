@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
+# Hide future warnings
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 # Set parameters
 model_name = "gpt-5.2"
 input_file_path = "../data/summaries.csv"
@@ -43,11 +47,17 @@ if summaries["tasks"].nunique() != 1:
 
 # Order agents
 agent_order = [
+    "react",
+    "react-k1",
     "baseline",
     "plus-tasker",
     "plus-reasoner",
-    # "minus-tasker",
-    # "minus-reasoner",
+    "plus-summarizer-v1",
+    "plus-summarizer-v2",
+    "plus-memorizer-v1",
+    "minus-tasker",
+    "minus-reasoner",
+    "minus-summarizer",
     "topline"
 ]
 
@@ -56,6 +66,18 @@ summaries["agent_name"] = pd.Categorical(
     categories=agent_order,
     ordered=True)
 
+pastel = sns.color_palette("tab10")
+palette = {
+    name:
+        pastel[7] if name.startswith("react") else      # pastel blue
+        pastel[0] if name == "baseline" else            # pastel gray
+        pastel[2] if name.startswith("plus") else       # pastel green
+        pastel[1] if name.startswith("minus") else      # pastel orange
+        pastel[0] if name == "topline" else             # pastel purple
+        pastel[7]                                       # fallback gray
+    for name in agent_order
+}
+
 # Create plot for task completion accuracy
 accuracy_file_name = f"accuracy-by-agent-for-{model_name}.png"
 sns.set_style("whitegrid")
@@ -63,11 +85,14 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
     y="accuracy",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Accuracy by Agent with {model_name}")
 plt.xlabel("Agent")
 plt.ylabel("Accuracy (task completion rate)")
 plt.ylim(0.0, 1.0)
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.1%}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
 plt.savefig(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
@@ -80,10 +105,13 @@ plt.figure(figsize=(14, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_steps_per_task",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Steps per Task by Agent with {model_name}")
 plt.xlabel("Agent")
 plt.ylabel("Average steps per task")
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
 for p in ax.patches:
     ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
@@ -97,10 +125,13 @@ plt.figure(figsize=(14, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_tokens_per_task",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Tokens by Agent with {model_name}")
 plt.xlabel("Agent")
 plt.ylabel("Average tokens per task")
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
 for p in ax.patches:
     ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
@@ -114,11 +145,14 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_reward_per_task",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Reward per Task by Agent with {model_name}")
 plt.xlabel("Agent")
 plt.ylabel("Average reward per task")
 plt.ylim(0.0, 1.0)
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.2f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
 plt.savefig(f"{output_folder_path}/{reward_file_name}", bbox_inches='tight')
@@ -131,11 +165,14 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_reward_per_step",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Reward per Step by Agent with {model_name}")
 plt.xlabel("Agent")
 plt.ylabel("Reward per step")
 #plt.ylim(0.0, 1.0)
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.4f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
 plt.savefig(f"{output_folder_path}/{reward_per_step_file_name}", bbox_inches='tight')
@@ -148,10 +185,13 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_reward_per_m_tokens",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Reward per Million Tokens by Agent with {model_name}")
 plt.xlabel("Agent")
 plt.ylabel("Average reward per million tokens")
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.2f}", (p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
 plt.savefig(f"{output_folder_path}/{reward_per_million_file_name}", bbox_inches='tight')

@@ -11,8 +11,8 @@ Your specific objective is to review our attempt, identify any errors, and provi
 {process}
 
 # Memory
-Our context contains only the current state and the previous 5 steps (i.e., state-action pairs).
-Any earlier steps are truncated and unavailable.
+Our context contains only the full state information for the previous step and the current step.
+Environment or agent state from any earlier steps may be truncated and unavailable.
 
 # Actions
 {actions}

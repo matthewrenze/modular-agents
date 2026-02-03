@@ -12,13 +12,17 @@ class SystemFactory:
         if not params.use_tasker:
             section = self.remove_line(section, "Tasker")
 
-        # Filter reasoner
-        if not params.use_reasoner:
-            section = self.remove_line(section, "Reasoner")
-
         # Filter summarizer
         if not params.use_summarizer:
             section = self.remove_line(section, "Summarizer")
+
+        # Filter memorizer
+        if not params.use_memorizer:
+            section = self.remove_line(section, "Memorizer")
+
+        # Filter reasoner
+        if not params.use_reasoner:
+            section = self.remove_line(section, "Reasoner")
 
         # Add "(you)" tag to the specified subagent
         subagent_name = subagent_name.capitalize()

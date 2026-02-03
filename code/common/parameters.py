@@ -11,7 +11,9 @@ class Parameters:
 
     # Feature toggles
     use_react: bool = False
+    use_react_k1: bool = False
     use_tasker: bool = False
+    use_memorizer: bool = False
     use_reasoner: bool = False
     use_actor: bool = True
     use_summarizer: bool = False

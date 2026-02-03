@@ -1,6 +1,11 @@
+## Example 1
 Task: Dice the carrot in the kitchen.
 
-## Step 1 of 10
+History: N/A
+
+Memories: N/A
+
+Step: 1 of 10
 Environment:
   Feedback: 
   Location: Living Room 
@@ -10,11 +15,13 @@ Environment:
   Score: 0 of 4
   Done: False
 Agent:
+  Summary: I started in the living room.
+  Memory: 
+    create: At step 1, the kitchen was north of the living room.
   Thought: I need to go to the kitchen, so I can find the carrot.
   Action: go north
-  Summary: I was in the living room with the kitchen to the north. So, I went north.
 
-## Step 2 of 10
+Step: 2 of 10
 Environment:
   Feedback: You are in the kitchen.
   Location: Kitchen
@@ -24,11 +31,26 @@ Environment:
   Score: 1 of 4
   Done: False
 Agent:
+  Summary: I went north → I arrived in the kitchen
+  Memory: 
+    create: At step 2, there was a carrot on the counter in the kitchen.
+    create: At step 2, there was a knife on the table in the kitchen.
   Thought: I need a knife to dice the carrot.
   Action: take knife from table
-  Summary: I was in the kitchen with a carrot on the counter and a knife on the table. So, I took the knife from the table.
 
-## Step 3 of 10
+## Example 2
+Task: Dice the carrot in the kitchen.
+
+History:
+  Step 1: I started in the living room.
+  Step 2: I went north → I arrived in kitchen
+
+Memories:
+  1: At step 1, the kitchen was north of the living room.
+  2: At step 2, there was a carrot on the counter in the kitchen.
+  3: At step 2, there was a knife on the table in the kitchen.
+
+Step: 3 of 10
 Environment:
   Feedback: You take the knife from the table. Your score has just gone up by one point.
   Location: Kitchen
@@ -38,11 +60,13 @@ Environment:
   Score: 2 of 4
   Done: False
 Agent:
+  Summary: I took knife from table → the knife was added to my inventory
+  Memory: 
+    delete: 3
   Thought: I need to dice the carrot with the knife.
   Action: dice carrot with knife
-  Summary: I was in the kitchen with a carrot on the counter. I had a knife in my inventory. So, I diced the carrot with the knife.
 
-## Step 4 of 10
+Step: 4 of 10
 Environment:
   Feedback: You can't dice the carrot while it's still on the counter. You need to pick it up first.
   Location: Kitchen
@@ -52,11 +76,27 @@ Environment:
   Score: 2 of 4
   Done: False
 Agent:
+  Summary: I diced the carrot with the knife → I failed because carrot must be in my inventory
+  Memory: 
+    create: At step 4, I failed to dice the carrot because I needed to take it from the counter first.
   Thought: I need to take the carrot from the counter before I can dice it.
   Action: take carrot from counter
-  Summary: I failed to dice the carrot because it was still on the counter. So, I took the carrot from the counter.
 
-## Step 5 of 10
+## Example 3
+Task: Dice the carrot in the kitchen.
+
+History:
+  Step 1: I started in the living room.
+  Step 2: I went north → I arrived in kitchen
+  Step 3: I took knife from table → the knife was added to my inventory
+  Step 4: I diced the carrot with the knife → I failed because carrot must be in my inventory
+
+Memories:
+  1: At step 1, the kitchen was north of the living room.
+  2: At step 2, there was a carrot on the counter in the kitchen.
+  4: At step 4, I failed to dice the carrot because I needed to take it from the counter first.
+
+Step: 5 of 10
 Environment:
   Feedback: You take the carrot from the counter. Your score has gone up by one point.
   Location: Kitchen
@@ -66,11 +106,14 @@ Environment:
   Score: 3 of 4
   Done: False
 Agent:
+  Summary: I took the carrot from the counter → the carrot was added to my inventory
+  Memory: 
+    delete: 2
+    delete: 4
   Thought: I can now dice the carrot with the knife.
   Action: dice carrot with knife
-  Summary: I was in the kitchen. I had a knife and a carrot in my inventory. So, I diced the carrot with the knife.
 
-## Step 6 of 10
+Step: 6 of 10
 Environment:
   Feedback: The carrot is now diced. You win!
   Location: Kitchen
@@ -80,6 +123,7 @@ Environment:
   Score: 4 of 4
   Done: True
 Agent:
+  Summary: I diced the carrot with the knife → the carrot is diced; the task is complete
+  Memory:
   Thought: I have completed the task successfully, so I should quit.
   Action: quit
-  Summary: I was in the kitchen. I had a knife and a diced carrot in my inventory. I successfully completed the task. So, I quit.

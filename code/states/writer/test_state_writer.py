@@ -11,42 +11,53 @@ from states.agent_state import AgentState
 
 TEST_YAML = """
 task_state:
-  task: Perform task 1.
+  task: task 1
   step_id: 3
   max_steps: 99
   max_items: 1
   max_score: 2
   max_reward: 1.0
   success: false
+memories:
+    1: memory 1
+    2: memory 2
 step_history:
   - step_id: 1
     env_state:
       feedback: ""
-      location: Room 1
-      description: You are in room 1.
-      inventory: "You are carrying: item 1"
+      location: location 1
+      description: description 1
+      inventory: inventory 1
       items: 1
       score: 1
       reward: 0.50
       is_done: False
     agent_state:
-      thought: I should do action 1.
-      action: do action 1
-      summary: Took action 1 in room 1.
+      summary: ""
+      memory: |
+        create: memory 1
+        delete: 1
+      thought: thought 1
+      action: action 1
   - step_id: 2
     env_state:
-      feedback: You are now in room 2.
-      location: Room 2
-      description: You are in room 2.
-      inventory: "You are carrying: item 1 and item 2"
+      feedback: feedback 2
+      location: location 2
+      description: description 2
+      inventory: inventory 2
       items: 2
       score: 2
       reward: 1.0
       is_done: True
     agent_state:
-      thought: I should do action 2.
-      action: do action 2
-      summary: Took action 2 in room 2.
+      summary: summary 2
+      memory: |
+        create: memory 2
+        create: memory 3
+        delete: 2
+        delete: 3
+      thought: thought 2
+      action: action 2
   - step_id: 3
     env_state:
       feedback: ""
@@ -59,6 +70,7 @@ step_history:
       is_done: False
     agent_state:
       thought: ""
+      memory: ""
       action: ""
       summary: ""
 """
@@ -76,46 +88,51 @@ class TestStateWriter:
         # Build a state equivalent to TEST_YAML
         state = GlobalState(
             task_state=TaskState(
-                task="Perform task 1.",
+                task="task 1",
                 step_id=3,
                 max_steps=99,
                 max_items=1,
                 max_score=2,
                 max_reward=1.0),
+            memories={
+                1: "memory 1",
+                2: "memory 2",},
             step_history=[
                 StepState(
                     step_id=1,
                     env_state=EnvState(
-                        location="Room 1",
-                        description="You are in room 1.",
-                        inventory="You are carrying: item 1",
+                        location="location 1",
+                        description="description 1",
+                        inventory="inventory 1",
                         items=1,
                         score=1,
                         reward=0.50,
                         is_done=False,
                     ),
                     agent_state=AgentState(
-                        thought="I should do action 1.",
-                        action="do action 1",
-                        summary="Took action 1 in room 1.",
+                        summary="",
+                        memory="create: memory 1\ndelete: 1\n",
+                        thought="thought 1",
+                        action="action 1",
                     ),
                 ),
                 StepState(
                     step_id=2,
                     env_state=EnvState(
-                        feedback="You are now in room 2.",
-                        location="Room 2",
-                        description="You are in room 2.",
-                        inventory="You are carrying: item 1 and item 2",
+                        feedback="feedback 2",
+                        location="location 2",
+                        description="description 2",
+                        inventory="inventory 2",
                         items=2,
                         score=2,
                         reward=1.0,
                         is_done=True,
                     ),
                     agent_state=AgentState(
-                        thought="I should do action 2.",
-                        action="do action 2",
-                        summary="Took action 2 in room 2.",
+                        summary="summary 2",
+                        memory="create: memory 2\ncreate: memory 3\ndelete: 2\ndelete: 3\n",
+                        thought="thought 2",
+                        action="action 2",
                     ),
                 ),
                 StepState(

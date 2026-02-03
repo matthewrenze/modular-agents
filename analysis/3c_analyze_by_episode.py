@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Set parameters
+# agent_name = "react"
 # agent_name = "baseline"
 agent_name = "plus-tasker"
 # agent_name = "plus-reasoner"

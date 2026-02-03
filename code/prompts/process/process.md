@@ -18,9 +18,10 @@ Next, the environment will provide us with:
   - Score - our current score and maximum possible score.
   - Done - whether the task is complete or not.
 Then, we will provide:
+  - Summary (Summarizer) - a summary of the action-outcome pair for the previous step.
+  - Memory (Memorizer) - any important information we need to remember for future steps.
   - Thought (Reasoner) - a goal-oriented chain-of-reasoning from the current state to the best next action.
   - Action (Actor) - a command that we will execute in our environment.
-  - Summary (Summarizer) - a summary of the state-action pair for this step.
 Finally, the environment will provide us with an updated state based on our action.
 We will use feedback from the environment to refine our actions in subsequent steps.
 

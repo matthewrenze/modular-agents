@@ -31,17 +31,17 @@ class Reviewer(Agent):
         for index, step in enumerate(previous_steps):
             env_state = step.env_state
             agent_state = step.agent_state
-            user_content += f"Step {step.step_id} of {task_state.max_steps}\n"
+            user_content += f"Step: {step.step_id} of {task_state.max_steps}\n"
 
             # Append the environment state
-            user_content += f"  Environment:\n" \
-                + f"    Feedback: {env_state.feedback}\n" \
-                + f"    Location: {env_state.location}\n" \
-                + f"    Description: {env_state.description}\n" \
-                + f"    Inventory: {env_state.inventory}\n" \
-                + f"    Capacity: {env_state.items} of {task_state.max_items}\n" \
-                + f"    Score: {env_state.score} of {task_state.max_score}\n" \
-                + f"    Done: {env_state.is_done}\n"
+            user_content += f"Environment:\n" \
+                + f"  Feedback: {env_state.feedback}\n" \
+                + f"  Location: {env_state.location}\n" \
+                + f"  Description: {env_state.description}\n" \
+                + f"  Inventory: {env_state.inventory}\n" \
+                + f"  Capacity: {env_state.items} of {task_state.max_items}\n" \
+                + f"  Score: {env_state.score} of {task_state.max_score}\n" \
+                + f"  Done: {env_state.is_done}\n"
 
             # For the last step, don't include the observation
             if index == len(previous_steps) - 1:

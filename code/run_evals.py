@@ -14,6 +14,7 @@ from states.env_state import EnvState
 from states.global_state import GlobalState
 from states.step_state import StepState
 from states.agent_state import AgentState
+from memory.memory_manager import MemoryManager
 from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
 from messages.messages_writer import MessagesWriter
@@ -25,14 +26,17 @@ from typing import cast
 # Set agents
 agent_names = [
     # "react",
-    # "baseline",
-    # "plus-tasker",
-    # "plus-reasoner",
-    "plus-summarizer",
+    # "react-k1",
+    # "baseline-v1",
+    # "plus-tasker-v2",
+    # "plus-summarizer-v2",
+    "plus-memorizer-v1",
+    # "plus-reasoner-v1",
     # "minus-tasker",
-    # "minus-reasoner",
     # "minus-summarizer",
-    # "topline"
+    # "minus-memorizer",
+    # "minus-reasoner"
+    # "topline-v1"
 ]
 
 # Set models
@@ -42,17 +46,17 @@ model_names = [
 ]
 
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
-    # ("tw-simple-1", "textworld"),
-    # ("tw-treasure-1", "textworld"),
-    # ("tw-treasure-2", "textworld"),
-    # ("tw-treasure-3", "textworld"),
-    # ("tw-coin-1", "textworld"),
-    # ("tw-coin-2", "textworld"),
-    # ("tw-coin-3", "textworld"),
-    # ("tw-cooking-1", "textworld"),
-    # ("tw-cooking-2", "textworld"),
+    ("tw-simple-1", "textworld"),
+    ("tw-treasure-1", "textworld"),
+    ("tw-treasure-2", "textworld"),
+    ("tw-treasure-3", "textworld"),
+    ("tw-coin-1", "textworld"),
+    ("tw-coin-2", "textworld"),
+    ("tw-coin-3", "textworld"),
+    ("tw-cooking-1", "textworld"),
+    ("tw-cooking-2", "textworld"),
     ("tw-cooking-3", "textworld"),
 ]
 
@@ -124,13 +128,16 @@ for params in runs:
         # Create entities
         model = model_factory.create(params)
         react = agent_factory.create("react", params, model)
+        react_k1 = agent_factory.create("react-k1", params, model)
         tasker = agent_factory.create("tasker", params, model)
+        summarizer = agent_factory.create("summarizer", params, model)
+        memorizer = agent_factory.create("memorizer", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
-        summarizer = agent_factory.create("summarizer", params, model)
         reviewer_model = model_factory.create(params)
         reviewer = agent_factory.create("reviewer", params, reviewer_model)
         reviewer = cast(Reviewer, reviewer)
+        memory_manager = MemoryManager()
         details_manager = DetailsManager(params, episode_id)
         
         # Reset the variables
@@ -152,13 +159,13 @@ for params in runs:
             model.reset()
             react.reset()
             tasker.reset()
+            summarizer.reset()
+            memorizer.reset()
             reasoner.reset()
             actor.reset()
 
             # Run the agent in the environment
             for step_id in range(params.max_steps):
-
-                log.info(f"# Step {step_id + 1}")
 
                 # Set up the state
                 agent_state = AgentState()
@@ -190,6 +197,21 @@ for params in runs:
                 global_state.task_state.step_id = step_id + 1
                 step_state.env_state = env_state
 
+                # Log the history
+                if params.use_summarizer:
+                    log.info("History:")
+                    for history_step in global_state.step_history[:-1]:
+                        log.info(f"  Step {history_step.step_id}: {history_step.agent_state.summary}")
+
+                # Log the memories
+                if params.use_memorizer:
+                    log.info("Memories:")
+                    for memory_id, memory in global_state.memories.items():
+                        log.info(f"  {memory_id}: {memory}")
+
+                # Log the step
+                log.info(f"Step: {step_id + 1} of {params.max_steps}")
+
                 # Log the environment state
                 log.info(f"Environment:")
                 log.info(f"  Feedback: {env_state.feedback}")
@@ -205,13 +227,36 @@ for params in runs:
 
                 # Use the ReAct agent
                 if params.use_react:
-                    # Get the agent's action using ReAct
                     thought, action = react.execute(global_state)
                     agent_writer.write(params, episode_id, step_id + 1, "react", react.messages)
                     agent_state.thought = thought
                     agent_state.action = action
                     log.info(f"  Thought: {thought}")
                     log.info(f"  Action: {action}")
+
+                # Use the ReAct-k1 agent
+                if params.use_react_k1:
+                    thought, action = react_k1.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react_k1", react_k1.messages)
+                    agent_state.thought = thought
+                    agent_state.action = action
+                    log.info(f"  Thought: {thought}")
+                    log.info(f"  Action: {action}")
+
+                # Get the summarizer's summary
+                if params.use_summarizer:
+                    summary = summarizer.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "summarizer", summarizer.messages)
+                    agent_state.summary = summary
+                    log.info(f"  Summary: {summary}")
+
+                # Get the memorizer's memory updates
+                if params.use_memorizer:
+                    memory_updates = memorizer.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "memorizer", memorizer.messages)
+                    global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
+                    agent_state.memory = memory_updates
+                    log.info(f"  Memory: {memory_updates}")
 
                 # Get the reasoner's thought
                 if params.use_reasoner:
@@ -227,13 +272,6 @@ for params in runs:
                     agent_state.action = action
                     log.info(f"  Action: {action}")
 
-                # Get the summarizer's summary
-                if params.use_summarizer:
-                    summary = summarizer.execute(global_state)
-                    agent_writer.write(params, episode_id, step_id + 1, "summarizer", summarizer.messages)
-                    agent_state.summary = summary
-                    log.info(f"  Summary: {summary}")
-
                 # Create details row
                 details_row = details_manager.create()
                 details_row.step_id = step_id + 1
@@ -244,6 +282,7 @@ for params in runs:
                 details_row.score = env_state.score
                 details_row.final_reward = env_state.reward
                 details_row.is_done = env_state.is_done
+                details_row.summary = agent_state.summary
                 details_row.thought = agent_state.thought
                 details_row.action = agent_state.action
                 details_manager.add(details_row)
@@ -322,8 +361,10 @@ for params in runs:
 
     # Display the summaries
     print(f"Total Tasks: {summary.tasks}")
-    print(f"Correct Tasks: {summary.successes}")
     print(f"Accuracy: {summary.accuracy:.0%}")
+    print(f"Correct Tasks: {summary.successes}")
+    print(f"Failed Tasks: {summary.failures}")
+    print(f"Errors: {summary.errors}")
     print(f"Total Tokens: {summary.total_tokens}")
     print(f"Total Cost: ${summary.total_cost:.2f}")
     print(f"Total Time: {summary.total_time:.2f} seconds")

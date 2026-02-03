@@ -44,10 +44,11 @@ class Summarizer(Agent):
                 + "\n"
 
             # Add the agent state
-            user_content += f"Agent:\n" \
-                + f"  Thought: {agent_state.thought}\n" \
-                + f"  Action: {agent_state.action}\n" \
-                + "\n"
+            user_content += f"Agent:\n"
+            if self.params.use_summarizer:
+                user_content += f"  Thought: {agent_state.thought}\n"
+            user_content += f"  Action: {agent_state.action}\n"
+            user_content += "\n"
 
         user_message = {"role": "user", "content": user_content}
 

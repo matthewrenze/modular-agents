@@ -170,5 +170,7 @@ cython_debug/
 **/data/cache/**
 **/data/logs/**
 **/data/messages/**
+**/data/reviews/**
 **/data/states/**
 **/data/workspaces/**
+**/prod/**

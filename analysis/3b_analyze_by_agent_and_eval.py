@@ -43,11 +43,16 @@ if summaries["tasks"].nunique() != 1:
 
 # Order agents
 agent_order = [
+    "react",
+    "react-k1",
     "baseline",
     "plus-tasker",
     "plus-reasoner",
+    "plus-summarizer-v2",
+    "plus-memorizer-v1",
     # "minus-tasker",
     # "minus-reasoner",
+    # "minus-summarizer",
     "topline"
 ]
 
@@ -87,7 +92,7 @@ plt.title(f"Accuracy by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Accuracy (task completion rate)")
 plt.ylim(0.0, 1.0)
-plt.xticks(rotation=45, ha='right')
+plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent")
 plt.savefig(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')

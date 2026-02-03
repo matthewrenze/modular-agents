@@ -9,6 +9,7 @@ class DetailsRow:
         self.score = ""
         self.reward = 0.0
         self.is_done = False
+        self.summary = ""
         self.thought = ""
         self.action = ""
         self.error = ""

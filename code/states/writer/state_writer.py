@@ -12,12 +12,32 @@ class StateWriter:
         folder_path = f"../data/states/{params.agent_name} - {params.model_name} - {params.eval_name}"
         os.makedirs(folder_path, exist_ok=True)
 
+        # Deep copy the state
+        data = state.model_dump(mode="python")
+
+        # Wrap memory as a YAML string literal
+        # Note: to render block literal "|"
+        for step in data.get("step_history", []):
+            agent = step.get("agent_state") or {}
+            mem = agent.get("memory")
+            if isinstance(mem, str) and "\n" in mem:
+                agent["memory"] = LiteralStr(mem)
+
         # Write the file
         file_path = f"{folder_path}/{episode_id}.yaml"
         with open(file_path, "w", encoding="utf-8") as file:
             yaml.safe_dump(
-                state.model_dump(mode="python"),
+                data,
                 file,
                 sort_keys=False,
                 default_flow_style=False,
                 allow_unicode=True)
+
+
+class LiteralStr(str):
+    pass
+
+def literal_str_representer(dumper, data):
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+
+yaml.add_representer(LiteralStr, literal_str_representer, Dumper=yaml.SafeDumper)
