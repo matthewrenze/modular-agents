@@ -12,59 +12,31 @@ class Actor(Agent):
         system_message = {"role": "system", "content": self.system_prompt.strip()}
         self.messages.append(system_message)
 
-        # Add the task to the user prompt
-        task_state = state.task_state
-        user_content = f"Task: {task_state.task}\n"
+        # Add the task
+        user_content = self.renderer.render_task(state.task_state)
         user_content += "\n"
 
         # Add the history
         if self.params.use_summarizer:
-            user_content += "History:\n"
-            for step in state.step_history[:-2]:
-                user_content += f"  Step {step.step_id}: {step.agent_state.summary}\n"
+            previous_steps = state.step_history[:-2]
+            user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
         # Add the memories
         if self.params.use_memorizer:
-            user_content += "Memories:\n"
-            for id, memory in state.memories.items():
-                user_content += f"  {id}: {memory}\n"
+            user_content += self.renderer.render_memories(state.memories)
             user_content += "\n"
 
-        # Get the previous n steps (plus current step) from the history
-        previous_steps = state.step_history[-2:]
-
-        for index, step in enumerate(previous_steps):
-            env_state = step.env_state
-            agent_state = step.agent_state
-            user_content += f"# Step: {step.step_id} of {task_state.max_steps}\n"
-
-            # Append the environment state
-            user_content += f"Environment:\n" \
-                + f"  Feedback: {step.env_state.feedback}\n" \
-                + f"  Location: {step.env_state.location}\n" \
-                + f"  Description: {step.env_state.description}\n" \
-                + f"  Inventory: {step.env_state.inventory}\n" \
-                + f"  Capacity: {env_state.items} of {task_state.max_items} items\n" \
-                + f"  Score: {env_state.score} of {task_state.max_score}\n" \
-                + f"  Done: {env_state.is_done}\n" \
-                + "\n"
-
-            # Add the agent state
-            user_content += f"Agent:\n"
-
-            # Add the thought
-            if self.params.use_reasoner:
-                user_content += f"  Thought: {agent_state.thought}\n"
-
-            # Only include the action if it's not the last step
-            if index < len(previous_steps) - 1:
-                user_content += f"  Action: {agent_state.action}\n"
-                user_content += "\n"
-
-        user_message = {"role": "user", "content": user_content}
+        # Add the last two steps
+        current_steps = state.step_history[-2:]
+        for index, step in enumerate(current_steps):
+            user_content += self.renderer.render_step(step, state.task_state)
+            user_content += self.renderer.render_env(step.env_state, state.task_state)
+            user_content += self.renderer.render_agent(step.agent_state)
+            user_content += "\n"
 
         # Add the user prompt
+        user_message = {"role": "user", "content": user_content}
         self.messages.append(user_message)
 
         # Get the response from the model

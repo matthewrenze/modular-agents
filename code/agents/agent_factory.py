@@ -1,8 +1,9 @@
+from renderers.renderer_factory import RendererFactory
 from common.parameters import Parameters
 from agents.agent import Agent
 from models.model import Model
 from agents.react.react_agent import ReactAgent
-from agents.react_k1.react_agent import ReactAgentK1
+from agents.react_k1.react_k1_agent import ReactAgentK1
 from agents.tasker.tasker import Tasker
 from agents.summarizer.summarizer import Summarizer
 from agents.memorizer.memorizer import Memorizer
@@ -13,6 +14,10 @@ from prompts.system_prompt_factory import SystemPromptFactory
 
 class AgentFactory:
     def create(self, subagent: str, params: Parameters, model: Model) -> Agent:
+
+        # Create the renderer
+        renderer_factory = RendererFactory()
+        renderer = renderer_factory.create()
 
         # Load the system prompt template
         subagent_folder = subagent.replace("-", "_")
@@ -26,27 +31,27 @@ class AgentFactory:
 
         # Create the appropriate agent
         if subagent == "react":
-            return ReactAgent(model, system_prompt, params)
+            return ReactAgent(model, renderer, system_prompt, params)
 
         if subagent == "react-k1":
-            return ReactAgentK1(model, system_prompt, params)
+            return ReactAgentK1(model, renderer, system_prompt, params)
 
         if subagent == "tasker":
-            return Tasker(model, system_prompt, params)
+            return Tasker(model, renderer, system_prompt, params)
 
         if subagent == "summarizer":
-            return Summarizer(model, system_prompt, params)
+            return Summarizer(model, renderer, system_prompt, params)
 
         if subagent == "memorizer":
-            return Memorizer(model, system_prompt, params)
+            return Memorizer(model, renderer, system_prompt, params)
 
         if subagent == "reasoner":
-            return Reasoner(model, system_prompt, params)
+            return Reasoner(model, renderer, system_prompt, params)
 
         if subagent == "actor":
-            return Actor(model, system_prompt, params)
+            return Actor(model, renderer, system_prompt, params)
 
         if subagent == "reviewer":
-            return Reviewer(model, system_prompt, params)
+            return Reviewer(model, renderer, system_prompt, params)
 
         raise ValueError(f"Unknown subagent type: {subagent}")

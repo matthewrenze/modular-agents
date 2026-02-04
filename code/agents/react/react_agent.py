@@ -16,28 +16,17 @@ class ReactAgent(Agent):
         # Add the task to the first user prompt
         user_content = ""
         if state.task_state.step_id == 1:
-            user_content += f"Task: {state.task_state.task}\n"
+            user_content += self.renderer.render_task(state.task_state)
 
-        # Get the last step's state
-        task_state = state.task_state
+        # Add the last step
         step_state = state.step_history[-1]
-
-        # Prepare the user prompt
-        env_state = step_state.env_state
-        user_content += f"# Step: {step_state.step_id} of {task_state.max_steps}\n"
-        user_content += f"Environment:\n" \
-            + f"  Feedback: {step_state.env_state.feedback}\n" \
-            + f"  Location: {step_state.env_state.location}\n" \
-            + f"  Description: {step_state.env_state.description}\n" \
-            + f"  Inventory: {step_state.env_state.inventory}\n" \
-            + f"  Capacity: {env_state.items} of {task_state.max_items} items\n" \
-            + f"  Score: {env_state.score} of {task_state.max_score}\n" \
-            + f"  Done: {env_state.is_done}\n" \
-            + "\n"
+        user_content + self.renderer.render_step(step_state, state.task_state)
+        user_content += self.renderer.render_env(step_state.env_state, state.task_state)
+        user_content += "\n"
 
         # Append the user message
-        prompt_message = {"role": "user", "content": user_content}
-        self.messages.append(prompt_message)
+        user_message = {"role": "user", "content": user_content}
+        self.messages.append(user_message)
 
         # Get the response from the model
         response = self.model.get_response(self.messages)

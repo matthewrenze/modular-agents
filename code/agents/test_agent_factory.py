@@ -3,7 +3,7 @@ from common.parameters import Parameters
 from models.model import Model
 from agents.agent_factory import AgentFactory
 from agents.react.react_agent import ReactAgent
-from agents.react_k1.react_agent import ReactAgentK1
+from agents.react_k1.react_k1_agent import ReactAgentK1
 from agents.tasker.tasker import Tasker
 from agents.summarizer.summarizer import Summarizer
 from agents.memorizer.memorizer import Memorizer

@@ -55,7 +55,7 @@ class TextWorldEnv:
         score = 0
         max_score = infos["max_score"]
 
-        # Clean up the description
+        # Clean up the text
         description = self.remove_location(description)
         description = self.clean_text(description)
 
@@ -102,7 +102,7 @@ class TextWorldEnv:
         max_score = infos["max_score"]
         reward = score / max_score
 
-        # Clean up the descriptions
+        # Clean up the text
         feedback = self.remove_location(feedback)
         feedback = self.clean_text(feedback)
         description = self.remove_location(description)

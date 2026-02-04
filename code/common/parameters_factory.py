@@ -24,13 +24,13 @@ class ParametersFactory:
             return parameters
 
         # Create baseline agent
-        if agent_name == "baseline":
+        if agent_name.startswith("baseline"):
             parameters = self.minus_all(parameters)
             parameters.use_actor = True
             return parameters
 
         # Create topline agent
-        if agent_name == "topline":
+        if agent_name.startswith("topline"):
             parameters = self.plus_all(parameters)
             return parameters
 

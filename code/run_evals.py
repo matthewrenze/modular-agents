@@ -10,6 +10,7 @@ from evals.eval_factory import EvalFactory
 from models.cost_calculator import CostCalculator
 from models.model_factory import ModelFactory
 from agents.agent_factory import AgentFactory
+from renderers.renderer_factory import RendererFactory
 from states.env_state import EnvState
 from states.global_state import GlobalState
 from states.step_state import StepState
@@ -27,16 +28,17 @@ from typing import cast
 agent_names = [
     # "react",
     # "react-k1",
-    # "baseline-v1",
+    "baseline-v2",
     # "plus-tasker-v2",
+    # "plus-planner-v1"
     # "plus-summarizer-v2",
-    "plus-memorizer-v1",
+    # "plus-memorizer-v1",
     # "plus-reasoner-v1",
     # "minus-tasker",
     # "minus-summarizer",
     # "minus-memorizer",
     # "minus-reasoner"
-    # "topline-v1"
+    "topline-v2"
 ]
 
 # Set models
@@ -46,18 +48,18 @@ model_names = [
 ]
 
 # Set evals
-eval_size = 10
+eval_size = 1
 eval_env_names = [
     ("tw-simple-1", "textworld"),
-    ("tw-treasure-1", "textworld"),
-    ("tw-treasure-2", "textworld"),
-    ("tw-treasure-3", "textworld"),
-    ("tw-coin-1", "textworld"),
-    ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
-    ("tw-cooking-1", "textworld"),
-    ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-treasure-1", "textworld"),
+    # ("tw-treasure-2", "textworld"),
+    # ("tw-treasure-3", "textworld"),
+    # ("tw-coin-1", "textworld"),
+    # ("tw-coin-2", "textworld"),
+    # ("tw-coin-3", "textworld"),
+    # ("tw-cooking-1", "textworld"),
+    # ("tw-cooking-2", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -115,7 +117,8 @@ for params in runs:
     for episode_id in episode_ids:
 
         # Create the log
-        log = Log(params, episode_id)
+        renderer = RendererFactory.create()
+        log = Log(renderer, params, episode_id)
         log.head(f"--- Starting {params.agent_name} - {params.model_name} - {params.eval_name} - episode {episode_id} / {num_episodes} ---")
         
         # Create the episode
@@ -197,30 +200,19 @@ for params in runs:
                 global_state.task_state.step_id = step_id + 1
                 step_state.env_state = env_state
 
+                # Log the step
+                log.step(step_state, global_state.task_state)
+
                 # Log the history
                 if params.use_summarizer:
-                    log.info("History:")
-                    for history_step in global_state.step_history[:-1]:
-                        log.info(f"  Step {history_step.step_id}: {history_step.agent_state.summary}")
+                    log.history(global_state.step_history[:-1])
 
                 # Log the memories
                 if params.use_memorizer:
-                    log.info("Memories:")
-                    for memory_id, memory in global_state.memories.items():
-                        log.info(f"  {memory_id}: {memory}")
-
-                # Log the step
-                log.info(f"Step: {step_id + 1} of {params.max_steps}")
+                    log.memories(global_state.memories)
 
                 # Log the environment state
-                log.info(f"Environment:")
-                log.info(f"  Feedback: {env_state.feedback}")
-                log.info(f"  Location: {env_state.location}")
-                log.info(f"  Description: {env_state.description}")
-                log.info(f"  Inventory: {env_state.inventory}")
-                log.info(f"  Capacity: {env_state.items} of {global_state.task_state.max_items}")
-                log.info(f"  Score: {env_state.score} of {global_state.task_state.max_score}")
-                log.info(f"  Done: {env_state.is_done}")
+                log.env(env_state, global_state.task_state)
 
                 # Log the agent state
                 log.info(f"Agent:")
@@ -256,7 +248,8 @@ for params in runs:
                     agent_writer.write(params, episode_id, step_id + 1, "memorizer", memorizer.messages)
                     global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
                     agent_state.memory = memory_updates
-                    log.info(f"  Memory: {memory_updates}")
+                    memory_updates = renderer.render_memory_items(memory_updates)
+                    log.info(f"  Memory:\n{memory_updates}")
 
                 # Get the reasoner's thought
                 if params.use_reasoner:

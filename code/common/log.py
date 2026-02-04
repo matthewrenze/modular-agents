@@ -1,6 +1,11 @@
 import os
 import re
 from common.parameters import Parameters
+from renderers.render import Renderer
+from states.task_state import TaskState
+from states.step_state import StepState
+from states.env_state import EnvState
+from states.agent_state import AgentState
 
 # Define the ANSI colors
 BOLD_WHITE = "\033[97m"
@@ -11,21 +16,19 @@ RED = "\033[91m"
 RESET = "\033[0m"
 
 class Log:
-    def __init__(self, params: Parameters, episode_id):
+    def __init__(self, renderer: Renderer, params: Parameters, episode_id):
+        self.renderer = renderer
         folder_path = f"../data/logs/{params.agent_name} - {params.model_name} - {params.eval_name}"
         os.makedirs(folder_path, exist_ok=True)
         file_path = f"{folder_path}/{episode_id}.txt"
         self.file = open(file_path, "w", encoding="utf-8", newline="\n")
-
-    def print(self, text):
-        print(f"{WHITE}{text}{RESET}")
 
     def head(self, text):
         self.file.write(f"{text}\n")
         print(f"{BOLD_WHITE}{text}{RESET}")
 
     def info(self, text):
-        text = self.clean_info(text)
+        # text = self.clean_info(text)
         self.file.write(f"{text}\n")
         print(f"{WHITE}{text}{RESET}")
 
@@ -41,32 +44,42 @@ class Log:
         self.file.write(f"Error: {error}\n")
         print(f"{RED}Error: {error}{RESET}")
 
+    def raw(self, text):
+        text = text.lstrip().rstrip()
+        self.file.write(text)
+        print(text)
+
+    def task(self, task_state: TaskState):
+        task_text = self.renderer.render_task(task_state)
+        self.raw(task_text)
+
+    def step(self, step_index: StepState, task_state: TaskState):
+        step_text = self.renderer.render_step(step_index, task_state)
+        self.raw(step_text)
+
+    def history(self, step_history: list[StepState]):
+        history_text = self.renderer.render_history(step_history)
+        self.raw(history_text)
+
+    def memories(self, memories: dict[int, str]):
+        memories_text = self.renderer.render_memories(memories)
+        self.raw(memories_text)
+
+    def env(self, env_state: EnvState, task_state: TaskState):
+        env_text = self.renderer.render_env(env_state, task_state)
+        self.raw(env_text)
+
+    def agent(self, agent_state: AgentState):
+        agent_text = self.renderer.render_agent(agent_state)
+        self.raw(agent_text)
+
     def close(self):
         self.file.flush()
         self.file.close()
 
-    @staticmethod
-    def clean_info(text):
-        text = re.sub(r'\n+', '\n', text)
-        text = re.sub('\n', ' ', text)
-        text = re.sub(r'(?<!^)\s+', ' ', text)
-        return text
-
-# Test the log
-if __name__ == "__main__":
-
-    params = Parameters(
-        agent_name="test_agent",
-        model_name="test_model",
-        env_name="test_env",
-        eval_name="test_eval",
-        max_steps=10)
-
-    log = Log(params, 0)
-    log.head("Here is a heading")
-    log.print("Here is printed text")
-    log.info("Here is logged text")
-    log.debug("Here is debug text")
-    log.warning("Here is a warning message")
-    log.error("Here is a error message")
-    log.close()
+    # @staticmethod
+    # def clean_info(text):
+    #     text = re.sub(r'\n+', '\n', text)
+    #     text = re.sub('\n', ' ', text)
+    #     text = re.sub(r'(?<!^)\s+', ' ', text)
+    #     return text

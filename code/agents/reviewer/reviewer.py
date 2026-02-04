@@ -25,37 +25,15 @@ class Reviewer(Agent):
             + f"Max Steps: {task_state.max_steps}\n" \
             + "\n"
 
-        # Get the previous steps from the history
+        # Add the previous steps
         previous_steps = state.step_history
-
         for index, step in enumerate(previous_steps):
-            env_state = step.env_state
-            agent_state = step.agent_state
-            user_content += f"Step: {step.step_id} of {task_state.max_steps}\n"
-
-            # Append the environment state
-            user_content += f"Environment:\n" \
-                + f"  Feedback: {env_state.feedback}\n" \
-                + f"  Location: {env_state.location}\n" \
-                + f"  Description: {env_state.description}\n" \
-                + f"  Inventory: {env_state.inventory}\n" \
-                + f"  Capacity: {env_state.items} of {task_state.max_items}\n" \
-                + f"  Score: {env_state.score} of {task_state.max_score}\n" \
-                + f"  Done: {env_state.is_done}\n"
-
-            # For the last step, don't include the observation
-            if index == len(previous_steps) - 1:
-                continue
-
-            # Append the agent state
-            user_content += f"Agent State:\n" \
-                + f"  Thought: {agent_state.thought}\n" \
-                + f"  Action: {agent_state.action}\n" \
-                + "\n"
-
-        user_message = {"role": "user", "content": user_content}
+            user_content += self.renderer.render_step(step, task_state)
+            user_content += self.renderer.render_env(step.env_state, task_state)
+            user_content += self.renderer.render_agent(step.agent_state)
 
         # Add the user prompt
+        user_message = {"role": "user", "content": user_content}
         self.messages.append(user_message)
 
         # Get the response from the model

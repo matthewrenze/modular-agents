@@ -55,8 +55,8 @@ For example, "create: At step 1, the carrot was on the counter in the kitchen."
 To delete a memory, use "delete: <memory-id>".
 For example, "delete: 2" deletes the memory with id=2 in the list.
 If you have no changes to make to the memory list, respond with an empty string.
+Before creating new memories, be sure to delete any old or obsolete memories first.
 You can create or delete multiple memories in a single response by separating each action with a newline.
-Delete old or obsolete memories before creating new ones.
 For example:
 ```
 delete: 1

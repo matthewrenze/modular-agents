@@ -20,60 +20,28 @@ class ReactAgentK1(Agent):
         system_message = {"role": "system", "content": self.system_prompt.strip()}
         self.messages.append(system_message)
 
-        # Create the task prompt
-        task_state = state.task_state
-        task_user_content = ""
-        task_user_content += f"Task: {task_state.task}\n"
-
         # Add the task message
+        task_user_content = self.renderer.render_task(state.task_state)
         task_message = {"role": "user", "content": task_user_content}
         self.messages.append(task_message)
 
-        # Create the previous step's env state
+        # Add the previous step user (env) message
         if len(state.step_history) > 1:
-            previous_state = state.step_history[-2]
-            previous_env_state = previous_state.env_state
-            previous_user_content = f"# Step: {previous_state.step_id} of {task_state.max_steps}\n"
-            previous_user_content += f"Environment:\n" \
-                + f"  Feedback: {previous_env_state.feedback}\n" \
-                + f"  Location: {previous_env_state.location}\n" \
-                + f"  Description: {previous_env_state.description}\n" \
-                + f"  Inventory: {previous_env_state.inventory}\n" \
-                + f"  Capacity: {previous_env_state.items} of {task_state.max_items} items\n" \
-                + f"  Score: {previous_env_state.score} of {task_state.max_score}\n" \
-                + f"  Done: {previous_env_state.is_done}\n" \
-                + "\n"
-
-            # Add the previous user message
+            previous_step = state.step_history[-2]
+            previous_user_content = self.renderer.render_step(previous_step)
+            previous_user_content += self.renderer.render_env(previous_step.env_state, state.task_state)
             previous_user_message = {"role": "user", "content": previous_user_content}
             self.messages.append(previous_user_message)
 
-            # Create the previous step's agent state
-            previous_agent_state = previous_state.agent_state
-            previous_agent_content = f"Agent:\n" \
-                + f"  Thought: {previous_agent_state.thought}\n" \
-                + f"  Action: {previous_agent_state.action}\n" \
-                + "\n"
-
-            # Add the previous agent message
+            # Add the previous step model (agent) message
+            previous_agent_content = self.renderer.render_agent(previous_step.agent_state)
             previous_agent_message = {"role": "assistant", "content": previous_agent_content}
             self.messages.append(previous_agent_message)
 
-        # Create the current user prompt
-        current_state = state.step_history[-1]
-        env_state = current_state.env_state
-        current_user_content = f"# Step: {current_state.step_id} of {task_state.max_steps}\n"
-        current_user_content += f"Environment:\n" \
-            + f"  Feedback: {current_state.env_state.feedback}\n" \
-            + f"  Location: {current_state.env_state.location}\n" \
-            + f"  Description: {current_state.env_state.description}\n" \
-            + f"  Inventory: {current_state.env_state.inventory}\n" \
-            + f"  Capacity: {env_state.items} of {task_state.max_items} items\n" \
-            + f"  Score: {env_state.score} of {task_state.max_score}\n" \
-            + f"  Done: {env_state.is_done}\n" \
-            + "\n"
-
-        # Add the current user message
+        # Add the current step's user (env) message
+        current_step = state.step_history[-1]
+        current_user_content = self.renderer.render_step(current_step)
+        current_user_content += self.renderer.render_env(current_step.env, state.task_state)
         prompt_message = {"role": "user", "content": current_user_content}
         self.messages.append(prompt_message)
 
