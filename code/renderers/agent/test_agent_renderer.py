@@ -6,34 +6,39 @@ class TestAgentRenderer:
     def test_render(self):
         agent_state = AgentState(
             summary="summary 1",
-            memory="memory 1",
+            plan="add: 1\ninsert: 2\nupdate: 3\nmark: 4\ndelete: 5",
+            memory="delete: 1\ncreate: 2",
             thought="thought 1",
             action="action 1")
-
-        renderer = AgentRenderer()
-        rendered_output = renderer.render(agent_state)
-
-        expected_output = (
+        expected = (
             "Agent:\n"
             "  Summary: summary 1\n"
-            "  Memory:\n memory 1\n"
+            "  Plan:\n"
+            "    add: 1\n"
+            "    insert: 2\n"
+            "    update: 3\n"
+            "    mark: 4\n"
+            "    delete: 5\n"
+            "  Memory:\n"
+            "    delete: 1\n"
+            "    create: 2\n"
             "  Thought: thought 1\n"
             "  Action: action 1\n")
 
-        assert rendered_output == expected_output
+        renderer = AgentRenderer()
+        actual = renderer.render(agent_state)
+
+        assert actual == expected
 
     def test_render_empty(self):
-
         agent_state = AgentState(
             summary="",
             memory="",
             thought="",
-            action=""
-        )
+            action="")
+        expected = "Agent:\n"
 
         renderer = AgentRenderer()
-        rendered_output = renderer.render(agent_state)
+        actual = renderer.render(agent_state)
 
-        expected_output = "Agent:\n"
-
-        assert rendered_output == expected_output
+        assert actual == expected

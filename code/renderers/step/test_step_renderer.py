@@ -11,10 +11,9 @@ class TestStepRenderer:
             env_state=EnvState(),
             agent_state=AgentState())
         task_state = TaskState(max_steps=2)
+        expected = "Step: 1 of 2\n"
 
         renderer = StepRenderer()
-        rendered_output = renderer.render(step_state, task_state)
+        actual = renderer.render(step_state, task_state)
 
-        expected_output = "Step: 1 of 2\n"
-
-        assert rendered_output == expected_output
+        assert actual == expected

@@ -16,6 +16,10 @@ class SystemFactory:
         if not params.use_summarizer:
             section = self.remove_line(section, "Summarizer")
 
+        # Filter planner
+        if not params.use_planner:
+            section = self.remove_line(section, "Planner")
+
         # Filter memorizer
         if not params.use_memorizer:
             section = self.remove_line(section, "Memorizer")

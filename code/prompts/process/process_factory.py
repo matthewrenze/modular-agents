@@ -11,18 +11,25 @@ class ProcessFactory:
 
         # Filter tasker
         if not params.use_tasker:
-            section = self.remove_line(section, "Tasker")
+            section = self.remove_line(section, "Task")
 
         # Filter summarizer
         if not params.use_summarizer:
-            section = self.remove_line(section, "Summarizer")
+            section = self.remove_line(section, "History")
+            section = self.remove_line(section, "Summary")
 
+        # Filter planner
         if not params.use_memorizer:
-            section = self.remove_line(section, "Memorizer")
+            section = self.remove_line(section, "Plan")
+
+        # Filter memorizer
+        if not params.use_memorizer:
+            section = self.remove_line(section, "Memories")
+            section = self.remove_line(section, "Memory")
 
         # Filter reasoner
         if not params.use_reasoner:
-            section = self.remove_line(section, "Reasoner")
+            section = self.remove_line(section, "Thought")
 
         # Add "(you)" tag to the specified subagent
         subagent_name = subagent_name.capitalize()
@@ -34,7 +41,7 @@ class ProcessFactory:
     def remove_line(section: str, subagent_name: str) -> str:
         filtered_lines = []
         for line in section.splitlines():
-            subagent_tag = f"({subagent_name})"
+            subagent_tag = f" - {subagent_name}"
             if subagent_tag not in line:
                 filtered_lines.append(line)
         return "\n".join(filtered_lines)

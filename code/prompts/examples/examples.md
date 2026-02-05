@@ -1,7 +1,9 @@
-## Example 1
+## Example 1 - Basic successful execution from initial state
 Task: Dice the carrot in the kitchen.
 
 History: N/A
+
+Plan: N/A
 
 Memories: N/A
 
@@ -16,6 +18,9 @@ Environment:
   Done: False
 Agent:
   Summary: I started in the living room.
+  Plan: 
+    add: Go to the kitchen
+    add: Dice the carrot
   Memory: 
     create: At step 1, the kitchen was north of the living room.
   Thought: I need to go to the kitchen, so I can find the carrot.
@@ -32,18 +37,26 @@ Environment:
   Done: False
 Agent:
   Summary: I went north → I arrived in the kitchen
+  Plan:
+    mark: 1 = done
+    insert: 2 = Get the knife
   Memory: 
     create: At step 2, there was a carrot on the counter in the kitchen.
     create: At step 2, there was a knife on the table in the kitchen.
   Thought: I need a knife to dice the carrot.
   Action: take knife from table
 
-## Example 2
+## Example 2 - Correcting a mistake
 Task: Dice the carrot in the kitchen.
 
 History:
   Step 1: I started in the living room.
   Step 2: I went north → I arrived in kitchen
+
+Plan:
+  1 [X] Go to the kitchen
+  2 [ ] Get the knife
+  3 [ ] Dice the carrot
 
 Memories:
   1: At step 1, the kitchen was north of the living room.
@@ -61,6 +74,8 @@ Environment:
   Done: False
 Agent:
   Summary: I took knife from table → the knife was added to my inventory
+  Plan:
+    mark: 2 = done
   Memory: 
     delete: 3
   Thought: I need to dice the carrot with the knife.
@@ -77,12 +92,14 @@ Environment:
   Done: False
 Agent:
   Summary: I diced the carrot with the knife → I failed because carrot must be in my inventory
+  Plan:
+    insert: 3 = Get the carrot
   Memory: 
     create: At step 4, I failed to dice the carrot because I needed to take it from the counter first.
   Thought: I need to take the carrot from the counter before I can dice it.
   Action: take carrot from counter
 
-## Example 3
+## Example 3 - Recovering from mistake
 Task: Dice the carrot in the kitchen.
 
 History:
@@ -90,6 +107,12 @@ History:
   Step 2: I went north → I arrived in kitchen
   Step 3: I took knife from table → the knife was added to my inventory
   Step 4: I diced the carrot with the knife → I failed because carrot must be in my inventory
+
+Plan:
+  1 [X] Go to the kitchen.
+  2 [X] Get the knife
+  3 [ ] Get the carrot
+  4 [ ] Dice the carrot
 
 Memories:
   1: At step 1, the kitchen was north of the living room.
@@ -107,6 +130,8 @@ Environment:
   Done: False
 Agent:
   Summary: I took the carrot from the counter → the carrot was added to my inventory
+  Plan:
+    mark: 3 = done
   Memory: 
     delete: 2
     delete: 4
@@ -124,6 +149,8 @@ Environment:
   Done: True
 Agent:
   Summary: I diced the carrot with the knife → the carrot is diced; the task is complete
+  Plan:
+    mark: 4 = done
   Memory:
   Thought: I have completed the task successfully, so I should quit.
   Action: quit

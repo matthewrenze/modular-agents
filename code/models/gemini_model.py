@@ -2,20 +2,12 @@ import os
 import time
 from google import genai
 from common.console import warn
+from models.model import Model
 
-class GeminiModel:
+class GeminiModel(Model):
     def __init__(self, model_name):
         self.api_key = os.environ["GOOGLE_API_KEY"]
-        self.model_name = model_name
-        self.input_tokens = 0
-        self.output_tokens = 0
-        self.total_tokens = 0
         self.client = genai.Client(api_key=self.api_key)
-
-    def reset(self):
-        self.input_tokens = 0
-        self.output_tokens = 0
-        self.total_tokens = 0
 
     def get_response(self, messages):
         
@@ -51,8 +43,8 @@ class GeminiModel:
                 # Accumulate tokens
                 usage = response.usage_metadata
                 self.input_tokens += usage.prompt_token_count
-                self.output_tokens += (usage.thoughts_token_count or 0) \
-                    + (usage.candidates_token_count or 0)
+                self.reasoning_tokens += usage.thoughts_token_count or 0
+                self.output_tokens += usage.candidates_token_count or 0
                 self.total_tokens += usage.total_token_count
 
                 return content

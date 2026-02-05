@@ -18,11 +18,7 @@ class TestEnvRenderer:
             max_steps=3,
             max_items=4,
             max_score=5)
-
-        renderer = EnvRenderer()
-        rendered_output = renderer.render(env_state, task_state)
-
-        expected_output = (
+        expected = (
             "Environment:\n"
             "  Feedback: feedback 1\n"
             "  Location: location 1\n"
@@ -32,18 +28,16 @@ class TestEnvRenderer:
             "  Score: 2 of 5\n"
             "  Done: False\n")
 
-        assert rendered_output == expected_output
+        renderer = EnvRenderer()
+        actual = renderer.render(env_state, task_state)
+
+        assert actual == expected
 
     def test_render_empty_feedback(self):
         env_state = EnvState(
             feedback="")
-
         task_state = TaskState()
-
-        renderer = EnvRenderer()
-        rendered_output = renderer.render(env_state, task_state)
-
-        expected_output = (
+        expected = (
             "Environment:\n"
             "  Location: \n"
             "  Description: \n"
@@ -52,5 +46,8 @@ class TestEnvRenderer:
             "  Score: 0 of 0\n"
             "  Done: False\n")
 
-        assert rendered_output == expected_output
+        renderer = EnvRenderer()
+        actual = renderer.render(env_state, task_state)
+
+        assert actual == expected
 

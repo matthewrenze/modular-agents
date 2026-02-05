@@ -4,12 +4,18 @@ At the start of the episode, the environment will provide us with:
   - State - the initial state of the environment.
 Then, we will provide:
   - Task (Tasker) - a clear and concise description of the task to be completed.
+  - Plan (Planner) - a detailed plan of action outlining the steps needed to complete the task.
 We will complete the task through a series of steps in an iterative loop.
 
 ## Each Step of the Episode
 At each step of the episode, we will be provided with:
   - Step - the current step number.
-Next, the environment will provide us with:
+Next, we will provide:
+  - Task (Tasker) - a reminder of the task to be completed.
+  - History (Summarizer) - a summary of all previous action-outcome pairs.
+  - Plan (Planner) - the current plan of action, including any updates made in previous steps.
+  - Memories (Memorizer) - any important information we have remembered so far.
+Then, the environment will provide us with:
   - Feedback - the feedback from the last action we took.
   - Location - our current location in the environment.
   - Description - the current state of the environment.
@@ -17,8 +23,9 @@ Next, the environment will provide us with:
   - Capacity - the current and maximum number of items in inventory.
   - Score - our current score and maximum possible score.
   - Done - whether the task is complete or not.
-Then, we will provide:
+Next, we will provide:
   - Summary (Summarizer) - a summary of the action-outcome pair for the previous step.
+  - Plan (Planner) - any updates to the plan of action based on the current state.
   - Memory (Memorizer) - any important information we need to remember for future steps.
   - Thought (Reasoner) - a goal-oriented chain-of-reasoning from the current state to the best next action.
   - Action (Actor) - a command that we will execute in our environment.

@@ -22,7 +22,8 @@ Your review will provide the following:
  - Steps: a step-by-step analysis of any step-wise failures, inefficiencies, or N/A for productive steps.
  - Loops: the sequence of steps where the unproductive loops occurred and the cause of the loop, if any; or N/A.
  - Summary: if the task failed, a summary of the key cause of the failure; if the task succeeded, write N/A.
- - Category: A very short description of the failure mode, inefficiency, or loop that occurred; or N/A.
+ - Category: A very short description (or descriptions) of the failure mode, inefficiency, or loop that occurred; or N/A.
+ - Agent: the name of the agent (or agents) that was responsible for the failure, inefficiency, or loop; or N/A.
  - Advice: recommendations for how to improve the agent to avoid these types of issues in the future; or N/A.
 
 # Categories
@@ -32,15 +33,18 @@ Possible categories of failure or inefficiency include, but are not limited to:
  - Unproductive loop
  - Irreversible action
  - Inventory mismanagement
+ - Max step limit reached
 
 # Format
  - Your response should be in YAML format.
  - Your response should contain only Steps, Loops, Summary, Category, and Advice fields.
  - Use a new-line to separate each step in the steps section.
- - Each step should be formatted as "  {step-number}: {step-analysis}".
+ - Each step should be formatted as "  [step-number]: [step-analysis]".
  - There should be two spaces before the step number.
+ - Separate multiple categories and agents with a comma and a space
  - Do not include any new lines within individual steps or other fields
- - Do not include any colons in your response except after the field names and step numbers.
+ - Do not include any colons ":" in your response except after the field names and step numbers.
+ - Do not include any colons ":" in your [step-analysis] to avoid confusing the YAML parser.
  - Do not include any other text in your response.
 
 # Constraints
@@ -116,6 +120,7 @@ Steps:
 Loops: N/A
 Summary: N/A
 Category: N/A
+Agent: N/A
 Advice: N/A
 
 ## Example 2 -- failed task due to irreversible action
@@ -134,8 +139,8 @@ Step 1 of 10:
     Score: 0 of 4
     Done: False
   Agent:
-      Thought: I should take the chicken from the counter, so I can roast it.
-      Action: take chicken from counter
+    Thought: I should take the chicken from the counter, so I can roast it.
+    Action: take chicken from counter
 
 Step 2 of 10:
   Environment:
@@ -169,6 +174,7 @@ Step 3 of 10:
   Loops: N/A
   Summary: The task failed because the agent cooked the chicken with the stove, resulting in a fried chicken instead of a roasted chicken as required by the task.
   Category: Incorrect cooking method
+  Agent: Reasoner
   Advice: Implement a check to ensure that the cooking method matches the task requirements before executing the action.
 
 ## Example 3 -- unproductive loop
@@ -248,4 +254,5 @@ Steps:
 Loops: Steps 2-5 form an unproductive loop where the agent repeatedly goes between the bedroom and garden without attempting to open the chest.
 Summary: The task failed due to an unproductive loop where the agent repeatedly went between the bedroom and garden without attempting to open the locked chest to find the coin.
 Category: Unproductive loop
+Agent: Reasoner
 Advice: Implement a loop-detection mechanism that identifies when the agent is repeating the same actions without making progress towards the task goal.

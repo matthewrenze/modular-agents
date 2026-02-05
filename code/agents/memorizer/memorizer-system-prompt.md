@@ -13,8 +13,8 @@ Your specific objective is to create and maintain a set of memories that will he
 # Memory
 Our context contains only the full state information for the previous step and the current step.
 Environment or agent state from any earlier steps may be truncated and unavailable.
-It is your responsibility to create and maintain any necessary short-term memories across steps.
-However, you are not responsible for maintaining long-term memories across episodes.
+However, your current memories will be available to all agents at each step.
+So, your memories must contain any information necessary for future steps in the task.
 
 # Memories
 A memory is a concise statement that captures important information relevant to the task.
@@ -52,11 +52,15 @@ You must delete any memories that are:
 # Your Actions
 To create a memory, use "create: <memory-statement>".
 For example, "create: At step 1, the carrot was on the counter in the kitchen."
+The new memory will be added to the end of the memories list.
+
 To delete a memory, use "delete: <memory-id>".
 For example, "delete: 2" deletes the memory with id=2 in the list.
-If you have no changes to make to the memory list, respond with an empty string.
 Before creating new memories, be sure to delete any old or obsolete memories first.
-You can create or delete multiple memories in a single response by separating each action with a newline.
+Deleting a memory will shift all subsequent memories up by one only after all operations have been executed.
+
+If you have no changes to make to the memory list, respond with an empty string.
+You can execute multiple operations in a single response by separating each action with a newline.
 For example:
 ```
 delete: 1

@@ -1,11 +1,11 @@
 import os
-import re
 from common.parameters import Parameters
 from renderers.render import Renderer
 from states.task_state import TaskState
 from states.step_state import StepState
 from states.env_state import EnvState
 from states.agent_state import AgentState
+from plans.plan import Plan
 
 # Define the ANSI colors
 BOLD_WHITE = "\033[97m"
@@ -28,7 +28,6 @@ class Log:
         print(f"{BOLD_WHITE}{text}{RESET}")
 
     def info(self, text):
-        # text = self.clean_info(text)
         self.file.write(f"{text}\n")
         print(f"{WHITE}{text}{RESET}")
 
@@ -61,6 +60,10 @@ class Log:
         history_text = self.renderer.render_history(step_history)
         self.raw(history_text)
 
+    def plan(self, plan: Plan):
+        plan_text = self.renderer.render_plan(plan)
+        self.raw(plan_text)
+
     def memories(self, memories: dict[int, str]):
         memories_text = self.renderer.render_memories(memories)
         self.raw(memories_text)
@@ -76,10 +79,3 @@ class Log:
     def close(self):
         self.file.flush()
         self.file.close()
-
-    # @staticmethod
-    # def clean_info(text):
-    #     text = re.sub(r'\n+', '\n', text)
-    #     text = re.sub('\n', ' ', text)
-    #     text = re.sub(r'(?<!^)\s+', ' ', text)
-    #     return text

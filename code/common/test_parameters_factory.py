@@ -10,6 +10,7 @@ class TestParametersFactory:
         assert params.use_react
         assert not params.use_tasker
         assert not params.use_summarizer
+        assert not params.use_planner
         assert not params.use_memorizer
         assert not params.use_reasoner
         assert not params.use_actor
@@ -21,6 +22,7 @@ class TestParametersFactory:
         assert not params.use_react
         assert not params.use_tasker
         assert not params.use_summarizer
+        assert not params.use_planner
         assert not params.use_memorizer
         assert not params.use_reasoner
         assert params.use_actor
@@ -32,6 +34,7 @@ class TestParametersFactory:
         assert not params.use_react
         assert params.use_tasker
         assert params.use_summarizer
+        assert params.use_planner
         assert params.use_memorizer
         assert params.use_reasoner
         assert params.use_actor
@@ -40,6 +43,7 @@ class TestParametersFactory:
         "agent_name,true_param", [
         ("plus-tasker", "use_tasker"),
         ("plus-summarizer", "use_summarizer"),
+        ("plus-planner", "use_planner"),
         ("plus-memorizer", "use_memorizer"),
         ("plus-reasoner", "use_reasoner"),
     ])
@@ -58,6 +62,7 @@ class TestParametersFactory:
         "agent_name,false_param", [
         ("minus-tasker", "use_tasker"),
         ("minus-summarizer", "use_summarizer"),
+        ("minus-planner", "use_planner"),
         ("minus-memorizer", "use_memorizer"),
         ("minus-reasoner", "use_reasoner"),
     ])

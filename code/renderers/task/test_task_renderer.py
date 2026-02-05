@@ -4,10 +4,9 @@ from states.task_state import TaskState
 class TestTaskRenderer:
     def test_render_task(self):
         task_state = TaskState(task="task 1")
+        expected = "Task: task 1\n"
 
         renderer = TaskRenderer()
-        rendered_output = renderer.render(task_state)
+        actual = renderer.render(task_state)
 
-        expected_output = "Task: task 1\n"
-
-        assert rendered_output == expected_output
+        assert actual == expected

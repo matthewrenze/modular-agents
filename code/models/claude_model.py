@@ -2,23 +2,16 @@ import os
 import time
 import anthropic
 from common.console import warn
+from models.model import Model
 
 # TODO: Need to lock the version number of the anthropic models (instead of using aliases)
 # TODO: e.g., "claude-sonnet-4-0" => claude-sonnet-4-20250514
 
-class ClaudeModel:
+class ClaudeModel(Model):
     def __init__(self, model_name):
+        super().__init__(model_name)
         self.api_key = os.environ['ANTHROPIC_KEY']
-        self.model_name = model_name
-        self.input_tokens = 0
-        self.output_tokens = 0
-        self.total_tokens = 0
         self.client = anthropic.Anthropic(api_key=self.api_key)
-
-    def reset(self):
-        self.input_tokens = 0
-        self.output_tokens = 0
-        self.total_tokens = 0
 
     def get_response(self, messages):
 

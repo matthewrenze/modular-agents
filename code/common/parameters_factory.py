@@ -41,6 +41,8 @@ class ParametersFactory:
                 parameters.use_tasker = True
             if "summarizer" in agent_name:
                 parameters.use_summarizer = True
+            if "planner" in agent_name:
+                parameters.use_planner = True
             if "memorizer" in agent_name:
                 parameters.use_memorizer = True
             if "reasoner" in agent_name:
@@ -55,6 +57,8 @@ class ParametersFactory:
                 parameters.use_tasker = False
             if "summarizer" in agent_name:
                 parameters.use_summarizer = False
+            if "planner" in agent_name:
+                parameters.use_planner = False
             if "memorizer" in agent_name:
                 parameters.use_memorizer = False
             if "reasoner" in agent_name:
@@ -66,6 +70,7 @@ class ParametersFactory:
     def plus_all(parameters: Parameters) -> Parameters:
         parameters.use_tasker = True
         parameters.use_summarizer = True
+        parameters.use_planner = True
         parameters.use_memorizer = True
         parameters.use_reasoner = True
         parameters.use_actor = True
@@ -75,6 +80,7 @@ class ParametersFactory:
     def minus_all(parameters: Parameters) -> Parameters:
         parameters.use_tasker = False
         parameters.use_summarizer = False
+        parameters.use_planner = False
         parameters.use_memorizer = False
         parameters.use_reasoner = False
         parameters.use_actor = False

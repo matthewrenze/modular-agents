@@ -15,8 +15,15 @@ class StateWriter:
         # Deep copy the state
         data = state.model_dump(mode="python")
 
-        # Wrap memory as a YAML string literal
+        # Wrap plan as a YAML string literal
         # Note: to render block literal "|"
+        for step in data.get("step_history", []):
+            agent = step.get("agent_state") or {}
+            plan = agent.get("plan")
+            if isinstance(plan, str) and "\n" in plan:
+                agent["plan"] = LiteralStr(plan)
+
+        # Wrap memory as a YAML string literal
         for step in data.get("step_history", []):
             agent = step.get("agent_state") or {}
             mem = agent.get("memory")

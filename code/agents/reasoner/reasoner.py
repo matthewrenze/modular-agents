@@ -22,6 +22,11 @@ class Reasoner(Agent):
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
+        # Add the plan
+        if self.params.use_planner:
+            user_content += self.renderer.render_plan(state.plan)
+            user_content += "\n"
+
         # Add the memories
         if self.params.use_memorizer:
             user_content += self.renderer.render_memories(state.memories)

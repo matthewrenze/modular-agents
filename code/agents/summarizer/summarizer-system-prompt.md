@@ -37,7 +37,8 @@ For example:
 # Memory
 Our context contains only the full state information for the previous step and the current step.
 Environment or agent state from any earlier steps may be truncated and unavailable.
-So, your summaries must contain any relevant information that will be needed for future steps.
+However, your historical summaries will be available to all agents at every step.
+So, your summaries must contain any relevant trajectory information that will be needed for future steps.
 
 # Actions
 {actions}

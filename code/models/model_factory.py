@@ -1,4 +1,5 @@
 from common.parameters import Parameters
+from models.model import Model
 from models.claude_model import ClaudeModel
 from models.azure_model import AzureModel
 from models.gemini_model import GeminiModel
@@ -6,7 +7,7 @@ from models.gpt_model import GptModel
 
 class ModelFactory():
 
-    def create(self, params: Parameters):
+    def create(self, params: Parameters) -> Model:
 
         if params.model_name.startswith("claude"):
             return ClaudeModel(params.model_name)

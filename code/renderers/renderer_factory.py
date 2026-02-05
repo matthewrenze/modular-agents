@@ -1,3 +1,4 @@
+from renderers.plans.plan_renderer import PlanRenderer
 from renderers.render import Renderer
 from renderers.task.task_renderer import TaskRenderer
 from renderers.history.history_renderer import HistoryRenderer
@@ -12,6 +13,7 @@ class RendererFactory:
     def create():
         task_renderer = TaskRenderer()
         history_renderer = HistoryRenderer()
+        plan_renderer = PlanRenderer()
         memories_renderer = MemoriesRenderer()
         step_renderer = StepRenderer()
         env_renderer = EnvRenderer()
@@ -20,6 +22,7 @@ class RendererFactory:
         return Renderer(
             task_renderer=task_renderer,
             history_renderer=history_renderer,
+            plan_renderer=plan_renderer,
             memories_renderer=memories_renderer,
             step_renderer=step_renderer,
             env_renderer=env_renderer,

@@ -36,7 +36,9 @@ class SummaryManager:
         summary.accuracy = summary.successes / summary.tasks
         summary.total_reward = results["reward"].sum()
         summary.total_steps = results["steps"].sum()
+        summary.cached_tokens = results["cached_tokens"].sum()
         summary.input_tokens = results["input_tokens"].sum()
+        summary.reasoning_tokens = results["reasoning_tokens"].sum()
         summary.output_tokens = results["output_tokens"].sum()
         summary.total_tokens = results["total_tokens"].sum()
         summary.input_cost = results["input_cost"].sum()

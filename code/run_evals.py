@@ -15,6 +15,7 @@ from states.env_state import EnvState
 from states.global_state import GlobalState
 from states.step_state import StepState
 from states.agent_state import AgentState
+from plans.manager.plan_manager import PlanManager
 from memory.memory_manager import MemoryManager
 from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
@@ -28,9 +29,9 @@ from typing import cast
 agent_names = [
     # "react",
     # "react-k1",
-    "baseline-v2",
+    # "baseline-v2",
     # "plus-tasker-v2",
-    # "plus-planner-v1"
+    "plus-planner-v1"
     # "plus-summarizer-v2",
     # "plus-memorizer-v1",
     # "plus-reasoner-v1",
@@ -38,7 +39,7 @@ agent_names = [
     # "minus-summarizer",
     # "minus-memorizer",
     # "minus-reasoner"
-    "topline-v2"
+    # "topline-v2"
 ]
 
 # Set models
@@ -48,18 +49,18 @@ model_names = [
 ]
 
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
     ("tw-simple-1", "textworld"),
-    # ("tw-treasure-1", "textworld"),
-    # ("tw-treasure-2", "textworld"),
-    # ("tw-treasure-3", "textworld"),
-    # ("tw-coin-1", "textworld"),
-    # ("tw-coin-2", "textworld"),
-    # ("tw-coin-3", "textworld"),
-    # ("tw-cooking-1", "textworld"),
-    # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-treasure-1", "textworld"),
+    ("tw-treasure-2", "textworld"),
+    ("tw-treasure-3", "textworld"),
+    ("tw-coin-1", "textworld"),
+    ("tw-coin-2", "textworld"),
+    ("tw-coin-3", "textworld"),
+    ("tw-cooking-1", "textworld"),
+    ("tw-cooking-2", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -134,12 +135,14 @@ for params in runs:
         react_k1 = agent_factory.create("react-k1", params, model)
         tasker = agent_factory.create("tasker", params, model)
         summarizer = agent_factory.create("summarizer", params, model)
+        planner = agent_factory.create("planner", params, model)
         memorizer = agent_factory.create("memorizer", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
         reviewer_model = model_factory.create(params)
         reviewer = agent_factory.create("reviewer", params, reviewer_model)
         reviewer = cast(Reviewer, reviewer)
+        plan_manager = PlanManager()
         memory_manager = MemoryManager()
         details_manager = DetailsManager(params, episode_id)
         
@@ -163,6 +166,7 @@ for params in runs:
             react.reset()
             tasker.reset()
             summarizer.reset()
+            planner.reset()
             memorizer.reset()
             reasoner.reset()
             actor.reset()
@@ -207,6 +211,10 @@ for params in runs:
                 if params.use_summarizer:
                     log.history(global_state.step_history[:-1])
 
+                # Log the plan
+                if params.use_planner:
+                    log.plan(global_state.plan)
+
                 # Log the memories
                 if params.use_memorizer:
                     log.memories(global_state.memories)
@@ -242,13 +250,22 @@ for params in runs:
                     agent_state.summary = summary
                     log.info(f"  Summary: {summary}")
 
+                # Get the planner's plan
+                if params.use_planner:
+                    plan_updates = planner.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
+                    global_state.plan = plan_manager.execute(global_state.plan, plan_updates)
+                    agent_state.plan = plan_updates
+                    plan_updates = renderer.render_plan_updates(plan_updates)
+                    log.info(f"  Plan:\n{plan_updates}")
+
                 # Get the memorizer's memory updates
                 if params.use_memorizer:
                     memory_updates = memorizer.execute(global_state)
                     agent_writer.write(params, episode_id, step_id + 1, "memorizer", memorizer.messages)
                     global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
                     agent_state.memory = memory_updates
-                    memory_updates = renderer.render_memory_items(memory_updates)
+                    memory_updates = renderer.render_memory_updates(memory_updates)
                     log.info(f"  Memory:\n{memory_updates}")
 
                 # Get the reasoner's thought
@@ -325,11 +342,13 @@ for params in runs:
         result_row.steps = step_id + 1
         result_row.max_steps = params.max_steps
         result_row.solution_steps = episode["solution_steps"]
+        result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens
+        result_row.reasoning_tokens = model.reasoning_tokens
         result_row.output_tokens = model.output_tokens
         result_row.total_tokens = model.total_tokens
-        result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.input_tokens)
-        result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.output_tokens)
+        result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.cached_tokens, model.input_tokens)
+        result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.reasoning_tokens, model.output_tokens)
         result_row.total_cost = result_row.input_cost + result_row.output_cost
         result_row.reward_per_step = final_reward / (step_id + 1)
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0

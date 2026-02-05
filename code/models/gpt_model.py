@@ -2,9 +2,12 @@ import os
 import time
 from openai import AzureOpenAI
 from common.console import warn
+from models.model import Model
 
-class GptModel:
+class GptModel(Model):
     def __init__(self, model_name):
+        super().__init__(model_name)
+
         # HACK: Use EAST US 2 for gpt-5.1 until EAST US is enabled
         if model_name == "gpt-5.1" or model_name == "gpt-5.2":
             self.api_url = os.environ["AZURE_OPENAI_URL_EASTUS2"]
@@ -12,21 +15,11 @@ class GptModel:
         else:
             self.api_url = os.environ["AZURE_OPENAI_URL"]
             self.api_key = os.environ["AZURE_OPENAI_KEY"]
-
         self.api_version = "2025-01-01-preview"
-        self.model_name = model_name
-        self.input_tokens = 0
-        self.output_tokens = 0
-        self.total_tokens = 0
         self.client = AzureOpenAI(
             api_key=self.api_key,
             azure_endpoint=self.api_url,
             api_version=self.api_version)
-
-    def reset(self):
-        self.input_tokens = 0
-        self.output_tokens = 0
-        self.total_tokens = 0
 
     def get_response(self, messages):
 
@@ -34,7 +27,8 @@ class GptModel:
         params = {
             "model": self.model_name,
             "messages": messages,
-            "top_p": 1.0
+            "top_p": 1.0,
+            # "reasoning_effort": "medium"
         }
 
         # Don't set temperature on reasoning models
@@ -57,9 +51,17 @@ class GptModel:
                 if content is None:
                     raise ValueError("Received empty response from LLM API.")
 
+                # Get tokens
+                cached_tokens = getattr(response.usage.prompt_tokens_details, "cached_tokens", 0)
+                prompt_tokens = getattr(response.usage, "prompt_tokens", 0)
+                reasoning_tokens = getattr(response.usage.completion_tokens_details, "reasoning_tokens", 0)
+                completion_tokens = getattr(response.usage, "completion_tokens", 0)
+
                 # Accumulate tokens
-                self.input_tokens += getattr(response.usage, "prompt_tokens", 0)
-                self.output_tokens += getattr(response.usage, "completion_tokens", 0)
+                self.cached_tokens += cached_tokens
+                self.input_tokens += prompt_tokens - cached_tokens
+                self.reasoning_tokens += reasoning_tokens
+                self.output_tokens += completion_tokens - reasoning_tokens
                 self.total_tokens += getattr(response.usage, "total_tokens", 0)
 
                 return content

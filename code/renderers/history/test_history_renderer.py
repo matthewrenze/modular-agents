@@ -6,7 +6,6 @@ from states.agent_state import AgentState
 class TestHistoryRenderer:
 
     def test_render(self):
-
         step_history = [
             StepState(
                 step_id=1,
@@ -18,21 +17,20 @@ class TestHistoryRenderer:
                 env_state=EnvState(),
                 agent_state=AgentState(
                     summary="summary 2"))]
-
-        renderer = HistoryRenderer()
-        rendered_output = renderer.render(step_history)
-
-        expected_output = (
+        expected = (
             "History:\n"
             "  Step 1: summary 1\n"
             "  Step 2: summary 2\n")
 
-        assert rendered_output == expected_output
+        renderer = HistoryRenderer()
+        actual = renderer.render(step_history)
+
+        assert actual == expected
 
     def test_render_empty(self):
+        expected = "History: N/A\n"
+
         renderer = HistoryRenderer()
-        rendered_output = renderer.render([])
+        actual = renderer.render([])
 
-        expected_output = "History: N/A\n"
-
-        assert rendered_output == expected_output
+        assert actual == expected

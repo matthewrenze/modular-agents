@@ -12,7 +12,9 @@ class ResultRow:
         self.steps = 0
         self.max_steps = 0
         self.solution_steps = 0
+        self.cached_tokens = 0
         self.input_tokens = 0
+        self.reasoning_tokens = 0
         self.output_tokens = 0
         self.total_tokens = 0
         self.input_cost = 0.0

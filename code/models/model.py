@@ -1,13 +1,21 @@
-from typing import Protocol, runtime_checkable, Any
 
-@runtime_checkable
-class Model(Protocol):
 
-    model_name: str
-    input_tokens: int
-    output_tokens: int
-    total_tokens: int
+class Model:
 
-    def reset(self) -> None: ...
+    def __init__(self, model_name: str) -> None:
+        self.model_name = model_name
+        self.cached_tokens = 0
+        self.input_tokens = 0
+        self.reasoning_tokens = 0
+        self.output_tokens = 0
+        self.total_tokens = 0
 
-    def get_response(self, messages: list[dict[str, str]]) -> str: ...
+    def reset(self) -> None:
+        self.cached_tokens = 0
+        self.input_tokens = 0
+        self.reasoning_tokens = 0
+        self.output_tokens = 0
+        self.total_tokens = 0
+
+    def get_response(self, messages):
+        raise NotImplementedError("Subclasses must implement this method")
