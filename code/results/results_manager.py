@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from results.result_row import ResultRow
-from common.parameters import Parameters
+from params.parameters import Parameters
 
 class ResultsManager:
     def __init__(self):
@@ -22,15 +22,20 @@ class ResultsManager:
     def get_table(self):
         return self.results
 
+    def load(self, params: Parameters):
+        file_name = f"{params.agent_name} - {params.model_name} - {params.eval_name}.csv"
+        file_path = f"{self.folder_path}/{file_name}"
+        self.results = pd.read_csv(file_path)
+
     def save(self):
         # Create the folder if it doesn't exist
         os.makedirs(self.folder_path, exist_ok=True)
 
         # Create the file path
-        agent_name = self.results["agent_name"].iloc[0]
         model_name = self.results["model_name"].iloc[0]
+        agent_name = self.results["agent_name"].iloc[0]
         eval_name = self.results["eval_name"].iloc[0]
-        file_name = f"{agent_name} - {model_name} - {eval_name}.csv"
+        file_name = f"{model_name} - {agent_name} - {eval_name}.csv"
         file_path = f"{self.folder_path}/{file_name}"
 
         # Save the results

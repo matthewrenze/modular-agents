@@ -1,26 +1,33 @@
-from common.parameters import Parameters
+from params.parameters import Parameters
 
 class ParametersFactory:
-    def create(self, agent_name: str, model_name: str, env_name: str, eval_name: str, eval_size: int):
+    def create(self, model_name: str, agent_name: str, env_name: str, eval_name: str, eval_size: int):
 
         # Set parameters
         parameters = Parameters(
-            agent_name=agent_name,
             model_name=model_name,
+            agent_name=agent_name,
             env_name=env_name,
             eval_name=eval_name,
             eval_size=eval_size,
             max_steps=0)
 
-        # Create the react agent
-        if agent_name == "react":
+        # Create the react-k0 agent
+        if agent_name == "react-k0":
             parameters = self.minus_all(parameters)
-            parameters.use_react = True
+            parameters.use_react_k0 = True
             return parameters
 
+        # Create the react-k1 agent
         if agent_name == "react-k1":
             parameters = self.minus_all(parameters)
             parameters.use_react_k1 = True
+            return parameters
+
+        # Create the react-kn agent
+        if agent_name == "react-kn":
+            parameters = self.minus_all(parameters)
+            parameters.use_react_kn = True
             return parameters
 
         # Create baseline agent
@@ -65,6 +72,8 @@ class ParametersFactory:
                 parameters.use_reasoner = False
             parameters.use_actor = True
             return parameters
+
+        raise ValueError("Agent name not recognized.")
 
     @staticmethod
     def plus_all(parameters: Parameters) -> Parameters:

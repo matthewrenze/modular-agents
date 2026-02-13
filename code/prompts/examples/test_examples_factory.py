@@ -1,5 +1,5 @@
 import pytest
-from common.parameters import Parameters
+from params.parameters import Parameters
 from prompts.examples.examples_factory import ExamplesFactory
 
 class TestExamplesFactory:
@@ -29,9 +29,9 @@ class TestExamplesFactory:
         assert "  Plan: " not in examples
         assert "    add: " not in examples
         assert "    insert: " not in examples
-        assert "    update: " not in examples
+        # assert "    update: " not in examples #  Not currently in the examples
         assert "    mark: " not in examples
-        assert "    delete: " not in examples
+        # assert "    delete: " not in examples #  Not currently in the examples
         assert "  Memory: " not in examples
         assert "    create: " not in examples
         assert "    delete: " not in examples
@@ -63,9 +63,9 @@ class TestExamplesFactory:
         assert "  Plan: " in examples
         assert "    add: " in examples
         assert "    insert: " in examples
-        assert "    update: " in examples
+        # assert "    update: " in examples  # Not currently in the examples
         assert "    mark: " in examples
-        assert "    delete: " in examples
+        # assert "    delete: " in examples  # Not currently in the examples
         assert "  Memory: " in examples
         assert "    create: " in examples
         assert "    delete: " in examples

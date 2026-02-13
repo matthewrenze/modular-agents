@@ -1,41 +1,23 @@
 import io
-from common.parameters import Parameters
-from reviews.review import Review
-from reviews import review_writer
-from reviews.review_writer import ReviewWriter
+from params.parameters import Parameters
+from reviews.writer import review_writer
+from reviews.writer.review_writer import ReviewWriter
 
-review = Review(
-    steps={
-        "Step 1": "N/A",
-        "Step 2": "N/A",
-        "Step 3": "An error"
-    },
-    loops="A loop",
-    summary="A summary",
-    category="A category",
-    advice="Some advice"
-)
 
-expected_text = """
-Steps:
-  Step 1: N/A
-  Step 2: N/A
-  Step 3: An error
-Loops: A loop
-Summary: A summary
-Category: A category
-Advice: Some advice
-""".lstrip()
 
 class TestReviewWriter:
     def test_write_review(self, monkeypatch):
         params = Parameters(
-            agent_name="agent-a",
-            model_name="model-b",
-            eval_name="eval-c")
+            model_name="model",
+            agent_name="agent",
+            eval_name="eval")
         episode_id = 123
-        expected_folder = "../data/reviews/agent-a - model-b - eval-c"
+        review = "review"
+
+        expected_folder = "../data/reviews/model - agent - eval"
         expected_file = f"{expected_folder}/{episode_id}.txt"
+        expected_text = "review"
+
         captured = {"makedirs": None, "open": None, "text": None}
 
         def fake_makedirs(path, exist_ok=False):

@@ -1,9 +1,8 @@
 import re
-from common.console import debug
 from states.global_state import GlobalState
 from agents.agent import Agent
 
-class ReactAgentK1(Agent):
+class ReactK0(Agent):
 
     def reset(self):
         self.model.reset()
@@ -25,23 +24,10 @@ class ReactAgentK1(Agent):
         task_message = {"role": "user", "content": task_user_content}
         self.messages.append(task_message)
 
-        # Add the previous step user (env) message
-        if len(state.step_history) > 1:
-            previous_step = state.step_history[-2]
-            previous_user_content = self.renderer.render_step(previous_step)
-            previous_user_content += self.renderer.render_env(previous_step.env_state, state.task_state)
-            previous_user_message = {"role": "user", "content": previous_user_content}
-            self.messages.append(previous_user_message)
-
-            # Add the previous step model (agent) message
-            previous_agent_content = self.renderer.render_agent(previous_step.agent_state)
-            previous_agent_message = {"role": "assistant", "content": previous_agent_content}
-            self.messages.append(previous_agent_message)
-
         # Add the current step's user (env) message
         current_step = state.step_history[-1]
-        current_user_content = self.renderer.render_step(current_step)
-        current_user_content += self.renderer.render_env(current_step.env, state.task_state)
+        current_user_content = self.renderer.render_step(current_step, state.task_state)
+        current_user_content += self.renderer.render_env(current_step.env_state, state.task_state)
         prompt_message = {"role": "user", "content": current_user_content}
         self.messages.append(prompt_message)
 

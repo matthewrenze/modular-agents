@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from common.parameters import Parameters
+from params.parameters import Parameters
 from environments.textworld_env import TextWorldEnv
 
 class EnvFactory:

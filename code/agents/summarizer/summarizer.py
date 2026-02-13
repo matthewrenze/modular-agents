@@ -16,29 +16,36 @@ class Summarizer(Agent):
         user_content = self.renderer.render_task(state.task_state)
         user_content += "\n"
 
+
         # Add the history
         if self.params.use_summarizer:
             previous_steps = state.step_history[:-2]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
-        # Add the plan
-        if self.params.use_planner:
-            user_content += self.renderer.render_plan(state.plan)
+        # TODO: Delete these if I decide don't need them today
+        # # Add the plan
+        # if self.params.use_planner:
+        #     user_content += self.renderer.render_plan(state.plan)
+        #     user_content += "\n"
+        #
+        # # Add the memories
+        # if self.params.use_memorizer:
+        #     user_content += self.renderer.render_memories(state.memories)
+        #     user_content += "\n"
+
+        # Add the previous agent state (action)
+        if len(state.step_history) >= 2:
+            previous_step = state.step_history[-2]
+            user_content += self.renderer.render_step(previous_step, state.task_state)
+            user_content += self.renderer.render_agent(previous_step.agent_state)
             user_content += "\n"
 
-        # Add the memories
-        if self.params.use_memorizer:
-            user_content += self.renderer.render_memories(state.memories)
-            user_content += "\n"
-
-        # Add the last two steps
-        current_steps = state.step_history[-2:]
-        for index, step in enumerate(current_steps):
-            user_content += self.renderer.render_step(step, state.task_state)
-            user_content += self.renderer.render_env(step.env_state, state.task_state)
-            user_content += self.renderer.render_agent(step.agent_state)
-            user_content += "\n"
+        # Add the current environment (outcome)
+        current_step = state.step_history[-1]
+        user_content += self.renderer.render_step(current_step, state.task_state)
+        user_content += self.renderer.render_env(current_step.env_state, state.task_state)
+        user_content += "\n"
 
         # Add the user prompt
         user_message = {"role": "user", "content": user_content}

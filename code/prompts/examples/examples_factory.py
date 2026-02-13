@@ -1,5 +1,5 @@
 import re
-from common.parameters import Parameters
+from params.parameters import Parameters
 
 class ExamplesFactory:
     def create(self, params: Parameters):
@@ -35,7 +35,7 @@ class ExamplesFactory:
             examples = self.remove_line(examples, r"^    delete:")
 
         # Filter thoughts
-        if not params.use_reasoner and not params.use_react:
+        if not params.use_reasoner and not params.use_react_kn:
             examples = self.remove_line(examples, r"^  Thought:")
 
         # Filter action

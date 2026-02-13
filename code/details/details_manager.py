@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from details.details_row import DetailsRow
-from common.parameters import Parameters
+from params.parameters import Parameters
 
 class DetailsManager:
     def __init__(self, params: Parameters, episode_id: int):
@@ -22,11 +22,11 @@ class DetailsManager:
 
     def save(self):
         # Create the folder path
-        agent_name = self.params.agent_name
         model_name = self.params.model_name
+        agent_name = self.params.agent_name
         eval_name = self.params.eval_name
         episode_id = self.episode_id
-        subfolder_name = f"{agent_name} - {model_name} - {eval_name}"
+        subfolder_name = f"{model_name} - {agent_name} - {eval_name}"
         subfolder_path = f"{self.folder_path}/{subfolder_name}"
 
         # Create the folder if it doesn't exist

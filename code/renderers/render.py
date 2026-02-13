@@ -11,7 +11,6 @@ from states.env_state import EnvState
 from states.agent_state import AgentState
 from plans.plan import Plan
 
-
 class Renderer:
     def __init__(self,
             task_renderer: TaskRenderer,
@@ -47,8 +46,8 @@ class Renderer:
     def render_env(self, env_state: EnvState, task_state: TaskState) -> str:
         return self.env_renderer.render(env_state, task_state)
 
-    def render_agent(self, agent_state: AgentState) -> str:
-        return self.agent_renderer.render(agent_state)
+    def render_agent(self, agent_state: AgentState, log_mode: bool=False) -> str:
+        return self.agent_renderer.render(agent_state, log_mode)
 
     def render_plan_updates(self, plan: str) -> str:
         return self.agent_renderer.render_plan_updates(plan)

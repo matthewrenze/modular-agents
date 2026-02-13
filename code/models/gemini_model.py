@@ -1,15 +1,19 @@
 import os
 import time
 from google import genai
-from common.console import warn
+from logs.console import warn
 from models.model import Model
 
 class GeminiModel(Model):
     def __init__(self, model_name):
+        super().__init__(model_name)
         self.api_key = os.environ["GOOGLE_API_KEY"]
         self.client = genai.Client(api_key=self.api_key)
 
     def get_response(self, messages):
+
+        # Copy the messages
+        messages = [message.copy() for message in messages]
         
         # Format messages for Gemini
         for message in messages:
@@ -55,5 +59,6 @@ class GeminiModel(Model):
 
                 delay = retries[attempts]
                 warn(f"Retrying LLM API call in {delay} seconds due to error: {e}")
+                self.wait_time += delay
                 time.sleep(delay)
                 attempts += 1

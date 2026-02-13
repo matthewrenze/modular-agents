@@ -1,9 +1,10 @@
 from renderers.renderer_factory import RendererFactory
-from common.parameters import Parameters
+from params.parameters import Parameters
 from agents.agent import Agent
 from models.model import Model
-from agents.react.react_agent import ReactAgent
-from agents.react_k1.react_k1_agent import ReactAgentK1
+from agents.react_k0.react_k0 import ReactK0
+from agents.react_k1.react_k1 import ReactK1
+from agents.react_kn.react_kn import ReactKn
 from agents.tasker.tasker import Tasker
 from agents.summarizer.summarizer import Summarizer
 from agents.planner.planner import Planner
@@ -11,6 +12,7 @@ from agents.memorizer.memorizer import Memorizer
 from agents.reasoner.reasoner import Reasoner
 from agents.actor.actor import Actor
 from agents.reviewer.reviewer import Reviewer
+from agents.analyzer.analyzer import Analyzer
 from prompts.system_prompt_factory import SystemPromptFactory
 
 class AgentFactory:
@@ -31,11 +33,14 @@ class AgentFactory:
         system_prompt = system_prompt_factory.create(params, subagent, system_prompt)
 
         # Create the appropriate agent
-        if subagent == "react":
-            return ReactAgent(model, renderer, system_prompt, params)
+        if subagent == "react-k0":
+            return ReactK0(model, renderer, system_prompt, params)
 
         if subagent == "react-k1":
-            return ReactAgentK1(model, renderer, system_prompt, params)
+            return ReactK1(model, renderer, system_prompt, params)
+
+        if subagent == "react-kn":
+            return ReactKn(model, renderer, system_prompt, params)
 
         if subagent == "tasker":
             return Tasker(model, renderer, system_prompt, params)
@@ -57,5 +62,8 @@ class AgentFactory:
 
         if subagent == "reviewer":
             return Reviewer(model, renderer, system_prompt, params)
+
+        if subagent == "analyzer":
+            return Analyzer(model, renderer, system_prompt, params)
 
         raise ValueError(f"Unknown subagent type: {subagent}")

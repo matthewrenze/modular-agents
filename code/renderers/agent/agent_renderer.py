@@ -2,17 +2,17 @@ from states.agent_state import AgentState
 
 class AgentRenderer:
 
-    def render(self, agent_state: AgentState):
+    def render(self, agent_state: AgentState, log_mode: bool = False) -> str:
         result = f"Agent:\n" \
 
-        if agent_state.summary != "":
+        if agent_state.summary != "" and log_mode:
             result += f"  Summary: {agent_state.summary}\n"
 
-        if agent_state.plan != "":
+        if agent_state.plan != "" and log_mode:
             plan = self.render_plan_updates(agent_state.plan)
             result += f"  Plan:\n{plan}\n"
 
-        if agent_state.memory != "":
+        if agent_state.memory != "" and log_mode:
             memory = self.render_memory_updates(agent_state.memory)
             result += f"  Memory:\n{memory}\n"
 

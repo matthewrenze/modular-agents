@@ -1,12 +1,7 @@
-from unittest.mock import MagicMock, call, mock_open, patch
-from common.log import Log, BOLD_WHITE, WHITE, YELLOW, ORANGE, RED, RESET
-from common.parameters import Parameters
+from unittest.mock import call, mock_open, patch
+from logs.log import Log, BOLD_WHITE, WHITE, YELLOW, ORANGE, RED, RESET
+from params.parameters import Parameters
 from renderers.renderer_factory import RendererFactory
-from states.global_state import GlobalState
-from states.task_state import TaskState
-from states.step_state import StepState
-from states.env_state import EnvState
-from states.agent_state import AgentState
 
 
 class TestLog:
@@ -16,8 +11,8 @@ class TestLog:
     def test_log_calls(self, mock_makedirs, mock_open_fn, mock_print):
         renderer = RendererFactory.create()
         params = Parameters(
-            agent_name="test_agent",
             model_name="test_model",
+            agent_name="test_agent",
             env_name="test_env",
             eval_name="test_eval",
             max_steps=10)
@@ -33,7 +28,7 @@ class TestLog:
         log.close()
 
         # Assert folder was created
-        expected_dir = "../data/logs/test_agent - test_model - test_eval"
+        expected_dir = "../data/logs/test_model - test_agent - test_eval"
         mock_makedirs.assert_called_once_with(expected_dir, exist_ok=True)
 
         # Assert file was opened

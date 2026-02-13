@@ -1,4 +1,5 @@
-from common.parameters import Parameters
+from models.fireworks_model import FireworksModel
+from params.parameters import Parameters
 from models.model import Model
 from models.claude_model import ClaudeModel
 from models.azure_model import AzureModel
@@ -13,7 +14,7 @@ class ModelFactory():
             return ClaudeModel(params.model_name)
 
         elif params.model_name.startswith("deepseek"):
-            return AzureModel(params.model_name)
+            return FireworksModel(params.model_name)
 
         elif params.model_name.startswith("gemini"):
             return GeminiModel(params.model_name)
@@ -23,6 +24,9 @@ class ModelFactory():
         
         elif params.model_name.startswith("grok"):
             return AzureModel(params.model_name)
+
+        elif params.model_name.startswith("kimi"):
+            return FireworksModel(params.model_name)
 
         else:
             raise ValueError(f"Unknown model name: {params.model_name}")

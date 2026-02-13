@@ -5,7 +5,7 @@ from plans.plan_step import PlanStep
 from states.task_state import TaskState
 from states.writer import state_writer
 from states.writer.state_writer import StateWriter
-from common.parameters import Parameters
+from params.parameters import Parameters
 from states.global_state import GlobalState
 from states.step_state import StepState
 from states.env_state import EnvState
@@ -14,9 +14,9 @@ from states.agent_state import AgentState
 class TestStateWriter:
     def test_write(self, monkeypatch):
         params = Parameters(
-            agent_name="agent-a",
-            model_name="model-b",
-            eval_name="eval-c")
+            model_name="model",
+            agent_name="agent",
+            eval_name="eval")
         episode_id = 123
         state = GlobalState(
             task_state=TaskState(
@@ -80,7 +80,7 @@ class TestStateWriter:
             ],
         )
 
-        expected_folder = "../data/states/agent-a - model-b - eval-c"
+        expected_folder = "../data/states/model - agent - eval"
         expected_file_path = f"{expected_folder}/{episode_id}.yaml"
         with open("states/test_file.yaml", "r", encoding="utf-8") as f:
             expected_yaml = f.read()

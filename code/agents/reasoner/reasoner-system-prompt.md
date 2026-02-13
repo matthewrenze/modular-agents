@@ -29,6 +29,9 @@ Your thought process should focus on:
 Your response should contain only your chain-of-thought.
 Do not begin your response with "Thought:" -- just start your reasoning directly.
 Do not respond with the selected action -- this is the job of the Actor agent.
+Your response should be a single line of text containing your reasoning process.
+Do not include any new-line characters in your response.
+Do not include any colons ":" in your response.
 Do not include any other text in your response.
 
 # Constraints

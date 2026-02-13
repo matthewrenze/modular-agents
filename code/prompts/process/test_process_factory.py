@@ -1,5 +1,5 @@
 import pytest
-from common.parameters import Parameters
+from params.parameters import Parameters
 from prompts.process.process_factory import ProcessFactory
 
 class TestProcessFactory:
@@ -42,7 +42,7 @@ class TestProcessFactory:
 
     @pytest.mark.parametrize(
         "subagent_name, subagent_tag",
-        [("tasker", "  - Task (you) - "),
+        [("tasker", "  - Revised task (you) - "),
          ("summarizer", "  - Summary (you) - "),
          ("planner", "  - Plan (you) - "),
          ("memorizer", "  - Memory (you) - "),

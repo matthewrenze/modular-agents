@@ -1,21 +1,18 @@
 ## Start of the Episode
 At the start of the episode, the environment will provide us with:
-  - Task - a raw description of the task we need to complete.
-  - State - the initial state of the environment.
-Then, we will provide:
-  - Task (Tasker) - a clear and concise description of the task to be completed.
-  - Plan (Planner) - a detailed plan of action outlining the steps needed to complete the task.
+  - Task - a description of the task we need to complete.
+  - Revised task (Tasker) - a revised description of the task to be completed.
+  - State - the initial state of the environment (see below).
 We will complete the task through a series of steps in an iterative loop.
 
 ## Each Step of the Episode
 At each step of the episode, we will be provided with:
   - Step - the current step number.
 Next, we will provide:
-  - Task (Tasker) - a reminder of the task to be completed.
   - History (Summarizer) - a summary of all previous action-outcome pairs.
   - Plan (Planner) - the current plan of action, including any updates made in previous steps.
   - Memories (Memorizer) - any important information we have remembered so far.
-Then, the environment will provide us with:
+Then, we will be provided with the current state of the environment, which includes:
   - Feedback - the feedback from the last action we took.
   - Location - our current location in the environment.
   - Description - the current state of the environment.
@@ -35,4 +32,6 @@ We will use feedback from the environment to refine our actions in subsequent st
 ## End of the Episode
 At the end of the episode, the environment will provide us with:
   - the final state of the environment (see above for details).
+  - the final score and reward we achieved.
+  - a success or failure flag indicating whether we successfully completed the task or not.
 We will end the task by executing the "quit" operation.

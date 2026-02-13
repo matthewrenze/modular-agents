@@ -1,7 +1,7 @@
 class ResultRow:
     def __init__(self):
-        self.agent_name = ""
         self.model_name = ""
+        self.agent_name = ""
         self.eval_name = ""
         self.eval_size = 0
         self.episode = 0
@@ -9,8 +9,11 @@ class ResultRow:
         self.revised_task = ""
         self.success = False
         self.reward = 0.0
+        self.score = 0
+        self.max_score = 0
         self.steps = 0
         self.max_steps = 0
+        self.max_steps_hit = False
         self.solution_steps = 0
         self.cached_tokens = 0
         self.input_tokens = 0
@@ -22,7 +25,8 @@ class ResultRow:
         self.total_cost = 0.0
         self.start_time = None
         self.end_time = None
-        self.total_time = None
+        self.sleep_time = 0
+        self.total_time = 0
         self.reward_per_step = 0.0
         self.reward_per_token = 0.0
         self.error = ""

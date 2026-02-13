@@ -1,43 +1,42 @@
 import pytest
-from common.parameters_factory import ParametersFactory
-from common.parameters import Parameters
+from params.parameters_factory import ParametersFactory
 
 class TestParametersFactory:
-    def test_create_reacter(self):
+    @pytest.mark.parametrize(
+        "agent_name,true_param", [
+        ("react-k0", "use_react_k0"),
+        ("react-k1", "use_react_k1"),
+        ("react-kn", "use_react_kn")])
+    def test_create_react(self, agent_name, true_param):
         factory = ParametersFactory()
-        params = factory.create("react", "model", "env", "eval", 10)
-        assert params.agent_name == "react"
-        assert params.use_react
-        assert not params.use_tasker
-        assert not params.use_summarizer
-        assert not params.use_planner
-        assert not params.use_memorizer
-        assert not params.use_reasoner
-        assert not params.use_actor
+        params = factory.create( "model", agent_name, "env", "eval",10)
+        assert params.agent_name == agent_name
+        assert getattr(params, true_param)
+        for attr in dir(params):
+            if attr.startswith("use_") and attr != true_param:
+                assert not getattr(params, attr)
 
     def test_create_baseline(self):
         factory = ParametersFactory()
-        params = factory.create("baseline", "model", "env", "eval", 10)
+        params = factory.create("model", "baseline",  "env", "eval", 10)
         assert params.agent_name == "baseline"
-        assert not params.use_react
-        assert not params.use_tasker
-        assert not params.use_summarizer
-        assert not params.use_planner
-        assert not params.use_memorizer
-        assert not params.use_reasoner
         assert params.use_actor
+        for attr in dir(params):
+            if attr.startswith("use_") and attr != "use_actor":
+                assert not getattr(params, attr)
 
     def test_create_topline(self):
         factory = ParametersFactory()
-        params = factory.create("topline", "model", "env", "eval", 10)
+        params = factory.create("model", "topline",  "env", "eval", 10)
         assert params.agent_name == "topline"
-        assert not params.use_react
-        assert params.use_tasker
-        assert params.use_summarizer
-        assert params.use_planner
-        assert params.use_memorizer
-        assert params.use_reasoner
         assert params.use_actor
+        for attr in dir(params):
+            if (attr.startswith("use_")
+                    and attr != "use_actor"
+                    and attr != "use_react_k0"
+                    and attr != "use_react_k1"
+                    and attr != "use_react_kn"):
+                assert getattr(params, attr)
 
     @pytest.mark.parametrize(
         "agent_name,true_param", [
@@ -49,7 +48,7 @@ class TestParametersFactory:
     ])
     def test_create_with_plus(self, agent_name, true_param):
         factory = ParametersFactory()
-        params = factory.create(agent_name, "model", "env", "eval", 10)
+        params = factory.create("model", agent_name, "env", "eval", 10)
         assert params.agent_name == agent_name
         assert getattr(params, true_param)
         for attr in dir(params):
@@ -68,12 +67,13 @@ class TestParametersFactory:
     ])
     def test_create_with_minus(self, agent_name, false_param):
         factory = ParametersFactory()
-        params = factory.create(agent_name, "model", "env", "eval", 10)
+        params = factory.create("model", agent_name, "env", "eval", 10)
         assert params.agent_name == agent_name
         assert not getattr(params, false_param)
         for attr in dir(params):
             if attr.startswith("use_") \
                     and attr != false_param \
-                    and attr != "use_react" \
-                    and attr != "use_react_k1":
+                    and attr != "use_react_k0" \
+                    and attr != "use_react_k1" \
+                    and attr != "use_react_kn":
                 assert getattr(params, attr)

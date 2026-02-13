@@ -9,6 +9,7 @@ class Model:
         self.reasoning_tokens = 0
         self.output_tokens = 0
         self.total_tokens = 0
+        self.wait_time = 0
 
     def reset(self) -> None:
         self.cached_tokens = 0
@@ -16,6 +17,7 @@ class Model:
         self.reasoning_tokens = 0
         self.output_tokens = 0
         self.total_tokens = 0
+        self.wait_time = 0
 
     def get_response(self, messages):
         raise NotImplementedError("Subclasses must implement this method")

@@ -1,7 +1,7 @@
 class SummaryRow:
     def __init__(self):
-        self.agent_name = ""
         self.model_name = ""
+        self.agent_name = ""
         self.eval_name = ""
         self.tasks = 0
         self.successes = 0
@@ -10,6 +10,7 @@ class SummaryRow:
         self.accuracy = 0.0
         self.total_reward = 0.0
         self.total_steps = 0
+        self.max_steps_hit = 0
         self.cached_tokens = 0
         self.input_tokens = 0
         self.reasoning_tokens = 0

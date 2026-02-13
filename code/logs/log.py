@@ -1,5 +1,5 @@
 import os
-from common.parameters import Parameters
+from params.parameters import Parameters
 from renderers.render import Renderer
 from states.task_state import TaskState
 from states.step_state import StepState
@@ -18,7 +18,7 @@ RESET = "\033[0m"
 class Log:
     def __init__(self, renderer: Renderer, params: Parameters, episode_id):
         self.renderer = renderer
-        folder_path = f"../data/logs/{params.agent_name} - {params.model_name} - {params.eval_name}"
+        folder_path = f"../data/logs/{params.model_name} - {params.agent_name} - {params.eval_name}"
         os.makedirs(folder_path, exist_ok=True)
         file_path = f"{folder_path}/{episode_id}.txt"
         self.file = open(file_path, "w", encoding="utf-8", newline="\n")
@@ -44,7 +44,7 @@ class Log:
         print(f"{RED}Error: {error}{RESET}")
 
     def raw(self, text):
-        text = text.lstrip().rstrip()
+        text = text.lstrip().rstrip() + "\n"
         self.file.write(text)
         print(text)
 
@@ -73,7 +73,7 @@ class Log:
         self.raw(env_text)
 
     def agent(self, agent_state: AgentState):
-        agent_text = self.renderer.render_agent(agent_state)
+        agent_text = self.renderer.render_agent(agent_state, True)
         self.raw(agent_text)
 
     def close(self):

@@ -1,5 +1,5 @@
 import pytest
-from common.parameters import Parameters
+from params.parameters import Parameters
 from prompts.system.system_factory import SystemFactory
 
 class TestSystemFactory:

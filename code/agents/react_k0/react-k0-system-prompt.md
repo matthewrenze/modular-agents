@@ -20,7 +20,7 @@ Then, the environment will provide us with an updated state based on our action.
 We will use feedback from the environment to refine our actions in subsequent steps.
 
 # Memory
-Your context contains only the full state information for the previous step and the current step.
+Your context contains only the full state information for the current step.
 All environment and agent state information from any earlier steps will be truncated and unavailable.
 
 # Actions

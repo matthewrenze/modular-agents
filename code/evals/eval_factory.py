@@ -1,9 +1,10 @@
 import pandas as pd
-from common.parameters import Parameters
+from params.parameters import Parameters
 
 class EvalFactory:
 
-    def create(self, params: Parameters):
+    @staticmethod
+    def create(params: Parameters):
         if params.eval_name.startswith("tw-curriculum-"):
             file_path = f"../data/evals/tw-curriculum/{params.eval_name}.jsonl"
             eval = pd.read_json(file_path, lines=True)

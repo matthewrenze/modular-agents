@@ -1,6 +1,6 @@
 from models.model import Model
 from states.global_state import GlobalState
-from common.parameters import Parameters
+from params.parameters import Parameters
 from renderers.render import Renderer
 
 class Agent:

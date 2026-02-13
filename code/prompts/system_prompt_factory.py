@@ -1,4 +1,4 @@
-from common.parameters import Parameters
+from params.parameters import Parameters
 from prompts.system.system_factory import SystemFactory
 from prompts.process.process_factory import ProcessFactory
 from prompts.actions.actions_factory import ActionsFactory

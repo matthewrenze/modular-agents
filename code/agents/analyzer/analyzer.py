@@ -2,12 +2,12 @@ import yaml
 from agents.agent import Agent
 from states.global_state import GlobalState
 
-class Reviewer(Agent):
+class Analyzer(Agent):
 
     def execute(self, state: GlobalState) -> str:
         raise NotImplementedError("Reviewer does not implement execute() method. Use review() instead.")
 
-    def review(self, task: str, solution: str, solution_steps: int, log: str) -> str:
+    def analyze(self, reviews: str) -> str:
 
         # Clear the previous messages
         self.messages = []
@@ -17,10 +17,7 @@ class Reviewer(Agent):
         self.messages.append(system_message)
 
         # Create the user content
-        user_content = f"Task: {task}\n"
-        user_content += f"Solution: {solution}\n"
-        user_content += f"Optimal steps: {solution_steps}\n"
-        user_content += log.strip()
+        user_content = reviews.strip()
 
         # Add the user prompt
         user_message = {"role": "user", "content": user_content}

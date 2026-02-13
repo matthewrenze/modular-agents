@@ -1,7 +1,7 @@
 import os
 import time
 import anthropic
-from common.console import warn
+from logs.console import warn
 from models.model import Model
 
 # TODO: Need to lock the version number of the anthropic models (instead of using aliases)
@@ -52,5 +52,6 @@ class ClaudeModel(Model):
 
                 delay = retries[attempts]
                 warn(f"Retrying LLM API call in {delay} seconds due to error: {e}")
+                self.wait_time += delay
                 time.sleep(delay)
                 attempts += 1

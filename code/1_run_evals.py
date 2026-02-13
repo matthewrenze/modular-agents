@@ -1,9 +1,9 @@
 # Import packages
 import time
 import traceback
-from common.log import Log
-from common.console import warn
-from common.parameters_factory import ParametersFactory
+from logs.log import Log
+from logs.console import warn
+from params.parameters_factory import ParametersFactory
 from details.details_manager import DetailsManager
 from environments.env_factory import EnvFactory
 from evals.eval_factory import EvalFactory
@@ -21,20 +21,31 @@ from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
 from messages.messages_writer import MessagesWriter
 from states.writer.state_writer import StateWriter
-from reviews.review_writer import ReviewWriter
-from agents.reviewer.reviewer import Reviewer
-from typing import cast
+from reviews.writer.review_writer import ReviewWriter
+
+# Set models
+model_names = [
+    # "claude-sonnet-4-5",
+    # "claude-opus-4-6",
+    # "deepseek-v3.2"
+    # "gemini-3-flash-preview",
+    # "gemini-3-pro-preview",
+    "gpt-5-mini",
+    # "gpt-5.2"
+    # "kimi-k2.5"
+]
 
 # Set agents
 agent_names = [
-    # "react",
+    # "react-k0",
     # "react-k1",
+    # "react-kn",
     # "baseline-v2",
     # "plus-tasker-v2",
-    "plus-planner-v1"
+    # "plus-planner-v2"
     # "plus-summarizer-v2",
-    # "plus-memorizer-v1",
-    # "plus-reasoner-v1",
+    # "plus-memorizer-v2",
+    "plus-reasoner-v2",
     # "minus-tasker",
     # "minus-summarizer",
     # "minus-memorizer",
@@ -42,25 +53,19 @@ agent_names = [
     # "topline-v2"
 ]
 
-# Set models
-model_names = [
-    # "gpt-4.1-mini",
-    "gpt-5.2"
-]
-
 # Set evals
-eval_size = 10
+eval_size = 1
 eval_env_names = [
     ("tw-simple-1", "textworld"),
-    ("tw-treasure-1", "textworld"),
-    ("tw-treasure-2", "textworld"),
-    ("tw-treasure-3", "textworld"),
-    ("tw-coin-1", "textworld"),
-    ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
-    ("tw-cooking-1", "textworld"),
-    ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-treasure-1", "textworld"),
+    # ("tw-treasure-2", "textworld"),
+    # ("tw-treasure-3", "textworld"),
+    # ("tw-coin-1", "textworld"),
+    # ("tw-coin-2", "textworld"),
+    # ("tw-coin-3", "textworld"),
+    # ("tw-cooking-1", "textworld"),
+    # ("tw-cooking-2", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -71,13 +76,13 @@ sleep_time = 1
 # Create the runs
 runs = []
 parameters_factory = ParametersFactory()
-for agent_name in agent_names:
-    for model_name in model_names:
+for model_name in model_names:
+    for agent_name in agent_names:
         for eval_env_name in eval_env_names:
             eval_name, env_name = eval_env_name
             params = parameters_factory.create(
+                model_name=model_name,
                 agent_name = agent_name,
-                model_name = model_name,
                 env_name = env_name,
                 eval_name = eval_name,
                 eval_size = eval_size)
@@ -94,7 +99,7 @@ state_writer = StateWriter()
 review_writer = ReviewWriter()
 
 for params in runs:
-    print(f"--- Running {params.agent_name} - {params.model_name} - {params.eval_name} ---")
+    print(f"--- Running {params.model_name} - {params.agent_name} - {params.eval_name} ---")
 
     # Create components
     results_manager = ResultsManager()
@@ -112,7 +117,7 @@ for params in runs:
 
     # Set up summaries
     if summary_manager.exists(params):
-        warn(f"Summary for {params.agent_name} - {params.model_name} - {params.eval_name} already exists.")
+        warn(f"Summary for {params.model_name} - {params.agent_name} - {params.eval_name} already exists.")
         input("Press Enter to continue...")
 
     for episode_id in episode_ids:
@@ -120,7 +125,7 @@ for params in runs:
         # Create the log
         renderer = RendererFactory.create()
         log = Log(renderer, params, episode_id)
-        log.head(f"--- Starting {params.agent_name} - {params.model_name} - {params.eval_name} - episode {episode_id} / {num_episodes} ---")
+        log.head(f"--- Starting {params.model_name} - {params.agent_name} - {params.eval_name} - episode {episode_id} / {num_episodes} ---")
         
         # Create the episode
         episode = eval.iloc[episode_id - 1].to_dict()
@@ -131,17 +136,15 @@ for params in runs:
         
         # Create entities
         model = model_factory.create(params)
-        react = agent_factory.create("react", params, model)
+        react_k0 = agent_factory.create("react-k0", params, model)
         react_k1 = agent_factory.create("react-k1", params, model)
+        react_kn = agent_factory.create("react-kn", params, model)
         tasker = agent_factory.create("tasker", params, model)
         summarizer = agent_factory.create("summarizer", params, model)
         planner = agent_factory.create("planner", params, model)
         memorizer = agent_factory.create("memorizer", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
-        reviewer_model = model_factory.create(params)
-        reviewer = agent_factory.create("reviewer", params, reviewer_model)
-        reviewer = cast(Reviewer, reviewer)
         plan_manager = PlanManager()
         memory_manager = MemoryManager()
         details_manager = DetailsManager(params, episode_id)
@@ -151,8 +154,10 @@ for params in runs:
         action = ""
         answer = ""
         final_reward = 0.0
+        final_score = 0
         step_id = 0
         is_done = False
+        is_success = False
 
         # Create result row
         result_row = results_manager.create(params)
@@ -163,7 +168,9 @@ for params in runs:
 
             # Reset the model/agents
             model.reset()
-            react.reset()
+            react_k0.reset()
+            react_k1.reset()
+            react_kn.reset()
             tasker.reset()
             summarizer.reset()
             planner.reset()
@@ -225,10 +232,10 @@ for params in runs:
                 # Log the agent state
                 log.info(f"Agent:")
 
-                # Use the ReAct agent
-                if params.use_react:
-                    thought, action = react.execute(global_state)
-                    agent_writer.write(params, episode_id, step_id + 1, "react", react.messages)
+                # Use the ReAct-k0 agent
+                if params.use_react_k0:
+                    thought, action = react_k0.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react_k0", react_k0.messages)
                     agent_state.thought = thought
                     agent_state.action = action
                     log.info(f"  Thought: {thought}")
@@ -238,6 +245,15 @@ for params in runs:
                 if params.use_react_k1:
                     thought, action = react_k1.execute(global_state)
                     agent_writer.write(params, episode_id, step_id + 1, "react_k1", react_k1.messages)
+                    agent_state.thought = thought
+                    agent_state.action = action
+                    log.info(f"  Thought: {thought}")
+                    log.info(f"  Action: {action}")
+
+                # Use the ReAct-kn agent
+                if params.use_react_kn:
+                    thought, action = react_kn.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react", react_kn.messages)
                     agent_state.thought = thought
                     agent_state.action = action
                     log.info(f"  Thought: {thought}")
@@ -290,7 +306,7 @@ for params in runs:
                 details_row.description = env_state.description
                 details_row.inventory = env_state.inventory
                 details_row.score = env_state.score
-                details_row.final_reward = env_state.reward
+                details_row.reward = env_state.reward
                 details_row.is_done = env_state.is_done
                 details_row.summary = agent_state.summary
                 details_row.thought = agent_state.thought
@@ -299,28 +315,15 @@ for params in runs:
 
                 # Handle end of episode
                 if env_state.is_done:
+                    final_score = env_state.score
                     final_reward = env_state.reward
+                    is_success = final_reward == 1.0
+                    global_state.task_state.success = is_success
                     break
 
                 # Sleep for n seconds to avoid API throttling
                 time.sleep(sleep_time)
                 log.info("")
-
-            # Post-episode steps
-            review = reviewer.review(
-                global_state,
-                episode["task"],
-                episode["solution"])
-            agent_writer.write(params, episode_id, step_id + 1, "reviewer", reviewer.messages)
-            review_writer.write(review, params, episode_id)
-            log.info("Review:")
-            log.info("  Steps: ")
-            for step_id, step_analysis in review.steps.items():
-                log.info(f"    {step_id}: {step_analysis}")
-            log.info(f"  Loops: {review.loops}")
-            log.info(f"  Summary: {review.summary}")
-            log.info(f"  Category: {review.category}")
-            log.info(f"  Advice: {review.advice}")
 
         except Exception as e:
             error_message = f"{type(e).__name__}: {e}\n" \
@@ -330,17 +333,21 @@ for params in runs:
 
         # Log the results
         log.info(f"Reward: {final_reward}")
+        log.info(f"Success: {final_reward == 1.0}")
         log.head("--- End of task ---\n")
         log.close()
 
         # Update result row
-        total_sleep_time = sleep_time * (step_id + 1)
         result_row.stop_time = time.time()
-        result_row.total_time = result_row.stop_time - result_row.start_time - total_sleep_time
-        result_row.success = final_reward == 1.0
+        result_row.sleep_time = sleep_time * step_id + model.wait_time
+        result_row.total_time = result_row.stop_time - result_row.start_time - result_row.sleep_time
+        result_row.success = is_success
         result_row.reward = final_reward
-        result_row.steps = step_id + 1
+        result_row.score = final_score
+        result_row.max_score = global_state.task_state.max_score
+        result_row.steps = step_id
         result_row.max_steps = params.max_steps
+        result_row.max_steps_hit = result_row.steps == params.max_steps
         result_row.solution_steps = episode["solution_steps"]
         result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens
@@ -350,7 +357,7 @@ for params in runs:
         result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.cached_tokens, model.input_tokens)
         result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.reasoning_tokens, model.output_tokens)
         result_row.total_cost = result_row.input_cost + result_row.output_cost
-        result_row.reward_per_step = final_reward / (step_id + 1)
+        result_row.reward_per_step = final_reward / step_id
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
         results_manager.add(result_row)
 
@@ -383,6 +390,6 @@ for params in runs:
     print(f"Avg Reward per Task: {summary.avg_reward_per_task:.2f}")
     print(f"Avg Reward per Step: {summary.avg_reward_per_step:.4f}")
     print(f"Avg Reward per Token: {summary.avg_reward_per_token:.6f}")
-    print(" --- END OF EVAL ---" )
+    print("--- END OF EVAL ---" )
     print("")
 

@@ -1,4 +1,4 @@
-from common.parameters import Parameters
+from params.parameters import Parameters
 
 class SystemFactory:
     def create(self, params: Parameters, subagent_name: str):

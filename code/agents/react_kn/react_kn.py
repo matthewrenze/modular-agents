@@ -1,9 +1,8 @@
 import re
-from common.console import debug
 from states.global_state import GlobalState
 from agents.agent import Agent
 
-class ReactAgent(Agent):
+class ReactKn(Agent):
 
     def reset(self):
         self.model.reset()

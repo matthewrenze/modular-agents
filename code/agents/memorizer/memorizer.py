@@ -22,23 +22,23 @@ class Memorizer(Agent):
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
-        # Add the plan
-        if self.params.use_planner:
-            user_content += self.renderer.render_plan(state.plan)
-            user_content += "\n"
+        # TODO: Delete this if I decide don't need them today
+        # # Add the plan
+        # if self.params.use_planner:
+        #     user_content += self.renderer.render_plan(state.plan)
+        #     user_content += "\n"
 
         # Add the memories
         if self.params.use_memorizer:
             user_content += self.renderer.render_memories(state.memories)
             user_content += "\n"
 
-        # Add the last two steps
-        previous_steps = state.step_history[-2:]
-        for index, step in enumerate(previous_steps):
-            user_content += self.renderer.render_step(step, state.task_state)
-            user_content += self.renderer.render_env(step.env_state, state.task_state)
-            user_content += self.renderer.render_agent(step.agent_state)
-            user_content += "\n"
+        # Add the last steps (only)
+        current_step = state.step_history[-1]
+        user_content += self.renderer.render_step(current_step, state.task_state)
+        user_content += self.renderer.render_env(current_step.env_state, state.task_state)
+        # user_content += self.renderer.render_agent(current_step.agent_state)
+        user_content += "\n"
 
         # Add the user prompt
         user_message = {"role": "user", "content": user_content}

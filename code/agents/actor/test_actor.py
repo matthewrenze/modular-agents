@@ -1,12 +1,8 @@
 import pytest
-from common.parameters import Parameters
+from params.parameters import Parameters
 from models.gpt_model import GptModel
 from states.reader.state_reader import StateReader
 from agents.agent_factory import AgentFactory
-from states.global_state import GlobalState
-from states.step_state import StepState
-from states.env_state import EnvState
-from states.agent_state import AgentState
 
 class TestActor:
 
