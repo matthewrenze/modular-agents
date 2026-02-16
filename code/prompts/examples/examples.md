@@ -17,7 +17,7 @@ Environment:
   Score: 0 of 4
   Done: False
 Agent:
-  Summary: I started in the living room.
+  Summary: start → location = living room
   Plan: 
     add: Go to the kitchen
     add: Dice the carrot
@@ -36,7 +36,7 @@ Environment:
   Score: 1 of 4
   Done: False
 Agent:
-  Summary: I went north → I arrived in the kitchen
+  Summary: go north → location = kitchen
   Plan:
     mark: 1 = done
     insert: 2 = Get the knife
@@ -50,8 +50,8 @@ Agent:
 Task: Dice the carrot in the kitchen.
 
 History:
-  Step 1: I started in the living room.
-  Step 2: I went north → I arrived in kitchen
+  Step 1: start → location = living room
+  Step 2: go north → location = kitchen
 
 Plan:
   1 [X] Go to the kitchen
@@ -73,7 +73,7 @@ Environment:
   Score: 2 of 4
   Done: False
 Agent:
-  Summary: I took knife from table → the knife was added to my inventory
+  Summary: take knife from table → inventory += knife; score += 1
   Plan:
     mark: 2 = done
   Memory: 
@@ -91,7 +91,7 @@ Environment:
   Score: 2 of 4
   Done: False
 Agent:
-  Summary: I diced the carrot with the knife → I failed because carrot must be in my inventory
+  Summary: dice carrot with knife → failure = carrot must be in inventory to dice
   Plan:
     insert: 3 = Get the carrot
   Memory: 
@@ -103,10 +103,10 @@ Agent:
 Task: Dice the carrot in the kitchen.
 
 History:
-  Step 1: I started in the living room.
-  Step 2: I went north → I arrived in kitchen
-  Step 3: I took knife from table → the knife was added to my inventory
-  Step 4: I diced the carrot with the knife → I failed because carrot must be in my inventory
+  Step 1: start → location = living room
+  Step 2: go north → location = kitchen
+  Step 3: take knife from table → inventory += knife; score += 1
+  Step 4: dice carrot with knife → failure = carrot must be in inventory to dice
 
 Plan:
   1 [X] Go to the kitchen.
@@ -129,7 +129,7 @@ Environment:
   Score: 3 of 4
   Done: False
 Agent:
-  Summary: I took the carrot from the counter → the carrot was added to my inventory
+  Summary: take carrot from counter → inventory += carrot; score += 1
   Plan:
     mark: 3 = done
   Memory: 
@@ -148,7 +148,7 @@ Environment:
   Score: 4 of 4
   Done: True
 Agent:
-  Summary: I diced the carrot with the knife → the carrot is diced; the task is complete
+  Summary: dice carrot with knife → carrot = diced; score += 1
   Plan:
     mark: 4 = done
   Memory:
