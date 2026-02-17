@@ -54,7 +54,7 @@ DO NOT copy, rewrite, or extend the previous history in your response; only summ
 # Memory
 Our context contains only the full state information for the previous step and the current step.
 Environment or agent state from any earlier steps may be truncated and unavailable.
-However, we will have access to the summaries you provide for all previous steps in an episode.
+However, we will have access to the summaries you provide for the previous 10 steps in an episode.
 
 # Actions
 *Note: You are not allowed to execute these actions. They are for reference only.*

@@ -1,10 +1,11 @@
-from models.fireworks_model import FireworksModel
-from params.parameters import Parameters
 from models.model import Model
+from models.azure_openai_model import AzureOpenAiModel
+from models.openai_model import OpenAiModel
+from params.parameters import Parameters
 from models.claude_model import ClaudeModel
 from models.azure_model import AzureModel
 from models.gemini_model import GeminiModel
-from models.gpt_model import GptModel
+from models.fireworks_model import FireworksModel
 
 class ModelFactory():
 
@@ -20,7 +21,7 @@ class ModelFactory():
             return GeminiModel(params.model_name)
 
         elif params.model_name.startswith("gpt"):
-            return GptModel(params.model_name)
+            return OpenAiModel(params.model_name)
         
         elif params.model_name.startswith("grok"):
             return AzureModel(params.model_name)

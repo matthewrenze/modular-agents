@@ -13,6 +13,7 @@ Your specific objective is to select the best next action to take in order to co
 # Memory
 Our context contains only the full state information for the previous step and the current step.
 Environment or agent state from any earlier steps may be truncated and unavailable.
+However, we will have access to a summary of the previous 10 steps as acton-outcome pairs. 
 
 # Actions
 {actions}

@@ -30,8 +30,8 @@ model_names = [
     # "deepseek-v3.2"
     # "gemini-3-flash-preview",
     # "gemini-3-pro-preview",
-    "gpt-5-mini",
-    # "gpt-5.2"
+    # "gpt-5-mini",
+    "gpt-5.2"
     # "kimi-k2.5"
 ]
 
@@ -43,7 +43,8 @@ agent_names = [
     # "baseline-v2",
     # "plus-tasker-v2",
     # "plus-planner-v2"
-    "plus-summarizer-v2.2",
+    # "plus-summarizer-v2.2",
+    "plus-summarizer-v2.3",
     # "plus-memorizer-v2",
     # "plus-reasoner-v2",
     # "minus-tasker",
@@ -56,7 +57,7 @@ agent_names = [
 # Set evals
 eval_size = 1
 eval_env_names = [
-    # ("tw-simple-1", "textworld"),
+    ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -215,8 +216,9 @@ for params in runs:
                 log.step(step_state, global_state.task_state)
 
                 # Log the history
+                # TODO: Testing for v2.3 - only include the last 10 steps
                 if params.use_summarizer:
-                    log.history(global_state.step_history[:-1])
+                    log.history(global_state.step_history[:-1][-10:])
 
                 # Log the plan
                 if params.use_planner:

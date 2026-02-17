@@ -1,25 +1,17 @@
 import os
 import time
-from openai import AzureOpenAI
+from openai import OpenAI
 from logs.console import warn
 from models.model import Model
 
-class GptModel(Model):
+class OpenAiModel(Model):
     def __init__(self, model_name):
         super().__init__(model_name)
 
-        # HACK: Use EAST US 2 for gpt-5.1 until EAST US is enabled
-        if model_name == "gpt-5.1" or model_name == "gpt-5.2":
-            self.api_url = os.environ["AZURE_OPENAI_URL_EASTUS2"]
-            self.api_key = os.environ["AZURE_OPENAI_KEY_EASTUS2"]
-        else:
-            self.api_url = os.environ["AZURE_OPENAI_URL"]
-            self.api_key = os.environ["AZURE_OPENAI_KEY"]
-        self.api_version = "2025-01-01-preview"
-        self.client = AzureOpenAI(
-            api_key=self.api_key,
-            azure_endpoint=self.api_url,
-            api_version=self.api_version)
+        self.api_key = os.environ["OPENAI_API_KEY"]
+
+        self.client = OpenAI(
+            api_key=self.api_key)
 
     def get_response(self, messages):
 
