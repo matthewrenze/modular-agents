@@ -45,8 +45,8 @@ agent_names = [
     # "plus-planner-v2"
     # "plus-summarizer-v2.4",
     # "plus-summarizer-v2.2",
-    "plus-memorizer-v2",
-    # "plus-memorizer-v2.1",
+    # "plus-memorizer-v2",
+    "plus-memorizer-v2.1",
     # "plus-reasoner-v2",
     # "minus-tasker",
     # "minus-summarizer",

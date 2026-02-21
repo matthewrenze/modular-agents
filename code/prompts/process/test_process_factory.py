@@ -13,7 +13,7 @@ class TestProcessFactory:
             use_memorizer=True,
             use_reasoner=True)
         process_prompt = factory.create(params, "actor")
-        assert " - Task" in process_prompt
+        assert " - Revised task" in process_prompt
         assert " - History" in process_prompt
         assert " - Summary" in process_prompt
         assert " - Plan" in process_prompt
@@ -31,7 +31,7 @@ class TestProcessFactory:
             use_memorizer=False,
             use_reasoner=False)
         process_prompt = factory.create(params, "actor")
-        assert " - Task" not in process_prompt
+        assert " - Revised task" not in process_prompt
         assert " - Summary" not in process_prompt
         assert " - History" not in process_prompt
         assert " - Plan" not in process_prompt

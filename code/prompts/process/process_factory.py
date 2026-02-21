@@ -11,7 +11,7 @@ class ProcessFactory:
 
         # Filter tasker
         if not params.use_tasker:
-            section = self.remove_line(section, "Task")
+            section = self.remove_line(section, "Revised task")
 
         # Filter summarizer
         if not params.use_summarizer:

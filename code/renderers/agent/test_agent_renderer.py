@@ -7,7 +7,7 @@ class TestAgentRenderer:
         agent_state = AgentState(
             summary="summary 1",
             plan="add: 1\ninsert: 2\nupdate: 3\nmark: 4\ndelete: 5",
-            memory="delete: 1\ncreate: 2",
+            memory="delete: 1\nupdate: 2 = memory 2B\ncreate: memory 3",
             thought="thought 1",
             action="action 1")
         expected = (
@@ -24,7 +24,7 @@ class TestAgentRenderer:
         agent_state = AgentState(
             summary="summary 1",
             plan="add: 1\ninsert: 2\nupdate: 3\nmark: 4\ndelete: 5",
-            memory="delete: 1\ncreate: 2",
+            memory="delete: 1\nupdate: 2 = memory2B\ncreate: memory 3",
             thought="thought 1",
             action="action 1")
         expected = (
@@ -38,7 +38,8 @@ class TestAgentRenderer:
             "    delete: 5\n"
             "  Memory:\n"
             "    delete: 1\n"
-            "    create: 2\n"
+            "    update: 2 = memory2B\n"
+            "    create: memory 3\n"
             "  Thought: thought 1\n"
             "  Action: action 1\n")
 

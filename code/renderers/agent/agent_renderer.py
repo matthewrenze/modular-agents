@@ -34,5 +34,6 @@ class AgentRenderer:
 
     def render_memory_updates(self, memory: str) -> str:
         memory = memory.replace("create:", "    create:")
+        memory = memory.replace("update:", "    update:")
         memory = memory.replace("delete:", "    delete:")
         return memory

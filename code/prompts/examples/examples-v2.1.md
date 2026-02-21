@@ -22,7 +22,7 @@ Agent:
     add: Go to the kitchen
     add: Dice the carrot
   Memory: 
-    create: At step 1, the kitchen was north of the living room.
+    create: The kitchen is north of the living room.
   Thought: I need to go to the kitchen, so I can find the carrot.
   Action: go north
 
@@ -41,8 +41,8 @@ Agent:
     mark: 1 = done
     insert: 2 = Get the knife
   Memory: 
-    create: At step 2, there was a carrot on the counter in the kitchen.
-    create: At step 2, there was a knife on the table in the kitchen.
+    create: The orange carrot is on the counter in the kitchen.
+    create: A knife is on the table in the kitchen.
   Thought: I need a knife to dice the carrot.
   Action: take knife from table
 
@@ -59,9 +59,9 @@ Plan:
   3 [ ] Dice the carrot
 
 Memories:
-  1: At step 1, the kitchen was north of the living room.
-  2: At step 2, there was a carrot on the counter in the kitchen.
-  3: At step 2, there was a knife on the table in the kitchen.
+  1: The kitchen is north of the living room.
+  2: The orange carrot is on the counter in the kitchen.
+  3: A knife is on the table in the kitchen.
 
 Step: 3 of 10
 Environment:
@@ -95,7 +95,7 @@ Agent:
   Plan:
     insert: 3 = Get the carrot
   Memory: 
-    create: At step 4, I failed to dice the carrot because I needed to take it from the counter first.
+    create: You must have objects in your inventory to cut them.
   Thought: I need to take the carrot from the counter before I can dice it.
   Action: take carrot from counter
 
@@ -115,9 +115,9 @@ Plan:
   4 [ ] Dice the carrot
 
 Memories:
-  1: At step 1, the kitchen was north of the living room.
-  2: At step 2, there was a carrot on the counter in the kitchen.
-  4: At step 4, I failed to dice the carrot because I needed to take it from the counter first.
+  1: The kitchen is north of the living room.
+  2: The orange carrot is on the counter in the kitchen.
+  4: You must have objects in your inventory to cut them.
 
 Step: 5 of 10
 Environment:
@@ -134,7 +134,6 @@ Agent:
     mark: 3 = done
   Memory: 
     delete: 2
-    delete: 4
   Thought: I can now dice the carrot with the knife.
   Action: dice carrot with knife
 
