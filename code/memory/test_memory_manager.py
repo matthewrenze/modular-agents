@@ -5,17 +5,20 @@ class TestMemoryManager:
 
         memories = {
             1: "memory 1",
-            2: "memory 2",
+            2: "memory 2A",
+            3: "memory 3",
         }
 
         updates = """
-                create: memory 3
-                delete: 2
+                create: memory 4
+                update: 2 = memory 2B
+                delete: 3
                 """.strip()
         manager = MemoryManager()
         actual = manager.execute(memories, updates)
 
         assert actual == {
             1: "memory 1",
-            3: "memory 3",
+            2: "memory 2B",
+            4: "memory 4",
         }

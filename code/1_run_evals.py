@@ -43,9 +43,10 @@ agent_names = [
     # "baseline-v2",
     # "plus-tasker-v2",
     # "plus-planner-v2"
+    # "plus-summarizer-v2.4",
     # "plus-summarizer-v2.2",
-    "plus-summarizer-v2.3",
-    # "plus-memorizer-v2",
+    "plus-memorizer-v2",
+    # "plus-memorizer-v2.1",
     # "plus-reasoner-v2",
     # "minus-tasker",
     # "minus-summarizer",
@@ -57,7 +58,7 @@ agent_names = [
 # Set evals
 eval_size = 1
 eval_env_names = [
-    ("tw-simple-1", "textworld"),
+    # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -216,9 +217,8 @@ for params in runs:
                 log.step(step_state, global_state.task_state)
 
                 # Log the history
-                # TODO: Testing for v2.3 - only include the last 10 steps
                 if params.use_summarizer:
-                    log.history(global_state.step_history[:-1][-10:])
+                    log.history(global_state.step_history[:-1])
 
                 # Log the plan
                 if params.use_planner:

@@ -17,34 +17,33 @@ Each summary is a single line in structured log notation:
 action → outcome
 ```
 Where:
-- `action` is a concise description of the action taken written in past tense
-- `outcome` is a concise description of the resulting effect in the environment, also in past tense
-
-For example: 
-- "I went north → I arrived in kitchen"
-- "I took the key from chest → The key was added to my inventory"
-- "I diced the carrot with the spoon → I failed because the spoon cannot cut a carrot"
-- "I diced the carrot with the knife → The carrot is diced; the task is complete"
+- `action` is the exact command executed (or "start" for the initial step)
+- `outcome` uses assignment notation to concisely record what changed:
+    - `location = <place>` movement to a new location (e.g. `location = kitchen`)
+    - `inventory += <item>` item was added to inventory (e.g. `inventory += knife`)
+    - `inventory -= <item>` item was removed from inventory (e.g. `inventory -= apple`)
+    - `object = <state>` object state changes (e.g. `carrot = diced`)
+    - `score += <points>` score increased by points (e.g. `score += 1`)
+    - `failure = <reason>` action failed and why it failed (e.g. `failure = apple must be in inventory to slice`)
 
 ## Rules
 - Each summary must be exactly one line.
 - That one line must summarize only the immediately preceding action and its direct outcome.
-- Record only the direct effect of the action -- not room contents, full inventory, instructions, ingredients, or other unchanged states.
+- Record only the direct effect of the action -- not room contents, full inventory, or other unchanged states.
 - There should typically only be a single outcome per action.
 - If there are multiple outcomes, separate them with a semicolon and a space.
 - Never record more than three outcomes per action.
 - If there are more than three outcomes, prioritize the most important three and omit the rest.
-- Each summary must be written in the first-person past tense.
-- DO NOT record the agent's thoughts, plans, or reasoning in the summary; only the action and its direct effect on the environment.
+- DO NOT narrate, describe, or explain; use only the assignment notation above.
 - DO NOT include state that hasn't changed.
 - DO NOT describe room contents.
 
 ## Step 1
 For the first step (step 1): 
 You will be given the initial state of the environment but no action will be selected yet.
-So, you will write "I started in [location]" as your summary.
-For example, "I started in kitchen."
-DO NOT output "I started in ..." after step 1; only the first step should use "I started in" as the action-outcome summary.
+So, you will write "start → location = <starting location>" as your summary.
+For example, "start → location = living room"
+DO NOT output "start → ..." after step 1; only the first step should use "start" as the action.
 
 ## Step 2 and Beyond
 For each additional step:
@@ -62,7 +61,7 @@ However, we will have access to the summaries you provide for all previous steps
 {actions}
 
 # Constraints
-Your response should contain only your summaries.
+Your response should contain ONLY your summaries.
 DO NOT begin your response with "Summary:" -- just state your summary.
 Do not include any other text in your response.
 We do not have access to any other tools, actions, or commands.

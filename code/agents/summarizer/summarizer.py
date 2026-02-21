@@ -17,22 +17,10 @@ class Summarizer(Agent):
         user_content += "\n"
 
         # Add the history
-        # TODO: Testing for v2.3 - only include the last 10 steps
         if self.params.use_summarizer:
-            previous_steps = state.step_history[:-1][-10:]
+            previous_steps = state.step_history[:-1]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
-
-        # TODO: Delete these if I decide don't need them today
-        # # Add the plan
-        # if self.params.use_planner:
-        #     user_content += self.renderer.render_plan(state.plan)
-        #     user_content += "\n"
-        #
-        # # Add the memories
-        # if self.params.use_memorizer:
-        #     user_content += self.renderer.render_memories(state.memories)
-        #     user_content += "\n"
 
         # Add the previous agent state (action)
         if len(state.step_history) >= 2:

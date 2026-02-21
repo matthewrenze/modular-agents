@@ -18,15 +18,9 @@ class Memorizer(Agent):
 
         # Add the history
         if self.params.use_summarizer:
-            previous_steps = state.step_history[:-2]
+            previous_steps = state.step_history[:-1]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
-
-        # TODO: Delete this if I decide don't need them today
-        # # Add the plan
-        # if self.params.use_planner:
-        #     user_content += self.renderer.render_plan(state.plan)
-        #     user_content += "\n"
 
         # Add the memories
         if self.params.use_memorizer:

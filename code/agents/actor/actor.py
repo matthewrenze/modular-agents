@@ -17,9 +17,8 @@ class Actor(Agent):
         user_content += "\n"
 
         # Add the history
-        # TODO: Testing for v2.3 - only include the last 10 steps
         if self.params.use_summarizer:
-            previous_steps = state.step_history[:-2][-10:]
+            previous_steps = state.step_history[:-2]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
