@@ -21,8 +21,8 @@ Agent:
   Plan: 
     add: Go to the kitchen
     add: Dice the carrot
-  Memory: 
-    create: The kitchen is north of the living room.
+  Memory:
+    create: living room: rooms = {north = kitchen}
   Thought: I need to go to the kitchen, so I can find the carrot.
   Action: go north
 
@@ -41,8 +41,9 @@ Agent:
     mark: 1 = done
     insert: 2 = Get the knife
   Memory: 
-    create: The orange carrot is on the counter in the kitchen.
-    create: A knife is on the table in the kitchen.
+    create: kitchen: rooms = {south = living room}
+    create: carrot: location = {room = kitchen, on = counter}
+    create: knife: location = {room = kitchen, on = table}
   Thought: I need a knife to dice the carrot.
   Action: take knife from table
 
@@ -59,9 +60,10 @@ Plan:
   3 [ ] Dice the carrot
 
 Memories:
-  1: The kitchen is north of the living room.
-  2: The orange carrot is on the counter in the kitchen.
-  3: A knife is on the table in the kitchen.
+  1: living room: rooms = {north = kitchen}
+  2: kitchen: rooms = {south = living room}
+  3: carrot: location = {room = kitchen, on = counter}
+  4: knife: location = {room = kitchen, on = table}
 
 Step: 3 of 10
 Environment:
@@ -77,7 +79,7 @@ Agent:
   Plan:
     mark: 2 = done
   Memory: 
-    delete: 3
+    update: 4 = knife: location = inventory
   Thought: I need to dice the carrot with the knife.
   Action: dice carrot with knife
 
@@ -95,7 +97,7 @@ Agent:
   Plan:
     insert: 3 = Get the carrot
   Memory: 
-    create: You must have objects in your inventory to cut them.
+    create: rule 1: You must have objects in your inventory to cut them.
   Thought: I need to take the carrot from the counter before I can dice it.
   Action: take carrot from counter
 
@@ -115,9 +117,11 @@ Plan:
   4 [ ] Dice the carrot
 
 Memories:
-  1: The kitchen is north of the living room.
-  2: The orange carrot is on the counter in the kitchen.
-  4: You must have objects in your inventory to cut them.
+  1: living room: rooms = {north = kitchen}
+  2: kitchen: rooms = {south = living room}
+  3: carrot: location = {room = kitchen, on = counter}
+  4: knife: location = inventory
+  5: rule 1: You must have objects in your inventory to cut them.
 
 Step: 5 of 10
 Environment:
@@ -133,7 +137,7 @@ Agent:
   Plan:
     mark: 3 = done
   Memory: 
-    delete: 2
+    update: 3 = carrot: location = inventory
   Thought: I can now dice the carrot with the knife.
   Action: dice carrot with knife
 
@@ -151,5 +155,6 @@ Agent:
   Plan:
     mark: 4 = done
   Memory:
+    update: 3 = carrot: location = inventory, state = diced
   Thought: I have completed the task successfully, so I should quit.
   Action: quit
