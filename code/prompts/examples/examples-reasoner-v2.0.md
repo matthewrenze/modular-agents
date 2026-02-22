@@ -23,7 +23,7 @@ Agent:
     add: Dice the carrot
   Memory:
     create: living room: rooms = {north = kitchen}
-  Thought: To dice the carrot, I need to go to the kitchen. The kitchen is north of the living room, so I should go north.
+  Thought: I need to go to the kitchen, so I can find the carrot.
   Action: go north
 
 Step: 2 of 10
@@ -44,7 +44,7 @@ Agent:
     create: kitchen: rooms = {south = living room}
     create: carrot: location = {room = kitchen, on = counter}
     create: knife: location = {room = kitchen, on = table}
-  Thought: To dice the carrot, I need a knife. There is a knife on the table, so I should take the knife.
+  Thought: I need a knife to dice the carrot.
   Action: take knife from table
 
 ## Example 2 - Correcting a mistake
@@ -80,7 +80,7 @@ Agent:
     mark: 2 = done
   Memory: 
     update: 4 = knife: location = inventory
-  Thought: To dice the carrot, I need to use the knife.
+  Thought: I need to dice the carrot with the knife.
   Action: dice carrot with knife
 
 Step: 4 of 10
@@ -98,7 +98,7 @@ Agent:
     insert: 3 = Get the carrot
   Memory: 
     create: rule 1: You must have objects in your inventory to cut them.
-  Thought: Dicing the carrot failed because the carrot was on the counter and not in my inventory. I need to take the carrot from the counter first before I can dice it.
+  Thought: I need to take the carrot from the counter before I can dice it.
   Action: take carrot from counter
 
 ## Example 3 - Recovering from mistake
@@ -138,7 +138,7 @@ Agent:
     mark: 3 = done
   Memory: 
     update: 3 = carrot: location = inventory
-  Thought: Now that I have both the knife and the carrot in my inventory, I can dice the carrot with the knife.
+  Thought: I can now dice the carrot with the knife.
   Action: dice carrot with knife
 
 Step: 6 of 10
