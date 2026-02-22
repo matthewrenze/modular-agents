@@ -15,7 +15,7 @@ Our context contains only the full state information for the previous step and t
 Full environment or agent state from any earlier steps may be truncated and unavailable. 
 
 # Actions
-*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for reference only.*
+*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*
 {actions}
 
 # Reasoning

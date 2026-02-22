@@ -29,11 +29,12 @@ class TestExamplesFactory:
         assert "  Plan: " not in examples
         assert "    add: " not in examples
         assert "    insert: " not in examples
-        # assert "    update: " not in examples #  Not currently in the examples
+        # assert "    update: " not in examples # multiple (plan and memory)
         assert "    mark: " not in examples
         # assert "    delete: " not in examples #  Not currently in the examples
         assert "  Memory: " not in examples
         assert "    create: " not in examples
+        # assert "    update: " not in examples  # multiple (plan and memory)
         assert "    delete: " not in examples
         assert "  Thought: " not in examples
         assert "  Action: " in examples # Always included
@@ -63,11 +64,12 @@ class TestExamplesFactory:
         assert "  Plan: " in examples
         assert "    add: " in examples
         assert "    insert: " in examples
-        # assert "    update: " in examples  # Not currently in the examples
+        assert "    update: " in examples
         assert "    mark: " in examples
         # assert "    delete: " in examples  # Not currently in the examples
         assert "  Memory: " in examples
         assert "    create: " in examples
-        assert "    delete: " in examples
+        assert "    update: " in examples
+        # assert "    delete: " in examples # Not currently in the examples
         assert "  Thought: " in examples
         assert "  Action: " in examples # Always included

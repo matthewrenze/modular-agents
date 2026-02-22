@@ -39,8 +39,7 @@ Agent:
   Summary: go north → location = kitchen
   Plan:
     mark: 1 = done
-    insert: 2 = Take the knife from the table
-    update: 3 = Dice the carrot with the knife
+    insert: 2 = Get the knife
   Memory: 
     create: kitchen: rooms = {south = living room}
     create: carrot: location = {room = kitchen, on = counter}
@@ -57,8 +56,8 @@ History:
 
 Plan:
   1 [X] Go to the kitchen
-  2 [ ] Take the knife from the table
-  3 [ ] Dice the carrot with the knife
+  2 [ ] Get the knife
+  3 [ ] Dice the carrot
 
 Memories:
   1: living room: rooms = {north = kitchen}
@@ -96,7 +95,7 @@ Environment:
 Agent:
   Summary: dice carrot with knife → failure = carrot must be in inventory to dice
   Plan:
-    insert: 3 = Take the carrot from the counter
+    insert: 3 = Get the carrot
   Memory: 
     create: rule 1: You must have objects in your inventory to cut them.
   Thought: Dicing the carrot failed because the carrot was on the counter and not in my inventory. I need to take the carrot from the counter first before I can dice it.
@@ -112,10 +111,10 @@ History:
   Step 4: dice carrot with knife → failure = carrot must be in inventory to dice
 
 Plan:
-  1 [X] Go to the kitchen
-  2 [X] Take the knife from the table
-  3 [ ] Take the carrot from the counter
-  4 [ ] Dice the carrot with the knife
+  1 [X] Go to the kitchen.
+  2 [X] Get the knife
+  3 [ ] Get the carrot
+  4 [ ] Dice the carrot
 
 Memories:
   1: living room: rooms = {north = kitchen}

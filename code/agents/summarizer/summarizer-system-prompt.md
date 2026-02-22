@@ -58,7 +58,7 @@ Environment or agent state from any earlier steps may be truncated and unavailab
 However, we will have access to the summaries you provide for all previous steps in an episode.
 
 # Actions
-*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for reference only.*
+*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*
 {actions}
 
 # Constraints

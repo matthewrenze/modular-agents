@@ -135,7 +135,7 @@ If so, do not create a new memory; instead, update the existing memory if necess
 ALWAYS prefer to store facts about an object with the object itself, NOT the room or container it is in.
 
 # Actions
-*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for reference only.*
+*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*
 {actions}
 
 # Constraints

@@ -19,20 +19,13 @@ class ExamplesFactory:
         if not params.use_planner:
             examples = self.remove_line(examples, r"^Plan:")
             examples = self.remove_line(examples, r"^  (\d+) \[(.?)\]")
-            examples = self.remove_line(examples, r"^    add:")
-            examples = self.remove_line(examples, r"^    insert:")
-            examples = self.remove_line(examples, r"^    update:")
-            examples = self.remove_line(examples, r"^    mark:")
-            examples = self.remove_line(examples, r"^    delete:")
-            examples = self.remove_line(examples, r"^  Plan:")
+            examples = self.remove_block(examples, r"^  Plan:")
 
         # Filter memories
         if not params.use_memorizer:
             examples = self.remove_line(examples, r"^Memories:")
             examples = self.remove_line(examples, r"^  \d+:")
-            examples = self.remove_line(examples, r"^  Memory:")
-            examples = self.remove_line(examples, r"^    create:")
-            examples = self.remove_line(examples, r"^    delete:")
+            examples = self.remove_block(examples, r"^  Memory:")
 
         # Filter thoughts
         if not params.use_reasoner and not params.use_react_kn:
@@ -50,4 +43,20 @@ class ExamplesFactory:
         for line in section.splitlines():
             if not pattern.search(line):
                 filtered_lines.append(line)
+        return "\n".join(filtered_lines)
+
+    @staticmethod
+    def remove_block(section: str, regex: str) -> str:
+        filtered_lines = []
+        pattern = re.compile(regex)
+        skip_block = False
+        for line in section.splitlines():
+            if pattern.search(line):
+                skip_block = True
+            elif skip_block and not line.startswith("    "):
+                skip_block = False
+
+            if not skip_block:
+                filtered_lines.append(line)
+
         return "\n".join(filtered_lines)
