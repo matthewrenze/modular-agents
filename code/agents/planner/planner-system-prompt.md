@@ -114,8 +114,8 @@ Do not update a step you are about to delete in the same set of operations.
 - Do not insert and delete the same step-id in the same set of operations.
 - Do not update a step you are about to delete.
 
-# Our Actions
-*Note: You are not allowed to execute these actions. They are for reference only.*
+# Actions
+*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for reference only.*
 {actions}
 
 # Format

@@ -41,13 +41,14 @@ agent_names = [
     # "react-k1",
     # "react-kn",
     # "baseline-v2",
-    # "plus-tasker-v2",
+    # "plus-tasker-v2"
+    "plus-tasker-v2.1",
     # "plus-planner-v2"
     # "plus-summarizer-v2.4",
     # "plus-summarizer-v2.2",
     # "plus-memorizer-v2",
     # "plus-memorizer-v2.1",
-    "plus-memorizer-v2.2",
+    # "plus-memorizer-v2.2",
     # "plus-reasoner-v2",
     # "minus-tasker",
     # "minus-summarizer",

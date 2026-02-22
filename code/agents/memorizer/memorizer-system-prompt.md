@@ -134,8 +134,8 @@ Before creating a new memory, check if the same or similar information is alread
 If so, do not create a new memory; instead, update the existing memory if necessary to ensure it is accurate and complete.
 ALWAYS prefer to store facts about an object with the object itself, NOT the room or container it is in.
 
-# Our Actions
-*Note: You are not allowed to execute these actions. They are for reference only.*
+# Actions
+*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for reference only.*
 {actions}
 
 # Constraints

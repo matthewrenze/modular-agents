@@ -15,11 +15,12 @@ Our context contains only the full state information for the previous step and t
 Environment or agent state from any earlier steps may be truncated and unavailable.
 
 # Actions
+*Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for reference only.*
 {actions}
 
 # Reasoning
 Your thought process should focus on:
-  - Analyzing the task and the goal state.
+  - Analyzing the task and the goal state
   - Analyzing the current state we are in
   - Analyzing the next state we want to reach
   - Analyzing the previous steps taken from the start state
