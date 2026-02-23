@@ -58,7 +58,10 @@ Steps will be added in the order they were provided.
 To insert a step at a specified position in the plan list, use "insert: <step-id> = <step-description>".
 For example, "insert: 2 = Get the key"
 Use "insert" when a step was missed and needs to go between existing steps.
-Note that inserting a step will shift all subsequent steps down by one but only after all operations have been executed.
+Inserting a step will shift all subsequent steps down by one but ONLY after all operations have been executed.
+To insert multiple steps at the same step-id, provide multiple "insert" operations with the same step-id.
+If you insert multiple steps with the same step-id, they will all be inserted before the original step-id in the order they were provided.
+For example, "insert: 2 = Get the key" followed by "insert: 2 = Find the map".
 
 ## Update a Step
 To update an existing plan step in the plan list, use "update: <step-id> = <new-step-description>".
@@ -96,24 +99,35 @@ All operations in a single response reference the plan as it was BEFORE any oper
 Step IDs do not change during the execution of your operations.
 After ALL operations are complete, steps are automatically renumbered sequentially (1, 2, 3, ...)
 
+## Step ID Referencing Example
 For example, if the current plan is:
 1 [ ] Subgoal 1
 2 [ ] Subgoal 2
 3 [ ] Subgoal 3
 
 And you respond with:
-insert: 2 = Subgoal 4 
+```
+insert: 2 = Subgoal 4
+insert: 2 = Subgoal 5
 delete: 3
+```
 
-The insert adds a new step before the ORIGINAL step 2 ("Subgoal 2").
+The insert adds a new steps before the ORIGINAL step 2 ("Subgoal 2").
 The delete removes the ORIGINAL step 3 ("Subgoal 3"), NOT the original step 2 ("Subgoal 2").
 The result after renumbering will be:
 1 [ ] Subgoal 1
 2 [ ] Subgoal 4
-3 [ ] Subgoal 2
+3 [ ] Subgoal 5
+4 [ ] Subgoal 2
 
-Do not insert and delete the same step-id in the same set of operations. 
-Do not update a step you are about to delete in the same set of operations.
+## Step ID Referencing Rules
+DO NOT insert and delete the same step-id in the same set of operations. 
+DO NOT update a step you are about to delete in the same set of operations.
+DO NOT insert a step at a step-id that is being deleted in the same set of operations.
+DO NOT insert a sequence of steps with incrementally increasing step-ids to order a sequence of steps.
+ - You MUST provide the same step-id for all steps in the sequence to be inserted, and they will be inserted in the order provided before the original step-id.
+DO NOT insert a step at a step-id beyond the last step-id in the current plan.
+ - If you need to insert steps at or beyond the end of the plan, use add instead of insert.
 
 # Rules
 - Keep plans as concise as possible while capturing all necessary details 
@@ -132,17 +146,16 @@ Do not update a step you are about to delete in the same set of operations.
   - DO NOT mark a step as "done" in anticipation of it being the next action.
 - DO NOT insert and delete the same step-id in the same set of operations.
 - DO NOT update a step you are about to delete.
+- DO NOT add a step to "quit" at the end of a task.
 
 # Actions
 *Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*
 {actions}
 
-# Format
+# Constraints
 Your response should contain only "add", "insert", "update", "mark", or "delete" actions.
 DO NOT begin your response with "Plan:" -- just state your list of plan actions.
 Do not include any other text in your response.
-
-# Constraints
 We do not have access to any other tools, actions, or commands.
 We have {max_steps} steps to complete each task.
 Be concise in your response.

@@ -1,5 +1,3 @@
-# plan_manager.py
-
 import re
 from typing import Optional
 
@@ -62,6 +60,10 @@ class PlanManager:
         if idx is not None:
             plan_step = PlanStep(id=self._alloc_temp_id(), status="todo", label=label)
             plan.insert(idx, plan_step)
+        else:
+            label = label + " (insert failed: target id not found; added to end of plan)"
+            plan_step = PlanStep(id=self._alloc_temp_id(), status="todo", label=label)
+            plan.append(plan_step)
         return plan
 
     def _execute_update(self, plan: Plan, line: str) -> Plan:

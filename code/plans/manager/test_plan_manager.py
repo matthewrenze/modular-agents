@@ -23,23 +23,34 @@ class TestPlanManager:
         updated_plan = manager.execute(plan, operations)
 
         assert len(updated_plan) == 5
+        assert_plan_step(updated_plan[0], id=1, status="done", label="step 1")
+        assert_plan_step(updated_plan[1], id=2, status="todo", label="step 6")
+        assert_plan_step(updated_plan[2], id=3, status="todo", label="step 2")
+        assert_plan_step(updated_plan[3], id=4, status="todo", label="step 4.1")
+        assert_plan_step(updated_plan[4], id=5, status="todo", label="step 5")
 
-        assert updated_plan[0].id == 1
-        assert updated_plan[0].status == "done"
-        assert updated_plan[0].label == "step 1"
+    def test_insert_with_equal_ids(self):
+        manager = PlanManager()
+        plan = [
+            PlanStep(id=1, status="todo", label="step 1"),
+            PlanStep(id=2, status="todo", label="step 2"),
+        ]
 
-        assert updated_plan[1].id == 2
-        assert updated_plan[1].status == "todo"
-        assert updated_plan[1].label == "step 6"
+        operations = """
+        insert: 2 = step 1.1
+        insert: 2 = step 1.2
+        """
 
-        assert updated_plan[2].id == 3
-        assert updated_plan[2].status == "todo"
-        assert updated_plan[2].label == "step 2"
+        updated_plan = manager.execute(plan, operations)
 
-        assert updated_plan[3].id == 4
-        assert updated_plan[3].status == "todo"
-        assert updated_plan[3].label == "step 4.1"
+        assert len(updated_plan) == 4
+        assert_plan_step(updated_plan[0], id=1, status="todo", label="step 1")
+        assert_plan_step(updated_plan[1], id=2, status="todo", label="step 1.1")
+        assert_plan_step(updated_plan[2], id=3, status="todo", label="step 1.2")
+        assert_plan_step(updated_plan[3], id=4, status="todo", label="step 2")
 
-        assert updated_plan[4].id == 5
-        assert updated_plan[4].status == "todo"
-        assert updated_plan[4].label == "step 5"
+def assert_plan_step(step: PlanStep, id: int, status: str, label: str):
+    assert step.id == id
+    assert step.status == status
+    assert step.label == label
+

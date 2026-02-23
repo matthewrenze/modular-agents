@@ -44,7 +44,8 @@ agent_names = [
     # "plus-tasker-v2"
     # "plus-tasker-v2.1",
     # "plus-planner-v2",
-    "plus-planner-v2.1",
+    # "plus-planner-v2.1",
+    # "plus-planner-v2.2",
     # "plus-summarizer-v2.4",
     # "plus-summarizer-v2.2",
     # "plus-memorizer-v2",
@@ -53,14 +54,15 @@ agent_names = [
     # "plus-reasoner-v2",
     # "plus-reasoner-v2.1",
     # "minus-tasker",
+    # "minus-planner",
     # "minus-summarizer",
     # "minus-memorizer",
     # "minus-reasoner"
-    # "topline-v2"
+    "topline-v2"
 ]
 
 # Set evals
-eval_size = 10
+eval_size = 1
 eval_env_names = [
     # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
@@ -68,10 +70,10 @@ eval_env_names = [
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
     # ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
+    # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
