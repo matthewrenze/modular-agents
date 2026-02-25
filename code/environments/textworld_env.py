@@ -36,6 +36,12 @@ class TextWorldEnv:
             request_infos=env_infos,
             max_episode_steps=self.params.max_steps)
 
+        # Close the previous environment if it exists
+        # NOTE: This is to fix the "GameNotRunningError" that occurs during many parallel evals
+        if self.env is not None:
+            self.env.close()
+            self.env = None
+
         # Create the environment
         self.env = textworld.gym.make(env_id)
 

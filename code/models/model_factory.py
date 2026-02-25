@@ -14,19 +14,16 @@ class ModelFactory():
         if params.model_name.startswith("claude"):
             return ClaudeModel(params.model_name)
 
-        elif params.model_name.startswith("deepseek"):
-            return FireworksModel(params.model_name)
-
         elif params.model_name.startswith("gemini"):
             return GeminiModel(params.model_name)
 
         elif params.model_name.startswith("gpt"):
             return OpenAiModel(params.model_name)
-        
-        elif params.model_name.startswith("grok"):
-            return AzureModel(params.model_name)
 
         elif params.model_name.startswith("kimi"):
+            return FireworksModel(params.model_name)
+
+        elif params.model_name.startswith("glm"):
             return FireworksModel(params.model_name)
 
         else:

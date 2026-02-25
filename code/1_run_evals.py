@@ -25,44 +25,36 @@ from reviews.writer.review_writer import ReviewWriter
 
 # Set models
 model_names = [
-    # "claude-sonnet-4-5",
-    # "claude-opus-4-6",
+    # "claude-sonnet-4-6",
     # "deepseek-v3.2"
-    # "gemini-3-flash-preview",
-    # "gemini-3-pro-preview",
+    # "gemini-3.1-pro-preview",
     # "gpt-5-mini",
-    "gpt-5.2"
-    # "kimi-k2.5"
+    # "gpt-5.2"
+    # "glm-5"
+    "kimi-k2.5"
 ]
 
 # Set agents
 agent_names = [
-    # "react-k0",
+    "react-k0",
     # "react-k1",
     # "react-kn",
-    # "baseline-v2",
-    # "plus-tasker-v2"
+    # "baseline-v3.0",
     # "plus-tasker-v2.1",
-    # "plus-planner-v2",
-    # "plus-planner-v2.1",
     # "plus-planner-v2.2",
-    # "plus-summarizer-v2.4",
     # "plus-summarizer-v2.2",
-    # "plus-memorizer-v2",
-    # "plus-memorizer-v2.1",
     # "plus-memorizer-v2.2",
-    # "plus-reasoner-v2",
     # "plus-reasoner-v2.1",
-    # "minus-tasker",
-    # "minus-planner",
-    # "minus-summarizer",
-    # "minus-memorizer",
-    # "minus-reasoner"
-    "topline-v2"
+    # "minus-tasker-v2.0",
+    # "minus-planner-v2.0",
+    # "minus-summarizer-v2.0",
+    # "minus-memorizer-v2.0",
+    # "minus-reasoner-v2.0"
+    # "topline-v2.0"
 ]
 
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
     # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
