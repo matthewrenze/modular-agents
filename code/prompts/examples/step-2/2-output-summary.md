@@ -1,0 +1,1 @@
+take gold key from shelf → inventory += gold key

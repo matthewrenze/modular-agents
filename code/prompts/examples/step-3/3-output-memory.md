@@ -1,0 +1,1 @@
+wooden door: location = living room, direction = north, state = {closed, unlocked}

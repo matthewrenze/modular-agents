@@ -1,0 +1,1 @@
+open wooden door → wooden door = open

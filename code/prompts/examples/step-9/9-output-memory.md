@@ -1,0 +1,1 @@
+orange carrot: location = inventory, state = diced

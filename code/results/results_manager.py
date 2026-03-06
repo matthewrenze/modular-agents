@@ -23,7 +23,7 @@ class ResultsManager:
         return self.results
 
     def load(self, params: Parameters):
-        file_name = f"{params.agent_name} - {params.model_name} - {params.eval_name}.csv"
+        file_name = f"{params.model_name} - {params.agent_name} - {params.eval_name}.csv"
         file_path = f"{self.folder_path}/{file_name}"
         self.results = pd.read_csv(file_path)
 

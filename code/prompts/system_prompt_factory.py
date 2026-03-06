@@ -24,7 +24,7 @@ class SystemPromptFactory:
 
         # Add examples section
         examples_factory = ExamplesFactory()
-        examples_content = examples_factory.create(params)
+        examples_content = examples_factory.create(params, subagent)
         system_prompt = system_prompt.replace("{examples}", examples_content)
 
         # Replace max steps

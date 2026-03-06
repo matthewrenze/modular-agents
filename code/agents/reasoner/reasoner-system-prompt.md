@@ -39,7 +39,7 @@ Do not include any other text in your response.
 
 # Constraints
 We do not have access to any other tools, actions, or commands.
-We have {max_steps} steps to complete each task.
+We have {max_steps} steps to complete this task.
 Be concise in your response.
 
 # Examples

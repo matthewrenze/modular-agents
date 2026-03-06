@@ -155,7 +155,8 @@ class TextWorldEnv:
         if inventory == "You are carrying nothing.":
             return 0
 
-        if inventory == "You are carrying:" and "," not in inventory:
+        if inventory.startswith("You are carrying:") \
+                and "and" not in inventory:
             return 1
 
         return len(inventory.split(",")) + 1

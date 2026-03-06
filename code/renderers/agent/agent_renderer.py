@@ -8,13 +8,13 @@ class AgentRenderer:
         if agent_state.summary != "" and log_mode:
             result += f"  Summary: {agent_state.summary}\n"
 
-        if agent_state.plan != "" and log_mode:
-            plan = self.render_plan_updates(agent_state.plan)
-            result += f"  Plan:\n{plan}\n"
-
         if agent_state.memory != "" and log_mode:
             memory = self.render_memory_updates(agent_state.memory)
             result += f"  Memory:\n{memory}\n"
+
+        if agent_state.plan != "" and log_mode:
+            plan = self.render_plan_updates(agent_state.plan)
+            result += f"  Plan:\n{plan}\n"
 
         if agent_state.thought != "":
             result += f"  Thought: {agent_state.thought}\n" \
@@ -33,7 +33,4 @@ class AgentRenderer:
         return plan
 
     def render_memory_updates(self, memory: str) -> str:
-        memory = memory.replace("create:", "    create:")
-        memory = memory.replace("update:", "    update:")
-        memory = memory.replace("delete:", "    delete:")
-        return memory
+        return "\n".join([f"    {line}" for line in memory.splitlines()])

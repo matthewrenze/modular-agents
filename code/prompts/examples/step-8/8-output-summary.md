@@ -1,0 +1,1 @@
+take orange carrot from counter → inventory += orange carrot

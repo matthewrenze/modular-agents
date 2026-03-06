@@ -59,3 +59,14 @@ class TestProcessFactory:
             use_reasoner=True)
         system_prompt = factory.create(params, subagent_name)
         assert subagent_tag in system_prompt
+
+    def test_create_for_remove_we_will_also_have_access_to_the_following(self):
+        factory = ProcessFactory()
+        params = Parameters(
+            use_tasker=True,
+            use_summarizer=False,
+            use_planner=False,
+            use_memorizer=False,
+            use_reasoner=True)
+        system_prompt = factory.create(params, "actor")
+        assert "We will also have access to the following:" not in system_prompt

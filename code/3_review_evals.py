@@ -13,42 +13,40 @@ from logs.console import warn
 # Set models
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 model_names = [
-    "gpt-5-mini",
-    # "gpt-5.2"
+    "gpt-5.2"
 ]
 
 # Set agents
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 agent_names = [
-    # "react-k0",
-    # "react-k1",
-    # "react-kn",
-    "baseline-v2",
-    # "plus-tasker-v2",
-    # "plus-planner-v2"
-    # "plus-summarizer-v2",
-    # "plus-memorizer-v2",
-    # "plus-reasoner-v2",
-    # "minus-tasker",
-    # "minus-summarizer",
-    # "minus-memorizer",
-    # "minus-reasoner"
-    # "topline-v2"
+    # "react-k0-v3.0",
+    # "react-k1-v3.0",
+    # "react-kn-v3.0",
+    # "baseline-v3.0",
+    # "plus-planner-v3.0"
+    # "plus-summarizer-v3.0",
+    # "plus-memorizer-v3.0",
+    "plus-reasoner-v3.0",
+    # "minus-planner-v3.0"
+    # "minus-summarizer-v3.0",
+    # "minus-memorizer-v3.0",
+    # "minus-reasoner-v3.0"
+    # "topline-v3.0"
 ]
 
 # Set evals
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 eval_size = 10
 eval_env_names = [
-    ("tw-simple-1", "textworld"),
-    ("tw-treasure-1", "textworld"),
-    ("tw-treasure-2", "textworld"),
-    ("tw-treasure-3", "textworld"),
-    ("tw-coin-1", "textworld"),
-    ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
-    ("tw-cooking-1", "textworld"),
-    ("tw-cooking-2", "textworld"),
+    # ("tw-simple-1", "textworld"),
+    # ("tw-treasure-1", "textworld"),
+    # ("tw-treasure-2", "textworld"),
+    # ("tw-treasure-3", "textworld"),
+    # ("tw-coin-1", "textworld"),
+    # ("tw-coin-2", "textworld"),
+    # ("tw-coin-3", "textworld"),
+    # ("tw-cooking-1", "textworld"),
+    # ("tw-cooking-2", "textworld"),
     ("tw-cooking-3", "textworld"),
 ]
 
@@ -74,7 +72,7 @@ for model_name in model_names:
             runs.append(params)
 
 for params in runs:
-    print(f"--- Reviewing {params.agent_name} - {params.model_name} - {params.eval_name} ---")
+    print(f"--- Reviewing {params.model_name} - {params.agent_name} - {params.eval_name} ---")
 
     # Get the episode ids
     eval = EvalFactory().create(params)
@@ -90,7 +88,7 @@ for params in runs:
 
     for episode_id in episode_ids:
 
-        print(f"--- Reviewing {params.agent_name} - {params.model_name} - {params.eval_name} - {episode_id} of {len(episode_ids)} ---")
+        print(f"--- Reviewing {params.model_name} - {params.agent_name} - {params.eval_name} - {episode_id} of {len(episode_ids)} ---")
 
         try:
 

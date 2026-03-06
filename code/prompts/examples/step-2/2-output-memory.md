@@ -1,0 +1,1 @@
+gold key: location = inventory

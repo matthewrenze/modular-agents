@@ -2,61 +2,98 @@ import re
 from params.parameters import Parameters
 
 class ExamplesFactory:
-    def create(self, params: Parameters):
+    def create(self, params: Parameters, subagent: str):
+        content = ""
+        for step in range(1, 10):
+            content += f"## Example {step}\n"
 
-        # Load section from file
-        file_path = f"prompts/examples/examples.md"
+            content += "### Input\n"
+
+            # Add the task to every step (except for react then only first step)
+            if not subagent.startswith("react") \
+                    or (subagent.startswith("react") and step == 1):
+                content += self.get_part(0, "input-task")
+
+            # Add the history (for everything except react)
+            if params.use_summarizer and not subagent.startswith("react"):
+                content += self.get_part(step, "input-history")
+
+            # Add the previous memories (for the memorizer)
+            if subagent == "memorizer" and params.use_memorizer:
+                content += self.get_part(step, "input-memories")
+
+            # Add the previous plan (for the planner only)
+            if subagent == "planner" and params.use_planner:
+                content += self.get_part(step, "input-plan")
+
+            # Add previous environment (for the reasoner and actor)
+            if (subagent == "reasoner" or subagent == "actor") \
+                    and step > 1:
+                content += self.get_part(step - 1, "input-env")
+
+            # Add the previous thought and action (for the reasoner and actor)
+            if (subagent == "reasoner" or subagent == "actor") and step > 1:
+                content += "Agent:\n"
+
+                # Add the previous thought (for the reasoner and actor)
+                if params.use_reasoner:
+                    content += f"  Thought: {self.get_part(step - 1, 'output-thought')}"
+
+                # Add the previous action (for the reasoner and actor)
+                content += f"  Action: {self.get_part(step - 1, 'output-action')}"
+
+            # Add the previous action (for the summarizer only)
+            if subagent == "summarizer" and step > 1:
+                content += f"Step: {step - 1} of 10\n"
+                content += "Agent:\n"
+                content += f"  Action: {self.get_part(step - 1, 'output-action')}"
+
+            # Add current environment
+            content += self.get_part(step, "input-env")
+
+            # Add the previous memories (for the actor and the reasoner)
+            if (subagent == "actor" or subagent == "reasoner") \
+                    and params.use_memorizer:
+                content += self.get_part(step, "input-memories")
+
+            # Add the updated plan (for the actor and reasoner)
+            if (subagent == "actor" or subagent == "reasoner") \
+                    and params.use_planner:
+                content += self.get_part(step + 1, "input-plan")
+
+            # Add the current thought (for the actor)
+            if subagent == "actor" and params.use_reasoner:
+                content += "Agent:\n"
+                content += f"  Thought: {self.get_part(step, 'output-thought')}"
+
+            content += "\n### Output\n"
+
+            if subagent.startswith("react"):
+                content += f"Thought: {self.get_part(step, 'output-thought')}"
+                content += f"Action: {self.get_part(step, 'output-action')}"
+
+            if subagent == "summarizer":
+                content += self.get_part(step, "output-summary")
+
+            if subagent == "memorizer":
+                content += self.get_part(step, "output-memory")
+
+            if subagent == "planner":
+                content += self.get_part(step, "output-plan")
+
+            if subagent == "reasoner":
+                content += self.get_part(step, "output-thought")
+
+            if subagent == "actor":
+                content += self.get_part(step, f"output-action")
+
+            content += "\n"
+
+        return content
+
+
+    @staticmethod
+    def get_part(step: int, part: str) -> str:
+        file_path = f"prompts/examples/step-{step}/{step}-{part}.md"
         with open(file_path, "r") as file:
-            examples = file.read()
-
-        # Filter summaries
-        if not params.use_summarizer:
-            examples = self.remove_line(examples, r"^History:")
-            examples = self.remove_line(examples, r"^  Step \d+:")
-            examples = self.remove_line(examples, r"^  Summary:")
-
-        # Filter plans
-        if not params.use_planner:
-            examples = self.remove_line(examples, r"^Plan:")
-            examples = self.remove_line(examples, r"^  (\d+) \[(.?)\]")
-            examples = self.remove_block(examples, r"^  Plan:")
-
-        # Filter memories
-        if not params.use_memorizer:
-            examples = self.remove_line(examples, r"^Memories:")
-            examples = self.remove_line(examples, r"^  \d+:")
-            examples = self.remove_block(examples, r"^  Memory:")
-
-        # Filter thoughts
-        if not params.use_reasoner and not params.use_react_kn:
-            examples = self.remove_line(examples, r"^  Thought:")
-
-        # Filter action
-        # Note: Actor is always used, so no filtering needed
-
-        return examples
-
-    @staticmethod
-    def remove_line(section: str, regex: str) -> str:
-        filtered_lines = []
-        pattern = re.compile(regex)
-        for line in section.splitlines():
-            if not pattern.search(line):
-                filtered_lines.append(line)
-        return "\n".join(filtered_lines)
-
-    @staticmethod
-    def remove_block(section: str, regex: str) -> str:
-        filtered_lines = []
-        pattern = re.compile(regex)
-        skip_block = False
-        for line in section.splitlines():
-            if pattern.search(line):
-                skip_block = True
-            elif skip_block and not line.startswith("    "):
-                skip_block = False
-
-            if not skip_block:
-                filtered_lines.append(line)
-
-        return "\n".join(filtered_lines)
+            return file.read() + "\n"

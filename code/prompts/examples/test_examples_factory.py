@@ -4,7 +4,7 @@ from prompts.examples.examples_factory import ExamplesFactory
 
 class TestExamplesFactory:
 
-    def test_create_with_all_subagents_disabled(self):
+    def test_create_for_all_subagents_disabled_input(self):
         factory = ExamplesFactory()
         params = Parameters(
             use_tasker=False,
@@ -12,34 +12,18 @@ class TestExamplesFactory:
             use_planner=False,
             use_memorizer=False,
             use_reasoner=False)
-        examples = factory.create(params)
+        examples = factory.create(params, "actor")
 
-        # Pre-env fields
         assert "Task: " in examples # Always included
         assert "History:" not in examples
         assert "  Step 1: " not in examples
+        assert "Memories:" not in examples
+        assert "  living room: "
         assert "Plan:" not in examples
         assert "  1 [X]" not in examples
         assert "  2 [ ]" not in examples
-        assert "Memories:" not in examples
-        assert "  1: "
 
-        # Agent fields
-        assert "  Summary: " not in examples
-        assert "  Plan: " not in examples
-        assert "    add: " not in examples
-        assert "    insert: " not in examples
-        # assert "    update: " not in examples # multiple (plan and memory)
-        assert "    mark: " not in examples
-        # assert "    delete: " not in examples #  Not currently in the examples
-        assert "  Memory: " not in examples
-        assert "    create: " not in examples
-        # assert "    update: " not in examples  # multiple (plan and memory)
-        assert "    delete: " not in examples
-        assert "  Thought: " not in examples
-        assert "  Action: " in examples # Always included
-
-    def test_create_with_all_subagents_enabled(self):
+    def test_create_for_all_subagents_enabled_input(self):
         factory = ExamplesFactory()
         params = Parameters(
             use_tasker=True,
@@ -47,29 +31,29 @@ class TestExamplesFactory:
             use_planner=True,
             use_memorizer=True,
             use_reasoner=True)
-        examples = factory.create(params)
+        examples = factory.create(params, "actor")
 
         # Pre-env fields
         assert "Task: " in examples # Always included
         assert "History:" in examples
         assert "  Step 1:" in examples
+        assert "Memories:" in examples
+        assert "  living room: " in examples
         assert "Plan:" in examples
         assert "  1 [X]" in examples
         assert "  2 [ ]" in examples
-        assert "Memories:" in examples
-        assert "  1: " in examples
 
-        # Agent fields
-        assert "  Summary: " in examples
-        assert "  Plan: " in examples
-        assert "    add: " in examples
-        assert "    insert: " in examples
-        assert "    update: " in examples
-        assert "    mark: " in examples
-        # assert "    delete: " in examples  # Not currently in the examples
-        assert "  Memory: " in examples
-        assert "    create: " in examples
-        assert "    update: " in examples
-        # assert "    delete: " in examples # Not currently in the examples
-        assert "  Thought: " in examples
-        assert "  Action: " in examples # Always included
+    @pytest.mark.parametrize("subagent, output", [
+        ("summarizer", "start → location = living room"),
+        ("memorizer", "living room: rooms = {north = ?}"),
+        ("planner", "add: Take the gold key"),
+        ("reasoner", "To dice the carrot, I need to go to the kitchen."),
+        ("actor", "take gold key from shelf"),
+    ])
+    def test_create_for_subagent_output(self, subagent, output):
+        factory = ExamplesFactory()
+        params = Parameters()
+        examples = factory.create(params, subagent)
+
+        assert output in examples
+

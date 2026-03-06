@@ -29,32 +29,29 @@ model_names = [
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
     # "gpt-5-mini",
-    # "gpt-5.2"
+    "gpt-5.2"
     # "glm-5"
-    "kimi-k2.5"
+    # "kimi-k2.5"
 ]
 
 # Set agents
 agent_names = [
-    "react-k0",
-    # "react-k1",
-    # "react-kn",
+    # "react-k0-v3.0",
+    # "react-k1-v3.0",
+    # "react-kn-v3.0",
     # "baseline-v3.0",
-    # "plus-tasker-v2.1",
-    # "plus-planner-v2.2",
-    # "plus-summarizer-v2.2",
-    # "plus-memorizer-v2.2",
-    # "plus-reasoner-v2.1",
-    # "minus-tasker-v2.0",
-    # "minus-planner-v2.0",
-    # "minus-summarizer-v2.0",
-    # "minus-memorizer-v2.0",
-    # "minus-reasoner-v2.0"
-    # "topline-v2.0"
+    # "plus-planner-v3.0",
+    # "plus-summarizer-v3.0",
+    "plus-memorizer-v3.1",
+    # "plus-reasoner-v3.0",
+    # "minus-planner-v3.0",
+    # "minus-summarizer-v3.0",
+    # "minus-memorizer-v3.0",
+    # "minus-reasoner-v3.0"
+    # "topline-v3.0"
 ]
-
 # Set evals
-eval_size = 10
+eval_size = 1
 eval_env_names = [
     # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
@@ -218,13 +215,13 @@ for params in runs:
                 if params.use_summarizer:
                     log.history(global_state.step_history[:-1])
 
-                # Log the plan
-                if params.use_planner:
-                    log.plan(global_state.plan)
-
                 # Log the memories
                 if params.use_memorizer:
                     log.memories(global_state.memories)
+
+                # Log the plan
+                if params.use_planner:
+                    log.plan(global_state.plan)
 
                 # Log the environment state
                 log.env(env_state, global_state.task_state)
@@ -266,15 +263,6 @@ for params in runs:
                     agent_state.summary = summary
                     log.info(f"  Summary: {summary}")
 
-                # Get the planner's plan
-                if params.use_planner:
-                    plan_updates = planner.execute(global_state)
-                    agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
-                    global_state.plan = plan_manager.execute(global_state.plan, plan_updates)
-                    agent_state.plan = plan_updates
-                    plan_updates = renderer.render_plan_updates(plan_updates)
-                    log.info(f"  Plan:\n{plan_updates}")
-
                 # Get the memorizer's memory updates
                 if params.use_memorizer:
                     memory_updates = memorizer.execute(global_state)
@@ -283,6 +271,15 @@ for params in runs:
                     agent_state.memory = memory_updates
                     memory_updates = renderer.render_memory_updates(memory_updates)
                     log.info(f"  Memory:\n{memory_updates}")
+
+                # Get the planner's plan
+                if params.use_planner:
+                    plan_updates = planner.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
+                    global_state.plan = plan_manager.execute(global_state.plan, plan_updates)
+                    agent_state.plan = plan_updates
+                    plan_updates = renderer.render_plan_updates(plan_updates)
+                    log.info(f"  Plan:\n{plan_updates}")
 
                 # Get the reasoner's thought
                 if params.use_reasoner:

@@ -19,7 +19,7 @@ class ReactKn(Agent):
 
         # Add the last step
         step_state = state.step_history[-1]
-        user_content + self.renderer.render_step(step_state, state.task_state)
+        user_content += self.renderer.render_step(step_state, state.task_state)
         user_content += self.renderer.render_env(step_state.env_state, state.task_state)
         user_content += "\n"
 

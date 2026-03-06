@@ -33,7 +33,8 @@ The key is the immutable unique name of the entity (e.g. "bedroom", "gold key", 
 The value can be:
   - a single property-value pair 
   - a property with a set of values 
-  - a property with a set of sub-property-value pairs.
+  - a list of property-value pairs
+  - a property with a set of sub-property-value pairs
 Here is the syntax / grammar for memories:
 [key]: [value]
 [key]: [property-1] = [value-1], [property-2] = [value-2], ... [property-n] = [value-n]
@@ -43,30 +44,19 @@ Here is the syntax / grammar for memories:
 ## Examples
 Here are some examples of valid memory statements:
 - "bedroom: rooms = {north = living room, east = ?}, doors = {east = wooden door}"
-- "screen door: location = kitchen, state = {closed, locked}, key = silver key"
+- "screen door: location = kitchen, direction = east, state = {closed, locked}"
 - "gold key: location = {room = bedroom, in = drawer}"
 - "safe: code = 1234"
 - "recipe 1: ingredients = {bread, peanut butter, jelly}, steps = {1. spread peanut butter on bread, 2. spread jelly on bread, 3. fold bread in half}"
 - "rule 2: To cut an object, it must first be in my inventory"
 - "reminder 3: Remember to turn off the stove after cooking"
 
-## Memory IDs
-Memories are indexed in the list by a monotonically increasing integer memory ID.
-Memory IDs range from 1 (the first memory) to n (the most recently added memory).
-Each memory ID is unique and does not change over an episode.
-When a memory is deleted, the IDs of other memories do not change.
-When a memory is updated, its ID does not change.
-For example:
-  1. bathroom: rooms = {south = living room}
-  2. silver coin: location = {room = bedroom, in = drawer}
-  ... 
-
 ## What Memories to Store
 You must create memories that are:
  - Task relevant spatial relationships between rooms (e.g., "kitchen: rooms = {south = living room, east = ?}, doors = {east = oak door}")
- - Doors that are active obstacles and their properties (e.g., "screen door: location = living room, state = {closed, locked}, key = silver key")
- - Task relevant object locations and properties (e.g., "copper coin: location = {room = bedroom, container = drawer}")
- - Rules learned from failures (e.g., "rule 1: To dice an object, it must first be in my inventory")
+ - Doors that are active obstacles and their properties (e.g., "wooden door: location = living room, state = {closed, locked}, key = silver key")
+ - Task relevant object locations and properties (e.g., "copper coin: location = {room = bedroom, in = drawer}")
+ - Rules learned from failures (e.g., "rule 1: To cut an object, it must first be in our inventory")
  - Important facts (e.g., "safe: code = 1234")
  - Instructions (e.g., "recipe 1: ingredients = {bread, peanut butter, jelly} steps = {1. spread peanut butter on bread, 2. spread jelly on bread, 3. fold bread in half}")
  - Reminders (e.g., "reminder 1: Remember to turn off the stove after cooking")
@@ -75,76 +65,48 @@ You must create memories that are:
 You must NOT create memories that are:
  - transient (e.g., "door: state = opening") 
  - irrelevant to the task or future steps (e.g., "sky: color = blue")
- - redundant with other memories (e.g., "red key: location = {room = bedroom, in = drawer}" and "drawer: contains = {red key}")
+ - doors that are not an obstacle (e.g., "archway: location = hallway, state = open")
+ - redundant with other memories (e.g., "drawer: contains = {red key}" if we already have "red key: location = {room = bedroom, in = drawer}")
 
 ## Memory Management
 You must update or delete any memories that are:
- - no longer relevant (e.g., update "key: location = inventory" after we take the key from the bedroom drawer)
- - no longer obstacles (e.g., delete "wooden door: location = corridor, state = {closed, locked}, key = copper key" after we unlock the wooden door)
- - not useful for future steps (e.g., delete "safe: code = 1234" after we open the safe)
- - contradicted by new information (e.g., update "green apple: location = {room = kitchen, on=counter}" after we move the green apple to the counter)
- - redundant with other object memories (e.g., delete "drawer: contains = {red key}" if we already have "red key: location = {room = bedroom, in = drawer}")
-   - However, bi-directional room relationships are ok (e.g., "kitchen: rooms = {south = living room}" and "living room: rooms = {north = kitchen}")
-   - And, rooms can reference doors and doors can reference rooms (e.g., "kitchen: rooms = {south = living room}, doors = {south = wooden door}" and "wooden door: location = kitchen, state = {closed, locked}, key = copper key")
+ - no longer true
+ - contradicted by new information
+ - redundant with other object memories
+   - However, bi-directional room relationships are ok 
+   - And, rooms can reference doors and doors can reference rooms
 
 ## Rules
-1. ONLY store task relevant facts; if it doesn't pertain to the task, DO NOT store it.
-2. There must be AT MOST one active memory per entity (i.e., room, object, rule, recipe, etc.)
-3. NEVER create a second memory for the same entity key; ALWAYS update the existing memory.
-4. Memories for rooms should focus on spatial relationships with other rooms and their doors; NOT their contents.
-5. Memories for objects should focus on their locations and properties relevant to the task.
-6. When a failure reveals a rule, store the generalized rule, not the specific event.
-7. ONLY update memories for entities with changed state; NEVER re-state unchanged memories.
-8. Use an immutable unique name for the key of an entity (e.g., given "fried diced orange carrot" use "orange carrot" instead of "carrot" or "fried diced orange carrot")
-9. You can use "?" to indicate unknown information in a memory (e.g., "create: kitchen: rooms = {south = ?}")
-  - However, you MUST update the memory to fill in the "?" when the information becomes available (e.g., "update: 1 = kitchen: rooms = {south = living room}")
+ - ONLY store task relevant facts; if it doesn't pertain to the task, DO NOT store it. 
+ - There must be AT MOST one active memory per entity (i.e., room, object, rule, recipe, etc.)
+ - NEVER create a second memory for the same entity key; ALWAYS update the existing memory. 
+ - Memories for rooms should focus on spatial relationships with other rooms and their doors; NOT their contents.
+ - Memories for objects should focus on their locations and properties relevant to the task.
+ - When a failure reveals a rule, store the generalized rule, not the specific event.
+ - ONLY update memories for entities with changed state; NEVER re-state unchanged memories.
+ - Use an immutable unique name for the key of an entity (e.g., given "fried diced orange carrot" use "orange carrot" instead of "carrot" or "fried diced orange carrot")
+ - You can use "?" to indicate unknown information in a memory (e.g., "kitchen: rooms = {south = ?}")
+  - However, you MUST update the memory to fill in the "?" when the information becomes available (e.g., "kitchen: rooms = {south = living room}")
 
-# Memory Operations
-## Create
-To create a memory, use "create: <memory-statement>".
-For example, "create: carrot: location = {room = kitchen, on = counter}"
-The new memory will be added to the end of the memories list.
-
-## Update
-To update a memory, use "update: <memory-id> = <new-memory-statement>".
-For example, "update: 2 = yellow pepper: state = {diced, fried}"
-This operation updates the memory with id=2 in the list to the new statement.
-
-## Delete
-To delete a memory, use "delete: <memory-id>".
-For example, "delete: 2" deletes the memory with id=2 in the list.
-Before creating new memories, be sure to delete any old or obsolete memories first.
-
-## No Changes
-If you have no changes to make to the memory list, respond with an empty string.
-
-## Multiple Operations
-You can execute multiple operations in a single response by separating each action with a newline.
-For example:
-```
-delete: 1
-delete: 3
-update: 2 = carrot: location = inventory, state = diced
-create: living room: rooms = {north = kitchen}
-create: safe: code = 1234
-```
-
-## Deduplication
-Before creating a new memory, check if the same or similar information is already captured in an existing memory.
-If so, do not create a new memory; instead, update the existing memory if necessary to ensure it is accurate and complete.
-ALWAYS prefer to store facts about an object with the object itself, NOT the room or container it is in.
+# Output Format
+Each line in your response is a single memory update in one of these forms:
+- Create: "<key>: <value>"
+- Update: "<key>: <new value>"
+- Delete: "<key>:"
+If you have no changes, respond with an empty string.
+You can output multiple updates by separating lines with a newline.
 
 # Actions
 *Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*
 {actions}
 
 # Constraints
-Your response should contain only "create", "update", and "delete" operations.
-Do not begin your response with "Memory:" -- just state your operations.
-Do not include new lines in an individual memory statement.
+Your response should contain only memory updates operations in the format described above.
+Do not begin your response with "Memory:" or any other label.
+Do not include new lines in a single memory operation.
 Do not include any other text in your response.
 We do not have access to any other tools, actions, or commands.
-We have {max_steps} steps to complete each task.
+We have {max_steps} steps to complete this task.
 Be concise in your response.
 
 # Examples

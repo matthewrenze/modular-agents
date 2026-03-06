@@ -1,0 +1,1 @@
+unlock wooden door with gold key → wooden door = unlocked

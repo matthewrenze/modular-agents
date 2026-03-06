@@ -12,28 +12,27 @@ from logs.console import warn
 # Set models
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 model_names = [
-    "gpt-5-mini",
-    # "gpt-5.2"
+    # "gpt-5-mini",
+    "gpt-5.2"
 ]
 
 
 # Set agents
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 agent_names = [
-    # "react-k0",
-    # "react-k1",
-    # "react-kn",
-    "baseline-v2",
-    # "plus-tasker-v2",
-    # "plus-planner-v2"
-    # "plus-summarizer-v2",
-    # "plus-memorizer-v2",
-    # "plus-reasoner-v2",
-    # "minus-tasker",
-    # "minus-summarizer",
-    # "minus-memorizer",
-    # "minus-reasoner"
-    # "topline-v2"
+    "react-k0-v3.0",
+    "react-k1-v3.0",
+    "react-kn-v3.0",
+    "baseline-v3.0",
+    "plus-planner-v3.0",
+    "plus-summarizer-v3.0",
+    "plus-memorizer-v3.0",
+    "plus-reasoner-v3.0",
+    "minus-planner-v3.0",
+    "minus-summarizer-v3.0",
+    "minus-memorizer-v3.0",
+    "minus-reasoner-v3.0"
+    "topline-v3.0"
 ]
 
 # Set evals
@@ -65,11 +64,11 @@ for eval_env_name in eval_env_names:
         eval_size = eval_size)
     runs.append(params)
 
-print(f"--- Analyzing {agent_names[0]} - {model_names[0]} ---")
+print(f"--- Analyzing {model_names[0]} - {agent_names[0]}  ---")
 
 # Create the review list
-reviews = f"Agent: {agent_names[0]}\n"
-reviews += f"Model: {model_names[0]}\n"
+reviews = f"Model: {model_names[0]}\n"
+reviews += f"Agent: {agent_names[0]}\n"
 reviews += "---\n"
 
 for params in runs:

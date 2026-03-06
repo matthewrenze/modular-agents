@@ -1,0 +1,1 @@
+go north → location = kitchen; score += 1

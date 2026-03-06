@@ -25,11 +25,11 @@ Each step should be a present-tense imperative verb phrase.
 
 # Actions vs Subgoals
 A step can be either an action or a subgoal.
-If the task specifies a specific action or sequence of actions, then the step should be an action.
-If the task specifies a more general goal or subgoal, then the step should be a subgoal.
+If the task specifies a sequence of actions, then the steps should be recorded as an actions.
+If the task specifies a more general goal or subgoal, then the steps should be recorded as subgoals.
 (e.g., "Go north" is an action, while "Find the kitchen" is a subgoal that may require multiple actions to complete.)
-You can expand subgoals into a set of actions once you know the precise sequence of actions to complete the subgoal.
-You can collapse a set of actions back into a single subgoal once the subgoal is complete.
+You should expand subgoals into a set of actions once you know the precise sequence of actions to complete the subgoal.
+You should NOT collapse a set of actions back into a single subgoal once the subgoal is complete.
 
 # Step Format
 Each step in the plan will be formatted as follows when rendered::
@@ -66,7 +66,7 @@ For example, "insert: 2 = Get the key" followed by "insert: 2 = Find the map".
 ## Update a Step
 To update an existing plan step in the plan list, use "update: <step-id> = <new-step-description>".
 For example, "update: 2 = Get the key from the drawer"
-Use "update" when the description of a step needs correction (e.g., wrong direction, wrong object).
+Use "update" when the description of a step needs correction (e.g., wrong direction, wrong object, new information).
 
 ## Mark a Step
 To change the status of a task, use "mark: <step-id> = <step-status>".
@@ -87,11 +87,11 @@ If you have no changes to make to the current plan, respond with an empty string
 You can perform multiple plan operations in a single response by separating each action with a newline.
 For example:
 ```
-add: Find the kitchen
+mark: 1 = done
 insert: 2 = Read the recipe
 update: 3 = Prepare the meal
-mark: 1 = done
 delete: 4
+add: Find the kitchen
 ```
 
 # Referencing Step IDs
@@ -130,9 +130,10 @@ DO NOT insert a step at a step-id beyond the last step-id in the current plan.
  - If you need to insert steps at or beyond the end of the plan, use add instead of insert.
 
 # Rules
-- Keep plans as concise as possible while capturing all necessary details 
-- Aim for 1-10 active steps at a time for most tasks.
-- However, you may have up to 120 total steps, if necessary, to encode an exact sequence of actions.
+- Keep plans as concise as possible while capturing all details necessary to complete the task.
+  - Use maximum allowed number of steps for the task (below) as a rough guide for the number of steps to include in your plan.
+  - You should be able to complete most tasks using roughly 80% of the max number of steps allowed.
+  - However, you may create plans that exceed the max number of steps, if necessary, to encode an exact sequence of actions specified by a task.
 - A single step must represent exactly one atomic action or subgoal.
   - If a step contains multiple verbs/actions, multiple instructions, or an action applied to a set of objects, then they MUST be separated into multiple steps.
   - For example, "Take the knife and the carrot" should be split into two steps
@@ -146,6 +147,8 @@ DO NOT insert a step at a step-id beyond the last step-id in the current plan.
   - DO NOT mark a step as "done" in anticipation of it being the next action.
 - DO NOT insert and delete the same step-id in the same set of operations.
 - DO NOT update a step you are about to delete.
+- DO NOT delete a step that you've marked as "done".
+  - Completed steps should always remain in the plan for reference and not be changed or deleted.
 - DO NOT add a step to "quit" at the end of a task.
 
 # Actions
@@ -157,7 +160,7 @@ Your response should contain only "add", "insert", "update", "mark", or "delete"
 DO NOT begin your response with "Plan:" -- just state your list of plan actions.
 Do not include any other text in your response.
 We do not have access to any other tools, actions, or commands.
-We have {max_steps} steps to complete each task.
+We have {max_steps} steps to complete this task.
 Be concise in your response.
 
 # Examples

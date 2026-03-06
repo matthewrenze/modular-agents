@@ -1,0 +1,1 @@
+dice orange carrot with knife → failure = need to take orange carrot first

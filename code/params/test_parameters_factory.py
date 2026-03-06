@@ -32,6 +32,7 @@ class TestParametersFactory:
         assert params.use_actor
         for attr in dir(params):
             if (attr.startswith("use_")
+                    and attr != "use_tasker"
                     and attr != "use_actor"
                     and attr != "use_react_k0"
                     and attr != "use_react_k1"
@@ -40,7 +41,7 @@ class TestParametersFactory:
 
     @pytest.mark.parametrize(
         "agent_name,true_param", [
-        ("plus-tasker", "use_tasker"),
+        # ("plus-tasker", "use_tasker"),
         ("plus-summarizer", "use_summarizer"),
         ("plus-planner", "use_planner"),
         ("plus-memorizer", "use_memorizer"),
@@ -59,7 +60,7 @@ class TestParametersFactory:
 
     @pytest.mark.parametrize(
         "agent_name,false_param", [
-        ("minus-tasker", "use_tasker"),
+        # ("minus-tasker", "use_tasker"),
         ("minus-summarizer", "use_summarizer"),
         ("minus-planner", "use_planner"),
         ("minus-memorizer", "use_memorizer"),
@@ -73,6 +74,7 @@ class TestParametersFactory:
         for attr in dir(params):
             if attr.startswith("use_") \
                     and attr != false_param \
+                    and attr != "use_tasker" \
                     and attr != "use_react_k0" \
                     and attr != "use_react_k1" \
                     and attr != "use_react_kn":

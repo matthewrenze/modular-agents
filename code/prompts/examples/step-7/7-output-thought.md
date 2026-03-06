@@ -1,0 +1,1 @@
+Dicing the orange carrot failed because the carrot is still on the counter and not in my inventory. I need to take the orange carrot from the counter first before I can dice it with the knife.

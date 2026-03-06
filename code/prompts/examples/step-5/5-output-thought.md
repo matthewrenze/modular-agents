@@ -1,0 +1,1 @@
+To dice the carrot, I need a knife. There is a knife on the table, so I should take the knife first, then dice the carrot with the knife.

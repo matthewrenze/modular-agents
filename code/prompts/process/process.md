@@ -6,13 +6,8 @@ At the start of the episode, the environment will provide us with:
 We will complete the task through a series of steps in an iterative loop.
 
 ## Each Step of the Episode
-At each step of the episode, we will be provided with:
+At each step of the episode, the environment will provide us with:
   - Step - the current step number.
-Next, we will provide:
-  - History (Summarizer) - a summary of all previous action-outcome pairs.
-  - Plan (Planner) - the current plan of action, including any updates made in previous steps.
-  - Memories (Memorizer) - any important information we have remembered so far.
-Then, we will be provided with the current state of the environment, which includes:
   - Feedback - the feedback from the last action we took.
   - Location - our current location in the environment.
   - Description - the current state of the environment.
@@ -20,10 +15,14 @@ Then, we will be provided with the current state of the environment, which inclu
   - Capacity - the current and maximum number of items in inventory.
   - Score - our current score and maximum possible score.
   - Done - whether the task is complete or not.
+We will also have access to the following:
+  - History (Summarizer) - a summary of all previous action-outcome pairs.
+  - Memories (Memorizer) - any important information we have remembered so far.
+  - Plan (Planner) - the current plan of action, including any updates made in previous steps.
 Next, we will provide:
   - Summary (Summarizer) - a summary of the action-outcome pair for the previous step.
-  - Plan (Planner) - any updates to the plan of action based on the current state.
   - Memory (Memorizer) - any important information we need to remember for future steps.
+  - Plan (Planner) - any updates to the plan of action based on the current state.
   - Thought (Reasoner) - a goal-oriented chain-of-reasoning from the current state to the best next action.
   - Action (Actor) - a command that we will execute in our environment.
 Finally, the environment will provide us with an updated state based on our action.

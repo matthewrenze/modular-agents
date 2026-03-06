@@ -8,5 +8,5 @@ from states.step_state import StepState
 class GlobalState(BaseModel):
     task_state: TaskState = None
     plan: Plan = []
-    memories: Dict[int, str] = {}
+    memories: Dict[str, str] = {}
     step_history: List[StepState] = []

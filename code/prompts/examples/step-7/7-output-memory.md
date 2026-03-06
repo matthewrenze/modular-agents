@@ -1,0 +1,1 @@
+rule 1: To cut an object, it must first be in our inventory

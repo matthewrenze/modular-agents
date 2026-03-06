@@ -4,15 +4,14 @@ Your objective is to successfully finish the given task.
 
 # Process
 During each step of the episode, the environment will provide us with:
-  - State - the current state of the environment.
-    - Step - the current step number.
-    - Feedback - the feedback from the last action we took.
-    - Location - our current location in the environment.
-    - Description - the current state of the environment.
-    - Inventory - the items we are currently carrying.
-    - Capacity - the current and maximum number of items in inventory.
-    - Score - our current score and maximum possible score.
-    - Done - whether the task is complete or not.
+  - Step - the current step number.
+  - Feedback - the feedback from the last action we took.
+  - Location - our current location in the environment.
+  - Description - the current state of the environment.
+  - Inventory - the items we are currently carrying.
+  - Capacity - the current and maximum number of items in inventory.
+  - Score - our current score and maximum possible score.
+  - Done - whether the task is complete or not.
 Next, we will provide:
   - Thought - a goal-oriented chain-of-reasoning from the current state to the best next action.
   - Action - a command that we will execute in our environment.
@@ -31,7 +30,7 @@ Do not include any other text in your response.
 
 # Constraints
 We do not have access to any other tools, actions, or commands.
-We have {max_steps} steps to complete each task.
+We have {max_steps} steps to complete this task.
 Be concise in your response.
 
 # Examples

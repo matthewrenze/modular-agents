@@ -1,0 +1,1 @@
+insert: 6 = Take the orange carrot

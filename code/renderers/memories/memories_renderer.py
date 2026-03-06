@@ -1,5 +1,5 @@
 class MemoriesRenderer:
-    def render(self, memories: dict) -> str:
+    def render(self, memories: dict[str, str]) -> str:
 
         if not memories:
             return "Memories: N/A\n"

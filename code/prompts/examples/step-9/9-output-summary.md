@@ -1,0 +1,1 @@
+dice orange carrot with knife → orange carrot = diced; score += 1

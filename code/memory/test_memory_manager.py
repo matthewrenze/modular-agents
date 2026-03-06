@@ -4,21 +4,21 @@ class TestMemoryManager:
     def test_execute(self):
 
         memories = {
-            1: "memory 1",
-            2: "memory 2A",
-            3: "memory 3",
+            "item 1": "value 1",
+            "item 2": "key 2 = value 2",
+            "item 3": "key 3 = {value 3A, value 3B}",
         }
 
         updates = """
-                create: memory 4
-                update: 2 = memory 2B
-                delete: 3
+                item 1: value 1B
+                item 3:
+                item 4: value 4
                 """.strip()
         manager = MemoryManager()
         actual = manager.execute(memories, updates)
 
         assert actual == {
-            1: "memory 1",
-            2: "memory 2B",
-            4: "memory 4",
+            "item 1": "value 1B",
+            "item 2": "key 2 = value 2",
+            "item 4": "value 4",
         }

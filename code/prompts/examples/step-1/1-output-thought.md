@@ -1,0 +1,1 @@
+To dice the carrot, I need to go to the kitchen. I'm in the living room, and there is a locked door to the north. I see a gold key on the shelf, so I should get the gold key first, then unlock the wooden door, open it, and find the kitchen.

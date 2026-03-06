@@ -22,22 +22,23 @@ class Reasoner(Agent):
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
-        # Add the plan
-        if self.params.use_planner:
-            user_content += self.renderer.render_plan(state.plan)
-            user_content += "\n"
+        # Add the last two steps
+        current_steps = state.step_history[-2:]
+        for index, step in enumerate(current_steps):
+            user_content += self.renderer.render_step(step, state.task_state)
+            user_content += self.renderer.render_env(step.env_state, state.task_state)
+            if index < len(current_steps) - 1:
+                user_content += self.renderer.render_agent(step.agent_state)
+                user_content += "\n"
 
         # Add the memories
         if self.params.use_memorizer:
             user_content += self.renderer.render_memories(state.memories)
             user_content += "\n"
 
-        # Add the last two steps
-        current_steps = state.step_history[-2:]
-        for index, step in enumerate(current_steps):
-            user_content += self.renderer.render_step(step, state.task_state)
-            user_content += self.renderer.render_env(step.env_state, state.task_state)
-            user_content += self.renderer.render_agent(step.agent_state)
+        # Add the plan
+        if self.params.use_planner:
+            user_content += self.renderer.render_plan(state.plan)
             user_content += "\n"
 
         # Add the user prompt

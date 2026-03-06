@@ -1,0 +1,1 @@
+Now that I have the gold key in my inventory, I can use it to unlock the wooden door to the north.

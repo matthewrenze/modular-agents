@@ -11,25 +11,31 @@ class ProcessFactory:
 
         # Filter tasker
         if not params.use_tasker:
-            section = self.remove_line(section, "Revised task")
+            section = self.remove_subagent_line(section, "Revised task")
+
+        # Filter "We will also have access to the following:"
+        if not params.use_summarizer \
+                and not params.use_memorizer \
+                and not params.use_planner:
+            section = self.remove_line(section, "We will also have access to the following:")
 
         # Filter summarizer
         if not params.use_summarizer:
-            section = self.remove_line(section, "History")
-            section = self.remove_line(section, "Summary")
-
-        # Filter planner
-        if not params.use_memorizer:
-            section = self.remove_line(section, "Plan")
+            section = self.remove_subagent_line(section, "History")
+            section = self.remove_subagent_line(section, "Summary")
 
         # Filter memorizer
         if not params.use_memorizer:
-            section = self.remove_line(section, "Memories")
-            section = self.remove_line(section, "Memory")
+            section = self.remove_subagent_line(section, "Memories")
+            section = self.remove_subagent_line(section, "Memory")
+
+        # Filter planner
+        if not params.use_planner:
+            section = self.remove_subagent_line(section, "Plan")
 
         # Filter reasoner
         if not params.use_reasoner:
-            section = self.remove_line(section, "Thought")
+            section = self.remove_subagent_line(section, "Thought")
 
         # Add "(you)" tag to the specified subagent
         subagent_name = subagent_name.capitalize()
@@ -38,11 +44,19 @@ class ProcessFactory:
         return section
 
     @staticmethod
-    def remove_line(section: str, subagent_name: str) -> str:
+    def remove_subagent_line(section: str, subagent_name: str) -> str:
         filtered_lines = []
         for line in section.splitlines():
             subagent_tag = f" - {subagent_name}"
             if subagent_tag not in line:
+                filtered_lines.append(line)
+        return "\n".join(filtered_lines)
+
+    @staticmethod
+    def remove_line(section: str, tag: str) -> str:
+        filtered_lines = []
+        for line in section.splitlines():
+            if tag not in line:
                 filtered_lines.append(line)
         return "\n".join(filtered_lines)
 

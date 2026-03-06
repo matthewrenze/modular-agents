@@ -1,55 +1,31 @@
-
 class MemoryManager:
+    def execute(self, memories: dict[str, str], updates: str) -> dict[str, str]:
 
-    def execute(self, memories, updates: str):
+        # If there are no memories, create an empty dict
+        if memories is None:
+            memories = {}
 
-        # Get the next id
-        next_id = 1 \
-            if not memories \
-            else max(memories.keys()) + 1
+        for update_line in updates.splitlines():
+            update_line = update_line.strip()
 
-        # Process each operation line by line
-        for line in updates.splitlines():
-            line = line.strip()
-            if not line:
+            # Skip empty lines
+            if not update_line:
                 continue
 
-            try:
+            # Handle invalid update lines
+            if ":" not in update_line:
+                raise ValueError(f"Invalid memory update: {update_line}")
 
-                # Parse the operation
-                operation, _, value = line.partition(":")
-                operation = operation.strip().lower()
-                value = value.strip()
+            # Parse the memory key and value
+            key, value = update_line.split(":", 1)
+            key = key.strip()
+            value = value.strip()
 
-                # Execute create
-                if operation == "create":
-                    memory = value
-                    memories[next_id] = memory
-                    next_id += 1
-
-                # Execute update
-                # Expected format: "update: <id> = <new memory content>"
-                elif operation == "update":
-                    id_str, _, new_memory = value.partition("=")
-                    id = int(id_str.strip())
-                    new_memory = new_memory.strip()
-                    if not id in memories:
-                        raise ValueError(f"Memory ID {id} does not exist for update.")
-                    memories[id] = new_memory
-
-                # Execute delete
-                elif operation == "delete":
-                    id = int(value)
-                    if not id in memories:
-                        raise ValueError(f"Memory ID {id} does not exist for deletion.")
-                    del memories[id]
-
-                # Handle unknown operation
-                else:
-                    raise ValueError(f"Unknown memory operation: {line}")
-
-            except Exception as e:
-                print(f"Error processing memory operation '{line}': {e}")
-                continue
+            if value == "":
+                # Delete the memory
+                memories.pop(key, None)
+            else:
+                # Add or update the memory
+                memories[key] = value
 
         return memories

@@ -13,19 +13,19 @@ class ParametersFactory:
             max_steps=0)
 
         # Create the react-k0 agent
-        if agent_name == "react-k0":
+        if agent_name.startswith("react-k0"):
             parameters = self.minus_all(parameters)
             parameters.use_react_k0 = True
             return parameters
 
         # Create the react-k1 agent
-        if agent_name == "react-k1":
+        if agent_name.startswith("react-k1"):
             parameters = self.minus_all(parameters)
             parameters.use_react_k1 = True
             return parameters
 
         # Create the react-kn agent
-        if agent_name == "react-kn":
+        if agent_name.startswith("react-kn"):
             parameters = self.minus_all(parameters)
             parameters.use_react_kn = True
             return parameters
@@ -44,8 +44,8 @@ class ParametersFactory:
         # Create baseline-plus agents
         if agent_name.startswith("plus-"):
             parameters = self.minus_all(parameters)
-            if "tasker" in agent_name:
-                parameters.use_tasker = True
+            # if "tasker" in agent_name:
+            #     parameters.use_tasker = True
             if "summarizer" in agent_name:
                 parameters.use_summarizer = True
             if "planner" in agent_name:
@@ -60,8 +60,8 @@ class ParametersFactory:
         # Create topline-minus agents
         if agent_name.startswith("minus-"):
             parameters = self.plus_all(parameters)
-            if "tasker" in agent_name:
-                parameters.use_tasker = False
+            # if "tasker" in agent_name:
+            #     parameters.use_tasker = False
             if "summarizer" in agent_name:
                 parameters.use_summarizer = False
             if "planner" in agent_name:
@@ -77,7 +77,7 @@ class ParametersFactory:
 
     @staticmethod
     def plus_all(parameters: Parameters) -> Parameters:
-        parameters.use_tasker = True
+        # parameters.use_tasker = True
         parameters.use_summarizer = True
         parameters.use_planner = True
         parameters.use_memorizer = True
@@ -87,7 +87,7 @@ class ParametersFactory:
 
     @staticmethod
     def minus_all(parameters: Parameters) -> Parameters:
-        parameters.use_tasker = False
+        # parameters.use_tasker = False
         parameters.use_summarizer = False
         parameters.use_planner = False
         parameters.use_memorizer = False

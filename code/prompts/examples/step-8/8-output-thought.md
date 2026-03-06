@@ -1,0 +1,1 @@
+Now that I have the orange carrot in my inventory, I can use the knife to dice the orange carrot.

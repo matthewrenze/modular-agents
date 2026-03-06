@@ -1,0 +1,1 @@
+Now that the wooden door is unlocked, I can open it to the north and find the kitchen.

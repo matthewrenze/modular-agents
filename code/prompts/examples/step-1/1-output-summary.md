@@ -1,0 +1,1 @@
+start → location = living room

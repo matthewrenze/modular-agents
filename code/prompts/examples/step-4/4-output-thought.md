@@ -1,0 +1,1 @@
+Now that the wooden door is open, I can go north to the kitchen and dice the carrot.
