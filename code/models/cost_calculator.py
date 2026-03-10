@@ -11,6 +11,7 @@ class CostCalculator:
             "glm-5": {"cached": 0.20, "input": 1.00, "output": 3.20},
             "gpt-5-mini": {"cached": 0.025, "input": 0.25, "output": 2.00},
             "gpt-5.2": {"cached": 0.175, "input": 1.75, "output": 14.00},
+            "gpt-5.4": {"cached": 0.25, "input": 2.50, "output": 15.00},
             "kimi-k2.5" : {"cached": 0.10, "input": 0.60, "output": 3.00},
         }
 

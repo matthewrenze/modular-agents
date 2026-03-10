@@ -3,8 +3,8 @@ from prompts.examples.examples_factory import ExamplesFactory
 
 # subagent = "react-kn"
 # subagent = "summarizer"
-subagent = "memorizer"
-# subagent = "planner"
+# subagent = "memorizer"
+subagent = "planner"
 # subagent = "reasoner"
 # subagent = "actor"
 

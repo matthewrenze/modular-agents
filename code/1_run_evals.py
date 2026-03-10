@@ -23,13 +23,17 @@ from messages.messages_writer import MessagesWriter
 from states.writer.state_writer import StateWriter
 from reviews.writer.review_writer import ReviewWriter
 
+# Set provider
+use_azure = True
+
 # Set models
 model_names = [
     # "claude-sonnet-4-6",
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
     # "gpt-5-mini",
-    "gpt-5.2"
+    # "gpt-5.2",
+    "gpt-5.4",
     # "glm-5"
     # "kimi-k2.5"
 ]
@@ -42,8 +46,8 @@ agent_names = [
     # "baseline-v3.0",
     # "plus-planner-v3.0",
     # "plus-summarizer-v3.0",
-    "plus-memorizer-v3.1",
-    # "plus-reasoner-v3.0",
+    # "plus-memorizer-v3.1",
+    "plus-reasoner-v3.0",
     # "minus-planner-v3.0",
     # "minus-summarizer-v3.0",
     # "minus-memorizer-v3.0",
@@ -53,7 +57,7 @@ agent_names = [
 # Set evals
 eval_size = 1
 eval_env_names = [
-    # ("tw-simple-1", "textworld"),
+    ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -62,7 +66,7 @@ eval_env_names = [
     # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -132,7 +136,7 @@ for params in runs:
         params.max_steps = max_steps
         
         # Create entities
-        model = model_factory.create(params)
+        model = model_factory.create(params, use_azure)
         react_k0 = agent_factory.create("react-k0", params, model)
         react_k1 = agent_factory.create("react-k1", params, model)
         react_kn = agent_factory.create("react-kn", params, model)

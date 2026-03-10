@@ -8,8 +8,8 @@ class AzureOpenAiModel(Model):
     def __init__(self, model_name):
         super().__init__(model_name)
 
-        # HACK: Use EAST US 2 for gpt-5.1 until EAST US is enabled
-        if model_name == "gpt-5.1" or model_name == "gpt-5.2":
+        # HACK: Use EAST US 2 for gpt-5.x until EAST US is enabled
+        if model_name.startswith("gpt-5"):
             self.api_url = os.environ["AZURE_OPENAI_URL_EASTUS2"]
             self.api_key = os.environ["AZURE_OPENAI_KEY_EASTUS2"]
         else:

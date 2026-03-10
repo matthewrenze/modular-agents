@@ -9,7 +9,7 @@ from models.fireworks_model import FireworksModel
 
 class ModelFactory():
 
-    def create(self, params: Parameters) -> Model:
+    def create(self, params: Parameters, use_azure: bool) -> Model:
 
         if params.model_name.startswith("claude"):
             return ClaudeModel(params.model_name)
@@ -18,7 +18,10 @@ class ModelFactory():
             return GeminiModel(params.model_name)
 
         elif params.model_name.startswith("gpt"):
-            return OpenAiModel(params.model_name)
+            if use_azure:
+                return AzureOpenAiModel(params.model_name)
+            else:
+                return OpenAiModel(params.model_name)
 
         elif params.model_name.startswith("kimi"):
             return FireworksModel(params.model_name)
