@@ -1,13 +1,10 @@
-from plans.plan import Plan
-
 class PlanRenderer:
-    def render(self, plan: Plan) -> str:
+    def render(self, plan: str) -> str:
 
         if not plan:
             return "Plan: N/A.\n"
 
         output = "Plan:\n"
-        for step in plan:
-            status_tag = "X" if step.status == "done" else " "
-            output += f"  {step.id} [{status_tag}] {step.label}\n"
+        for step in plan.strip().split("\n"):
+            output += f"  {step}\n"
         return output

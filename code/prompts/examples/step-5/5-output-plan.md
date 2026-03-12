@@ -1,2 +1,6 @@
-mark: 4 = done
-insert: 5 = Take the knife
+- [x] Take the gold key
+- [x] Unlock the wooden door
+- [x] Open the wooden door
+- [x] Go north to the kitchen
+- [ ] Take the knife
+- [ ] Dice the orange carrot

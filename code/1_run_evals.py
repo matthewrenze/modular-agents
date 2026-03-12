@@ -15,7 +15,6 @@ from states.env_state import EnvState
 from states.global_state import GlobalState
 from states.step_state import StepState
 from states.agent_state import AgentState
-from plans.manager.plan_manager import PlanManager
 from memory.memory_manager import MemoryManager
 from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
@@ -24,7 +23,7 @@ from states.writer.state_writer import StateWriter
 from reviews.writer.review_writer import ReviewWriter
 
 # Set provider
-use_azure = True
+use_azure = False
 
 # Set models
 model_names = [
@@ -32,8 +31,8 @@ model_names = [
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
     # "gpt-5-mini",
-    # "gpt-5.2",
-    "gpt-5.4",
+    "gpt-5.2",
+    # "gpt-5.4",
     # "glm-5"
     # "kimi-k2.5"
 ]
@@ -44,15 +43,15 @@ agent_names = [
     # "react-k1-v3.0",
     # "react-kn-v3.0",
     # "baseline-v3.0",
-    # "plus-planner-v3.0",
+    "plus-planner-v3.1",
     # "plus-summarizer-v3.0",
     # "plus-memorizer-v3.1",
-    "plus-reasoner-v3.0",
+    # "plus-reasoner-v3.1",
     # "minus-planner-v3.0",
     # "minus-summarizer-v3.0",
     # "minus-memorizer-v3.0",
     # "minus-reasoner-v3.0"
-    # "topline-v3.0"
+    # "topline-v3.1"
 ]
 # Set evals
 eval_size = 1
@@ -63,10 +62,10 @@ eval_env_names = [
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
     # ("tw-coin-2", "textworld"),
-    # ("tw-coin-3", "textworld"),
+    ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -113,8 +112,13 @@ for params in runs:
     # Get the episodes to run
     num_episodes = min(len(eval), eval_size)
     episode_ids = list(range(1, num_episodes + 1))
+    # HACK: select specific episodes for specific num_episodes
+    if num_episodes == 1:
+        episode_ids = [10]
     if num_episodes == 10:
         episode_ids = list(range(10, 101, 10))
+    if num_episodes == 99:
+        episode_ids = [100]
 
     # Set up summaries
     if summary_manager.exists(params):
@@ -146,7 +150,6 @@ for params in runs:
         memorizer = agent_factory.create("memorizer", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
-        plan_manager = PlanManager()
         memory_manager = MemoryManager()
         details_manager = DetailsManager(params, episode_id)
         
@@ -278,12 +281,12 @@ for params in runs:
 
                 # Get the planner's plan
                 if params.use_planner:
-                    plan_updates = planner.execute(global_state)
+                    new_plan = planner.execute(global_state)
                     agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
-                    global_state.plan = plan_manager.execute(global_state.plan, plan_updates)
-                    agent_state.plan = plan_updates
-                    plan_updates = renderer.render_plan_updates(plan_updates)
-                    log.info(f"  Plan:\n{plan_updates}")
+                    global_state.plan = new_plan
+                    agent_state.plan = new_plan
+                    new_plan = renderer.render_plan_updates(new_plan)
+                    log.info(f"  Plan:\n{new_plan}")
 
                 # Get the reasoner's thought
                 if params.use_reasoner:
@@ -358,7 +361,7 @@ for params in runs:
         result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.cached_tokens, model.input_tokens)
         result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.reasoning_tokens, model.output_tokens)
         result_row.total_cost = result_row.input_cost + result_row.output_cost
-        result_row.reward_per_step = final_reward / step_id
+        result_row.reward_per_step = final_reward / step_id if step_id > 0 else 0.0
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
         results_manager.add(result_row)
 

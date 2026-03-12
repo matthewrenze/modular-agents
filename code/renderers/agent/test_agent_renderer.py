@@ -6,8 +6,8 @@ class TestAgentRenderer:
     def test_render(self):
         agent_state = AgentState(
             summary="summary 1",
-            plan="add: 1\ninsert: 2\nupdate: 3\nmark: 4\ndelete: 5",
-            memory="delete: 1\nupdate: 2 = memory 2B\ncreate: memory 3",
+            plan="- [x] Step 1\n- [ ] Step 2",
+            memory="delete: 1\nupdate: 2 = memory 2\ncreate: memory 3",
             thought="thought 1",
             action="action 1")
         expected = (
@@ -23,7 +23,7 @@ class TestAgentRenderer:
     def test_render_log_mode(self):
         agent_state = AgentState(
             summary="summary 1",
-            plan="add: 1\ninsert: 2\nupdate: 3\nmark: 4\ndelete: 5",
+            plan="- [x] step 1\n- [ ] step 2",
             memory="item 1: value 1\nitem 2: value 2\nitem 3: value 3",
             thought="thought 1",
             action="action 1")
@@ -32,14 +32,11 @@ class TestAgentRenderer:
             "  Summary: summary 1\n"
             "  Memory:\n"
             "    item 1: value 1\n"
-            "    item 2: value 2B\n"
+            "    item 2: value 2\n"
             "    item 3: value 3\n"
             "  Plan:\n"
-            "    add: 1\n"
-            "    insert: 2\n"
-            "    update: 3\n"
-            "    mark: 4\n"
-            "    delete: 5\n"
+            "    - [x] step 1\n"
+            "    - [ ] step 2\n"
             "  Thought: thought 1\n"
             "  Action: action 1\n")
 

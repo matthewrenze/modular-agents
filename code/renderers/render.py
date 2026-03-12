@@ -9,7 +9,6 @@ from states.task_state import TaskState
 from states.step_state import StepState
 from states.env_state import EnvState
 from states.agent_state import AgentState
-from plans.plan import Plan
 
 class Renderer:
     def __init__(self,
@@ -34,7 +33,7 @@ class Renderer:
     def render_history(self, step_history: list) -> str:
         return self.history_renderer.render(step_history)
 
-    def render_plan(self, plan: Plan) -> str:
+    def render_plan(self, plan: str) -> str:
         return self.plan_renderer.render(plan)
 
     def render_memories(self, memories: dict) -> str:

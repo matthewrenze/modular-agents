@@ -42,8 +42,8 @@ class ExamplesFactory:
                 # Add the previous action (for the reasoner and actor)
                 content += f"  Action: {self.get_part(step - 1, 'output-action')}"
 
-            # Add the previous action (for the summarizer only)
-            if subagent == "summarizer" and step > 1:
+            # Add the previous action (for the summarizer and planner only)
+            if (subagent == "summarizer" or subagent == "planner") and step > 1:
                 content += f"Step: {step - 1} of 10\n"
                 content += "Agent:\n"
                 content += f"  Action: {self.get_part(step - 1, 'output-action')}"

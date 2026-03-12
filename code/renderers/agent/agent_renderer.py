@@ -25,11 +25,7 @@ class AgentRenderer:
         return result
 
     def render_plan_updates(self, plan: str) -> str:
-        plan = plan.replace("add:", "    add:")
-        plan = plan.replace("insert:", "    insert:")
-        plan = plan.replace("update:", "    update:")
-        plan = plan.replace("mark:", "    mark:")
-        plan = plan.replace("delete:", "    delete:")
+        plan = plan.replace("- [", "    - [")
         return plan
 
     def render_memory_updates(self, memory: str) -> str:

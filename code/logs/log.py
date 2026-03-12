@@ -5,7 +5,6 @@ from states.task_state import TaskState
 from states.step_state import StepState
 from states.env_state import EnvState
 from states.agent_state import AgentState
-from plans.plan import Plan
 
 # Define the ANSI colors
 BOLD_WHITE = "\033[97m"
@@ -60,7 +59,7 @@ class Log:
         history_text = self.renderer.render_history(step_history)
         self.raw(history_text)
 
-    def plan(self, plan: Plan):
+    def plan(self, plan: str):
         plan_text = self.renderer.render_plan(plan)
         self.raw(plan_text)
 

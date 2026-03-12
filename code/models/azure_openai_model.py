@@ -67,6 +67,10 @@ class AzureOpenAiModel(Model):
                 return content
             except Exception as e:
 
+                # Fail on content filter violations since retry won't work
+                if "content_filter" in str(e) or "ResponsibleAIPolicyViolation" in str(e):
+                    raise
+
                 if attempts >= len(retries):
                     raise
 

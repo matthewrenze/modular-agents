@@ -1,7 +1,6 @@
 import io
 import yaml
 
-from plans.plan_step import PlanStep
 from states.task_state import TaskState
 from states.writer import state_writer
 from states.writer.state_writer import StateWriter
@@ -26,12 +25,10 @@ class TestStateWriter:
                 max_items=1,
                 max_score=2,
                 max_reward=1.0),
-            plan=[
-                PlanStep(id=1, status="done", label="step 1"),
-                PlanStep(id=2, status="todo", label="step 2")],
+            plan="- [x] step 1\n- [ ] step 2\n",
             memories={
-                1: "memory 1",
-                2: "memory 2",},
+                "key 1": "value 1",
+                "key 2": "value 2"},
             step_history=[
                 StepState(
                     step_id=1,
@@ -46,34 +43,14 @@ class TestStateWriter:
                     ),
                     agent_state=AgentState(
                         summary="summary 1",
-                        plan="add: plan 1\ninsert: 2 = plan 2\nupdate: 3 = plan 3\n",
-                        memory="create: memory 1\ndelete: 1\n",
+                        plan="- [x] step 1\n- [x] step 2\n",
+                        memory="key 3: value 3\n",
                         thought="thought 1",
                         action="action 1",
                     ),
                 ),
                 StepState(
                     step_id=2,
-                    env_state=EnvState(
-                        feedback="feedback 2",
-                        location="location 2",
-                        description="description 2",
-                        inventory="inventory 2",
-                        items=2,
-                        score=2,
-                        reward=1.0,
-                        is_done=True,
-                    ),
-                    agent_state=AgentState(
-                        summary="summary 2",
-                        plan="mark: 4\ndelete: 5\ndelete: 6\n",
-                        memory="create: memory 2\ncreate: memory 3\ndelete: 2\ndelete: 3\n",
-                        thought="thought 2",
-                        action="action 2",
-                    ),
-                ),
-                StepState(
-                    step_id=3,
                     env_state=EnvState(),      # defaults -> should dump as {}
                     agent_state=AgentState(),  # defaults -> should dump as {}
                 ),

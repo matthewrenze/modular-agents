@@ -20,8 +20,8 @@ class TestExamplesFactory:
         assert "Memories:" not in examples
         assert "  living room: "
         assert "Plan:" not in examples
-        assert "  1 [X]" not in examples
-        assert "  2 [ ]" not in examples
+        assert "  - [x]" not in examples
+        assert "  - [ ]" not in examples
 
     def test_create_for_all_subagents_enabled_input(self):
         factory = ExamplesFactory()
@@ -40,13 +40,13 @@ class TestExamplesFactory:
         assert "Memories:" in examples
         assert "  living room: " in examples
         assert "Plan:" in examples
-        assert "  1 [X]" in examples
-        assert "  2 [ ]" in examples
+        assert "  - [x]" in examples
+        assert "  - [ ]" in examples
 
     @pytest.mark.parametrize("subagent, output", [
         ("summarizer", "start → location = living room"),
         ("memorizer", "living room: rooms = {north = ?}"),
-        ("planner", "add: Take the gold key"),
+        ("planner", "- [x] Take the gold key"),
         ("reasoner", "To dice the carrot, I need to go to the kitchen."),
         ("actor", "take gold key from shelf"),
     ])

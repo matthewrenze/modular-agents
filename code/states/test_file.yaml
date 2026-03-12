@@ -6,16 +6,12 @@ task_state:
   max_score: 2
   max_reward: 1.0
   success: false
-plan:
-  - id: 1
-    status: done
-    label: step 1
-  - id: 2
-    status: todo
-    label: step 2
+plan: |
+  - [x] step 1
+  - [ ] step 2
 memories:
-  1: memory 1
-  2: memory 2
+  key 1: value 1
+  key 2: value 2
 step_history:
   - step_id: 1
     env_state:
@@ -30,38 +26,13 @@ step_history:
     agent_state:
       summary: summary 1
       plan: |
-        add: plan 1
-        insert: 2 = plan 2
-        update: 3 = plan 3
+        - [x] step 1
+        - [x] step 2
       memory: |
-        create: memory 1
-        delete: 1
+        key 3: value 3
       thought: thought 1
       action: action 1
   - step_id: 2
-    env_state:
-      feedback: feedback 2
-      location: location 2
-      description: description 2
-      inventory: inventory 2
-      items: 2
-      score: 2
-      reward: 1.0
-      is_done: True
-    agent_state:
-      summary: summary 2
-      plan: |
-        mark: 4
-        delete: 5
-        delete: 6
-      memory: |
-        create: memory 2
-        create: memory 3
-        delete: 2
-        delete: 3
-      thought: thought 2
-      action: action 2
-  - step_id: 3
     env_state:
       feedback: ""
       location: ""
