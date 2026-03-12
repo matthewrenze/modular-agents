@@ -1,6 +1,3 @@
 Plan:
-  - [x] Take the gold key
-  - [x] Unlock the wooden door
-  - [x] Open the wooden door
-  - [ ] Go north to the kitchen
+  - [ ] Find the kitchen
   - [ ] Dice the orange carrot

@@ -63,7 +63,7 @@ class Log:
         plan_text = self.renderer.render_plan(plan)
         self.raw(plan_text)
 
-    def memories(self, memories: dict[int, str]):
+    def memories(self, memories: dict[str, str]):
         memories_text = self.renderer.render_memories(memories)
         self.raw(memories_text)
 

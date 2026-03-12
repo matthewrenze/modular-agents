@@ -7,13 +7,11 @@ class TestProcessFactory:
     def test_create_with_all_subagents_enabled(self):
         factory = ProcessFactory()
         params = Parameters(
-            use_tasker=True,
             use_summarizer=True,
             use_planner=True,
             use_memorizer=True,
             use_reasoner=True)
         process_prompt = factory.create(params, "actor")
-        assert " - Revised task" in process_prompt
         assert " - History" in process_prompt
         assert " - Summary" in process_prompt
         assert " - Plan" in process_prompt
@@ -25,13 +23,11 @@ class TestProcessFactory:
     def test_create_with_all_subagents_disabled(self):
         factory = ProcessFactory()
         params = Parameters(
-            use_tasker=False,
             use_summarizer=False,
             use_planner=False,
             use_memorizer=False,
             use_reasoner=False)
         process_prompt = factory.create(params, "actor")
-        assert " - Revised task" not in process_prompt
         assert " - Summary" not in process_prompt
         assert " - History" not in process_prompt
         assert " - Plan" not in process_prompt
@@ -42,8 +38,7 @@ class TestProcessFactory:
 
     @pytest.mark.parametrize(
         "subagent_name, subagent_tag",
-        [("tasker", "  - Revised task (you) - "),
-         ("summarizer", "  - Summary (you) - "),
+        [("summarizer", "  - Summary (you) - "),
          ("planner", "  - Plan (you) - "),
          ("memorizer", "  - Memory (you) - "),
          ("reasoner", "  - Thought (you) - "),
@@ -52,7 +47,6 @@ class TestProcessFactory:
     def test_create_for_subagent_you_tag(self, subagent_name, subagent_tag):
         factory = ProcessFactory()
         params = Parameters(
-            use_tasker=True,
             use_summarizer=True,
             use_planner=True,
             use_memorizer=True,
@@ -63,7 +57,6 @@ class TestProcessFactory:
     def test_create_for_remove_we_will_also_have_access_to_the_following(self):
         factory = ProcessFactory()
         params = Parameters(
-            use_tasker=True,
             use_summarizer=False,
             use_planner=False,
             use_memorizer=False,

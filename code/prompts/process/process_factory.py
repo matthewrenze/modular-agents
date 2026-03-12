@@ -9,10 +9,6 @@ class ProcessFactory:
         with open(file_path, "r") as file:
             section = file.read()
 
-        # Filter tasker
-        if not params.use_tasker:
-            section = self.remove_subagent_line(section, "Revised task")
-
         # Filter "We will also have access to the following:"
         if not params.use_summarizer \
                 and not params.use_memorizer \

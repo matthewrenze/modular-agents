@@ -7,7 +7,6 @@ class TestExamplesFactory:
     def test_create_for_all_subagents_disabled_input(self):
         factory = ExamplesFactory()
         params = Parameters(
-            use_tasker=False,
             use_summarizer=False,
             use_planner=False,
             use_memorizer=False,
@@ -26,7 +25,6 @@ class TestExamplesFactory:
     def test_create_for_all_subagents_enabled_input(self):
         factory = ExamplesFactory()
         params = Parameters(
-            use_tasker=True,
             use_summarizer=True,
             use_planner=True,
             use_memorizer=True,

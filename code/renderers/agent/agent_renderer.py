@@ -25,6 +25,7 @@ class AgentRenderer:
         return result
 
     def render_plan_updates(self, plan: str) -> str:
+        plan = plan.replace("NO_CHANGE", "    NO_CHANGE")
         plan = plan.replace("- [", "    - [")
         return plan
 

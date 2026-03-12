@@ -32,6 +32,13 @@ class Planner(Agent):
             user_content += self.renderer.render_plan(state.plan)
             user_content += "\n"
 
+        # Add the previous agent state (action)
+        if len(state.step_history) >= 2:
+            previous_step = state.step_history[-2]
+            user_content += self.renderer.render_step(previous_step, state.task_state)
+            user_content += self.renderer.render_agent(previous_step.agent_state)
+            user_content += "\n"
+
         # Add the last steps (only)
         current_step = state.step_history[-1]
         user_content += self.renderer.render_step(current_step, state.task_state)

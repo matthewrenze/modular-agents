@@ -35,21 +35,28 @@ For example:
 ```
 - [x] Find the kitchen
 - [ ] Read the cookbook
-- [ ] Prepare the meal
+- [ ] Gather the ingredients
+- [ ] Prepare the ingredients
+- [ ] Cook the meal
 ```
 
 # Rules
-- You MUST output the complete plan at each step.
+- During the first step:
+  - You MUST output the complete plan containing all subgoals.
+- During each additional step:
+  - If there are any changes to the plan, then you MUST output the complete plan with the new changes.
+  - If there are no changes to the plan, then you MUST output "NO_CHANGE".
 - Copy all existing steps *verbatim* unless you have a reason to update them.
 - ONLY add new steps if you discover new subgoals that must be completed.
-- ONLY update steps descriptions if you are certain the old description is no longer accurate or relevant to the task.
+- ONLY update step descriptions if you are certain the old description is no longer accurate or relevant to the task.
 - DO NOT delete steps from the plan unless you are certain they are no longer relevant to the task.
 - DO NOT delete steps from the plan that have been completed.
 - Keep plans as concise as possible while capturing all details necessary to complete the task.
 - If uncertain about the next step, add a more general step to the plan and refine it in future updates.
   - e.g., "Find the kitchen" instead of "Go north to the kitchen" if you are not sure of the direction.
 - DO NOT mark steps as "done" (i.e., "[x]" if they haven't been completed yet.
-- DO NOT add a step to "quit" at the end of a task.
+- DO NOT mark a step as "done" if the environment shows that the action leading to that subgoal failed.
+- DO NOT add a step to "quit" at the end of a task; just mark the final subgoal complete.
 
 # Actions
 *Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*

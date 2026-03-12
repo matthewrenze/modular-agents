@@ -8,10 +8,6 @@ class SystemFactory:
         with open(file_path, "r") as file:
             section = file.read()
 
-        # Filter tasker
-        if not params.use_tasker:
-            section = self.remove_line(section, "Tasker")
-
         # Filter summarizer
         if not params.use_summarizer:
             section = self.remove_line(section, "Summarizer")

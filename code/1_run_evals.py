@@ -43,7 +43,7 @@ agent_names = [
     # "react-k1-v3.0",
     # "react-kn-v3.0",
     # "baseline-v3.0",
-    "plus-planner-v3.1",
+    # "plus-planner-v3.2",
     # "plus-summarizer-v3.0",
     # "plus-memorizer-v3.1",
     # "plus-reasoner-v3.1",
@@ -51,7 +51,7 @@ agent_names = [
     # "minus-summarizer-v3.0",
     # "minus-memorizer-v3.0",
     # "minus-reasoner-v3.0"
-    # "topline-v3.1"
+    "topline-v3.2"
 ]
 # Set evals
 eval_size = 1
@@ -200,14 +200,6 @@ for params in runs:
                     log.info(f"Task: {task_state.task}")
                     global_state.task_state = task_state
                     result_row.task = task_state.task
-
-                    # Get the revised task
-                    if params.use_tasker:
-                        task = tasker.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "tasker", tasker.messages)
-                        log.info(f"Revised task: {task}")
-                        global_state.task_state.task = task
-                        result_row.revised_task = task
                 else:
                     env_state = env.step(action)
 
@@ -283,8 +275,11 @@ for params in runs:
                 if params.use_planner:
                     new_plan = planner.execute(global_state)
                     agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
-                    global_state.plan = new_plan
-                    agent_state.plan = new_plan
+                    if new_plan.strip() != "NO_CHANGE":
+                        global_state.plan = new_plan
+                        agent_state.plan = new_plan
+                    else:
+                        agent_state.plan = global_state.plan
                     new_plan = renderer.render_plan_updates(new_plan)
                     log.info(f"  Plan:\n{new_plan}")
 

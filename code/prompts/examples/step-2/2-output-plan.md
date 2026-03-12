@@ -1,5 +1,1 @@
-- [x] Take the gold key
-- [ ] Unlock the wooden door
-- [ ] Open the wooden door
-- [ ] Find the kitchen
-- [ ] Dice the orange carrot
+NO_CHANGE
