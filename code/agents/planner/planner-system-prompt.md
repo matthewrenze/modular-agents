@@ -35,9 +35,7 @@ For example:
 ```
 - [x] Find the kitchen
 - [ ] Read the cookbook
-- [ ] Gather the ingredients
-- [ ] Prepare the ingredients
-- [ ] Cook the meal
+- [ ] Prepare the meal
 ```
 
 # Rules
