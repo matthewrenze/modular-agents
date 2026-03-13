@@ -4,9 +4,9 @@ from prompts.examples.examples_factory import ExamplesFactory
 # subagent = "react-kn"
 # subagent = "summarizer"
 # subagent = "memorizer"
-subagent = "planner"
+# subagent = "planner"
 # subagent = "reasoner"
-# subagent = "actor"
+subagent = "actor"
 
 params = Parameters(
     use_summarizer=True,

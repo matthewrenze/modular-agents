@@ -1,4 +1,4 @@
-import re
+import os
 from params.parameters import Parameters
 
 class ExamplesFactory:
@@ -6,6 +6,11 @@ class ExamplesFactory:
         content = ""
         for step in range(1, 10):
             content += f"## Example {step}\n"
+
+            # Add the note (if it exists)
+            note = self.get_note(step)
+            if note is not None:
+                content += note
 
             content += "### Input\n"
 
@@ -90,6 +95,14 @@ class ExamplesFactory:
             content += "\n"
 
         return content
+
+    @staticmethod
+    def get_note(step: int) -> str | None:
+        file_path = f"prompts/examples/step-{step}/{step}-note.md"
+        if not os.path.exists(file_path):
+            return None
+        with open(file_path, "r") as file:
+            return file.read() + "\n"
 
 
     @staticmethod
