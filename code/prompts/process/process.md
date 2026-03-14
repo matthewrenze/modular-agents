@@ -1,7 +1,6 @@
 ## Start of the Episode
 At the start of the episode, the environment will provide us with:
   - Task - a description of the task we need to complete.
-  - Revised task (Tasker) - a revised description of the task to be completed.
   - State - the initial state of the environment (see below).
 We will complete the task through a series of steps in an iterative loop.
 

@@ -62,10 +62,10 @@ eval_env_names = [
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
     # ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
+    # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters

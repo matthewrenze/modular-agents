@@ -1,5 +1,4 @@
 We are composed of the following agents and responsibilities:
-  - Tasker - responsible for defining the overall task to be completed.
   - Summarizer - responsible for summarizing the trajectory/history as action-outcome pairs for each step.
   - Planner - responsible for creating and updating the plan of action to complete the task.
   - Memorizer - responsible for creating and maintaining memories of important information.

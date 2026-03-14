@@ -5,7 +5,6 @@ from agents.agent_factory import AgentFactory
 from agents.react_k0.react_k0 import ReactK0
 from agents.react_k1.react_k1 import ReactK1
 from agents.react_kn.react_kn import ReactKn
-from agents.tasker.tasker import Tasker
 from agents.summarizer.summarizer import Summarizer
 from agents.planner.planner import Planner
 from agents.memorizer.memorizer import Memorizer
@@ -21,7 +20,6 @@ class TestAgentFactory:
         [("react-k0", ReactK0, "You are an intelligent agent that completes multi-step tasks."),
          ("react-k1", ReactK1, "You are an intelligent agent that completes multi-step tasks."),
          ("react-kn", ReactKn, "You are an intelligent agent that completes multi-step tasks."),
-         ("tasker", Tasker, "You are the Tasker (task reviser) agent"),
          ("summarizer", Summarizer, "You are the Summarizer agent"),
          ("planner", Planner, "You are the Planner (plan creator and updater)"),
          ("memorizer", Memorizer, "You are the Memorizer (short-term memory) agent"),
