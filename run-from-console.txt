@@ -1,5 +1,2 @@
-ubuntu
-source /home/matthew/.virtualenvs/pycharm_test/bin/activate
-cd /mnt/c/Users/Matthew/Dropbox/School/JHU/DEng/Repositories/modular-agents/prod
-python run_evals.py
+*** GO TO PROD ***
 

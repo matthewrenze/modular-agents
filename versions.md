@@ -9,6 +9,17 @@ Planner
  - planner-v2.1
  - planner-v2.2
   - fixed insert ids out of range issue
+ - planner-v3.0
+ - planner-v3.1
+   - reverted back to writing full plan each step (
+   - reverted back to subgoals but still had action-level examples
+ - planner-v3.2
+   - added previous agent action to user prompt
+   - reverted back to subgoals in both instructions and examples
+   - added "NO_CHANGE" feature
+ - planner-v3.3
+   - inverted back to action-level examples
+   
 
 Summarizer
  - summarizer-v2 (64%, 242k)
@@ -42,6 +53,6 @@ Memorizer
    - symbolic memories 
    - (i.e., "[entity-key]: [property]=[value], ...")
    - (e.g., "carrot: location = {room = kitchen, on = counter}, state = diced)
- - memorizer-v3.0 ()
- - memorizer-v3.1
+ - memorizer-v3.0 (56%)
+ - memorizer-v3.1 (54%)
    - switched from int IDs to string IDs
