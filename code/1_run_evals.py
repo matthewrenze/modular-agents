@@ -62,10 +62,10 @@ eval_env_names = [
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
     # ("tw-coin-2", "textworld"),
-    # ("tw-coin-3", "textworld"),
+    ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -144,7 +144,6 @@ for params in runs:
         react_k0 = agent_factory.create("react-k0", params, model)
         react_k1 = agent_factory.create("react-k1", params, model)
         react_kn = agent_factory.create("react-kn", params, model)
-        tasker = agent_factory.create("tasker", params, model)
         summarizer = agent_factory.create("summarizer", params, model)
         planner = agent_factory.create("planner", params, model)
         memorizer = agent_factory.create("memorizer", params, model)
@@ -175,7 +174,6 @@ for params in runs:
             react_k0.reset()
             react_k1.reset()
             react_kn.reset()
-            tasker.reset()
             summarizer.reset()
             planner.reset()
             memorizer.reset()
