@@ -45,9 +45,24 @@ For example:
 - [ ] Eat the meal
 ```
 
+# Subgoal Expansion/Collapse Rules
+Each subgoal can either be expanded or collapsed.
+ - Collapsed: only the subgoal line is shown (no children actions are shown).
+ - Expanded: the subgoal line and all of its child actions are shown.
+- All past and future subgoals should be collapsed by default.
+- However, the subgoal(s) you are currently working on should be expanded to show its child actions.
+- Once you have completed a subgoal, you should mark it as done and collapse it to hide its child actions.
+- Do not add actions to future subgoals until you are ready to work on that subgoal.
+- At any given step, there should be exactly one or two subgoal expanded: 
+  - the active subgoal -- if you are in the middle of a subgoal.
+  - the active subgoal and the previous or next subgoal -- if you are transitioning between subgoals.
+- Collapse any previously expanded active subgoals once you have verified their child actions are complete.
+- If you're collapsing the active step, you MUST mark it as done ("[x]") before collapsing it (in the same step).
+
 # Rules
 - During the first step:
-  - You MUST output the complete plan containing all known top-level subgoals and actions.
+  - You MUST output the complete plan containing all known top-level subgoals and any known actions for the first subgoal.
+  - Only the first subgoal should be expanded to show its child actions; all other subgoals should be collapsed.
 - During each additional step:
   - If there are any changes to the plan, then you MUST output the complete plan with the new changes.
   - If there are no changes to the plan, then you MUST output "NO_CHANGE".

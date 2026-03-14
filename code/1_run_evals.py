@@ -43,7 +43,7 @@ agent_names = [
     # "react-k1-v3.0",
     # "react-kn-v3.0",
     # "baseline-v3.0",
-    "plus-planner-v3.4",
+    "plus-planner-v3.5",
     # "plus-summarizer-v3.0",
     # "plus-memorizer-v3.1",
     # "plus-reasoner-v3.1",
@@ -51,7 +51,7 @@ agent_names = [
     # "minus-summarizer-v3.0",
     # "minus-memorizer-v3.0",
     # "minus-reasoner-v3.0"
-    "topline-v3.4"
+    "topline-v3.5"
 ]
 # Set evals
 eval_size = 1
