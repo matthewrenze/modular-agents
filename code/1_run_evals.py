@@ -43,7 +43,7 @@ agent_names = [
     # "react-k1-v3.0",
     # "react-kn-v3.0",
     # "baseline-v3.0",
-    "plus-planner-v3.4",
+    # "plus-planner-v3.4",
     # "plus-summarizer-v3.0",
     # "plus-memorizer-v3.1",
     # "plus-reasoner-v3.1",
@@ -51,7 +51,7 @@ agent_names = [
     # "minus-summarizer-v3.0",
     # "minus-memorizer-v3.0",
     # "minus-reasoner-v3.0"
-    "topline-v3.4"
+    "topline-v3.5"
 ]
 # Set evals
 eval_size = 1
@@ -62,10 +62,10 @@ eval_env_names = [
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
     # ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
+    # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -144,7 +144,6 @@ for params in runs:
         react_k0 = agent_factory.create("react-k0", params, model)
         react_k1 = agent_factory.create("react-k1", params, model)
         react_kn = agent_factory.create("react-kn", params, model)
-        tasker = agent_factory.create("tasker", params, model)
         summarizer = agent_factory.create("summarizer", params, model)
         planner = agent_factory.create("planner", params, model)
         memorizer = agent_factory.create("memorizer", params, model)
@@ -175,7 +174,6 @@ for params in runs:
             react_k0.reset()
             react_k1.reset()
             react_kn.reset()
-            tasker.reset()
             summarizer.reset()
             planner.reset()
             memorizer.reset()

@@ -5,7 +5,6 @@ from models.model import Model
 from agents.react_k0.react_k0 import ReactK0
 from agents.react_k1.react_k1 import ReactK1
 from agents.react_kn.react_kn import ReactKn
-from agents.tasker.tasker import Tasker
 from agents.summarizer.summarizer import Summarizer
 from agents.planner.planner import Planner
 from agents.memorizer.memorizer import Memorizer
@@ -41,9 +40,6 @@ class AgentFactory:
 
         if subagent == "react-kn":
             return ReactKn(model, renderer, system_prompt, params)
-
-        if subagent == "tasker":
-            return Tasker(model, renderer, system_prompt, params)
 
         if subagent == "summarizer":
             return Summarizer(model, renderer, system_prompt, params)
