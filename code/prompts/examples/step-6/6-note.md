@@ -1,1 +1,1 @@
-_Note: In this example step the agent gets confused and chooses the wrong action. This is an example of a common failure case._
+_Note: In step 6, the actor chooses the wrong action. This is an example of a common failure case._
