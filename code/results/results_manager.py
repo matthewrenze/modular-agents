@@ -17,7 +17,7 @@ class ResultsManager:
         return row
 
     def add(self, row):
-        self.results = self.results._append(row.__dict__, ignore_index=True)
+        self.results = pd.concat([self.results, pd.DataFrame([row.__dict__])], ignore_index=True)
 
     def get_table(self):
         return self.results

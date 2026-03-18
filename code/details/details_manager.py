@@ -15,7 +15,7 @@ class DetailsManager:
         return row
 
     def add(self, row):
-        self.details = self.details._append(row.__dict__, ignore_index=True)
+        self.details = pd.concat([self.details, pd.DataFrame([row.__dict__])], ignore_index=True)
 
     def get_table(self):
         return self.details

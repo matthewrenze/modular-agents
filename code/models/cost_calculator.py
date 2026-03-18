@@ -1,6 +1,3 @@
-from thinc.tests.layers.test_softmax import inputs
-
-
 class CostCalculator:
     def __init__(self):
         # Note: All costs are in USD per million tokens

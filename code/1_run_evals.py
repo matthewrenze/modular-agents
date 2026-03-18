@@ -39,19 +39,19 @@ model_names = [
 
 # Set agents
 agent_names = [
-    # "react-k0-v3.0",
-    # "react-k1-v3.0",
-    # "react-kn-v3.0",
-    # "baseline-v3.0",
-    "plus-planner-v3.5",
-    # "plus-summarizer-v3.0",
-    # "plus-memorizer-v3.1",
-    # "plus-reasoner-v3.1",
-    # "minus-planner-v3.0",
-    # "minus-summarizer-v3.0",
-    # "minus-memorizer-v3.0",
-    # "minus-reasoner-v3.0"
-    "topline-v3.5"
+    # "react-k0-v4.0",
+    # "react-k1-v4.0",
+    # "react-kn-v4.0",
+    # "baseline-v4.0",
+    "plus-planner-v4.0",
+    # "plus-summarizer-v4.0",
+    # "plus-memorizer-v4.0",
+    # "plus-reasoner-v4.0",
+    # "minus-planner-v4.0",
+    # "minus-summarizer-v4.0",
+    # "minus-memorizer-v4.0",
+    # "minus-reasoner-v4.0"
+    # "topline-v4.0"
 ]
 # Set evals
 eval_size = 1
@@ -62,10 +62,10 @@ eval_env_names = [
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
     # ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
+    # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters

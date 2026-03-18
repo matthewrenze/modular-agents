@@ -45,32 +45,9 @@ For example:
 - [ ] Eat the meal
 ```
 
-# Hierarchy
-- The plan has EXACTLY two levels: subgoals (level 1) and actions (level 2).
-  - NEVER nest actions under other actions; actions may ONLY be children of subgoals.
-  - NEVER create a third level of indentation under any circumstance.
-- If a subgoal requires additional detail discovered mid-episode, add new sibling actions under the same parent subgoal rather than nesting children under an existing action.
-- If the plan has grown beyond two levels of depth due to uncertainty, you MUST restructure it back to exactly two levels before adding further steps.
-
-# Subgoal Expansion/Collapse Rules
-Each subgoal can either be expanded or collapsed.
- - Collapsed: only the subgoal line is shown (no children actions are shown).
- - Expanded: the subgoal line and all of its child actions are shown.
-- All past and future subgoals should be collapsed by default.
-- However, the subgoal(s) you are currently working on should be expanded to show its child actions.
-- Once all child actions of a subgoal are marked done ("[x]"), keep it expanded for one more step so all completed child actions are visible.
-- Do not add actions to future subgoals until you are ready to work on that subgoal.
-- At any given step, there should be exactly one or two subgoal expanded: 
-  - Exactly one active subgoal -- if you are in the middle of a subgoal.
-  - Exactly two active subgoals -- if you are transitioning between active subgoals.
-    - (i.e. the just-completed one still shows all children as done ("[x]") and the newly active one is showing is new child actions as todo ("[ ]")).
-- On the step after all children are marked done, collapse the completed subgoal (mark it "[x]" and remove its children).
-- You MUST NEVER collapse a subgoal without simultaneously marking it as done ("[x]").
-
 # Rules
 - During the first step:
-  - You MUST output the complete plan containing all known top-level subgoals and any known actions for the first subgoal.
-  - Only the first subgoal should be expanded to show its child actions; all other subgoals should be collapsed.
+  - You MUST output the complete plan containing all known top-level subgoals and actions.
 - During each additional step:
   - If there are any changes to the plan, then you MUST output the complete plan with the new changes.
   - If there are no changes to the plan, then you MUST output "NO_CHANGE".
@@ -84,8 +61,7 @@ Each subgoal can either be expanded or collapsed.
   - e.g., "Find the kitchen" instead of "Go north to the kitchen" if you are not sure of the direction.
   - Once you have more information, you can update the step to be more specific, e.g., "Go north to the kitchen".
 - DO NOT mark steps as "done" ("[x]") if they haven't been completed yet.
-- Mark a subgoal as done ("[x]") and collapse it on the step AFTER all of its child actions are marked done ("[x]")
-  - DO NOT collapse in the same step that the last child action is completed; wait one more step.
+- Mark a subgoal as done ("[x]") as soon as ALL of its child actions are marked done ("[x]"); do not wait for the next step.
 - DO NOT mark a step as "done" if the environment shows that the action or the action leading to a subgoal failed.
   - If an action fails (feedback indicates the action did not succeed), do NOT mark it "[x]".
   - Instead, add a new action to retry or find an alternative approach.
@@ -93,6 +69,13 @@ Each subgoal can either be expanded or collapsed.
 - Each action step must correspond to exactly one command from the Actions list below.
   - DO NOT combine multiple commands into a single action step.
   - e.g., use "Take the knife" and "Take the carrot" as separate actions; not "Take the knife and carrot".
+
+# Hierarchy
+- The plan has EXACTLY two levels: subgoals (level 1) and actions (level 2).
+  - NEVER nest actions under other actions; actions may ONLY be children of subgoals.
+  - NEVER create a third level of indentation under any circumstance.
+- If a subgoal requires additional detail discovered mid-episode, add new sibling actions under the same parent subgoal rather than nesting children under an existing action.
+- If the plan has grown beyond two levels of depth due to uncertainty, you MUST restructure it back to exactly two levels before adding further steps.
 
 # Actions
 *Note: These are the actions we can execute. You are not allowed to execute them yourself. They are for your reference only.*

@@ -67,7 +67,7 @@ class SummaryManager:
                     summaries = pd.read_csv(self.file_path)
 
                 # Append the new summary
-                summaries = summaries._append(summary.__dict__, ignore_index=True)
+                summaries = pd.concat([summaries, pd.DataFrame([summary.__dict__])], ignore_index=True)
 
                 # HACK: Move the model_name to the first column
                 summaries = summaries[["model_name"] + [c for c in summaries.columns if c != "model_name"]]
