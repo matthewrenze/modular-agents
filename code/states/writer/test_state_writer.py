@@ -57,8 +57,8 @@ class TestStateWriter:
             ],
         )
 
-        expected_folder = "../data/states/model - agent - eval"
-        expected_file_path = f"{expected_folder}/{episode_id}.yaml"
+        expected_folder = "../data/artifacts/model/agent/eval/episode-123"
+        expected_file_path = f"{expected_folder}/model - agent - eval - episode-123 - state.yaml"
         with open("states/test_file.yaml", "r", encoding="utf-8") as f:
             expected_yaml = f.read()
 

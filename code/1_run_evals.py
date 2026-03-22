@@ -42,16 +42,14 @@ agent_names = [
     # "react-k0-v4.0",
     # "react-k1-v4.0",
     # "react-kn-v4.0",
-    # "baseline-v4.0",
+    # "modular-base-v4.0",
     # "plus-planner-v4.0",
     # "plus-summarizer-v4.0",
     # "plus-memorizer-v4.0",
-    "plus-reasoner-v4.0",
     # "minus-planner-v4.0",
     # "minus-summarizer-v4.0",
     # "minus-memorizer-v4.0",
-    # "minus-reasoner-v4.0"
-    # "topline-v4.0"
+    # "modular-full-v4.0"
 ]
 # Set evals
 eval_size = 10
