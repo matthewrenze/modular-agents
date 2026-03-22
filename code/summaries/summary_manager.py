@@ -22,7 +22,8 @@ class SummaryManager:
         model_matches = summaries["model_name"] == params.model_name
         agent_matches = summaries["agent_name"] == params.agent_name
         eval_matches = summaries["eval_name"] == params.eval_name
-        all_matches = summaries[model_matches & agent_matches & eval_matches]
+        size_matches = summaries["tasks"] == params.eval_size
+        all_matches = summaries[model_matches & agent_matches & eval_matches & size_matches]
 
         return not all_matches.empty
 

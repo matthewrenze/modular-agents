@@ -6,8 +6,8 @@ class CostCalculator:
             "claude-opus-4-6": {"cached": 0.50, "input": 5.00, "output": 25.00},
             "gemini-3.1-pro-preview": {"cached": 0.20, "input": 2.00, "output": 12.00},
             "glm-5": {"cached": 0.20, "input": 1.00, "output": 3.20},
-            "gpt-5-mini": {"cached": 0.025, "input": 0.25, "output": 2.00},
             "gpt-5.2": {"cached": 0.175, "input": 1.75, "output": 14.00},
+            "gpt-5.4-mini": {"cached": 0.075, "input": 0.75, "output": 4.50},
             "gpt-5.4": {"cached": 0.25, "input": 2.50, "output": 15.00},
             "kimi-k2.5" : {"cached": 0.10, "input": 0.60, "output": 3.00},
         }

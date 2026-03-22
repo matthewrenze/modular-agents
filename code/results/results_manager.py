@@ -5,7 +5,7 @@ from params.parameters import Parameters
 
 class ResultsManager:
     def __init__(self):
-        self.folder_path = "../data/results"
+        self.folder_path = "../data/artifacts"
         self.results = pd.DataFrame()
 
     def create(self, params: Parameters):
@@ -23,8 +23,9 @@ class ResultsManager:
         return self.results
 
     def load(self, params: Parameters):
-        file_name = f"{params.model_name} - {params.agent_name} - {params.eval_name}.csv"
-        file_path = f"{self.folder_path}/{file_name}"
+        folder_path = f"{self.folder_path}/{params.model_name}/{params.agent_name}/{params.eval_name}"
+        file_name = f"{params.model_name} - {params.agent_name} - {params.eval_name} - results.csv"
+        file_path = f"{folder_path}/{file_name}"
         self.results = pd.read_csv(file_path)
 
     def save(self):
@@ -35,8 +36,9 @@ class ResultsManager:
         model_name = self.results["model_name"].iloc[0]
         agent_name = self.results["agent_name"].iloc[0]
         eval_name = self.results["eval_name"].iloc[0]
-        file_name = f"{model_name} - {agent_name} - {eval_name}.csv"
-        file_path = f"{self.folder_path}/{file_name}"
+        folder_path = f"{self.folder_path}/{model_name}/{agent_name}/{eval_name}"
+        file_name = f"{model_name} - {agent_name} - {eval_name} - results.csv"
+        file_path = f"{folder_path}/{file_name}"
 
         # Save the results
         self.results.to_csv(file_path, index=False)

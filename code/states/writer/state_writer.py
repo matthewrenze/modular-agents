@@ -9,7 +9,7 @@ class StateWriter:
     def write(self, state: GlobalState, params: Parameters, episode_id: int):
 
         # Create the folder
-        folder_path = f"../data/states/{params.model_name} - {params.agent_name} - {params.eval_name}"
+        folder_path = f"../data/artifacts/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
         os.makedirs(folder_path, exist_ok=True)
 
         # Deep copy the state
@@ -31,7 +31,8 @@ class StateWriter:
                 agent["memory"] = LiteralStr(mem)
 
         # Write the file
-        file_path = f"{folder_path}/{episode_id}.yaml"
+        file_name = f"{params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - state.yaml"
+        file_path = f"{folder_path}/{file_name}"
         with open(file_path, "w", encoding="utf-8") as file:
             yaml.safe_dump(
                 data,

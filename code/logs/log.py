@@ -17,9 +17,10 @@ RESET = "\033[0m"
 class Log:
     def __init__(self, renderer: Renderer, params: Parameters, episode_id):
         self.renderer = renderer
-        folder_path = f"../data/logs/{params.model_name} - {params.agent_name} - {params.eval_name}"
+        folder_path = f"../data/artifacts/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
         os.makedirs(folder_path, exist_ok=True)
-        file_path = f"{folder_path}/{episode_id}.txt"
+        file_name = f"{params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - log.txt"
+        file_path = f"{folder_path}/{file_name}"
         self.file = open(file_path, "w", encoding="utf-8", newline="\n")
 
     def head(self, text):

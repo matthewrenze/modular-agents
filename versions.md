@@ -11,7 +11,7 @@ Planner
   - fixed insert ids out of range issue
  - planner-v3.0
  - planner-v3.1
-   - reverted back to writing full plan each step (
+   - reverted back to writing full plan each step
    - reverted back to subgoals but still had action-level examples
  - planner-v3.2
    - added previous agent action to user prompt
@@ -19,7 +19,13 @@ Planner
    - added "NO_CHANGE" feature
  - planner-v3.3
    - inverted back to action-level examples
-   
+ - planner-v3.4
+   - added 2-level hierarchy of subgoals and actions
+   - added mandatory full expansion of all subgoals
+ - planner-v3.5
+   - Added mandatory expand of the active subgoal and collapse of all other subgoals
+ - planner-v3.6
+   - added optional expand/collapse of subgoals (I let the agent decide when to expand/collapse)
 
 Summarizer
  - summarizer-v2 (64%, 242k)

@@ -30,8 +30,8 @@ model_names = [
     # "claude-sonnet-4-6",
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
-    # "gpt-5-mini",
-    "gpt-5.2",
+    # "gpt-5.2",
+    "gpt-5.4-mini",
     # "gpt-5.4",
     # "glm-5"
     # "kimi-k2.5"
@@ -43,10 +43,10 @@ agent_names = [
     # "react-k1-v4.0",
     # "react-kn-v4.0",
     # "baseline-v4.0",
-    "plus-planner-v4.0",
+    # "plus-planner-v4.0",
     # "plus-summarizer-v4.0",
     # "plus-memorizer-v4.0",
-    # "plus-reasoner-v4.0",
+    "plus-reasoner-v4.0",
     # "minus-planner-v4.0",
     # "minus-summarizer-v4.0",
     # "minus-memorizer-v4.0",
@@ -54,10 +54,10 @@ agent_names = [
     # "topline-v4.0"
 ]
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
     ("tw-simple-1", "textworld"),
-    # ("tw-treasure-1", "textworld"),
+    ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
     # ("tw-coin-1", "textworld"),
