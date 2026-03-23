@@ -18,17 +18,19 @@ class TestParametersFactory:
 
     def test_create_baseline(self):
         factory = ParametersFactory()
-        params = factory.create("model", "baseline",  "env", "eval", 10)
-        assert params.agent_name == "baseline"
+        params = factory.create("model", "modular-base",  "env", "eval", 10)
+        assert params.agent_name == "modular-base"
         assert params.use_actor
         for attr in dir(params):
-            if attr.startswith("use_") and attr != "use_actor":
+            if attr.startswith("use_") \
+                    and attr != "use_actor" \
+                    and attr != "use_reasoner":
                 assert not getattr(params, attr)
 
     def test_create_topline(self):
         factory = ParametersFactory()
-        params = factory.create("model", "topline",  "env", "eval", 10)
-        assert params.agent_name == "topline"
+        params = factory.create("model", "modular-full",  "env", "eval", 10)
+        assert params.agent_name == "modular-full"
         assert params.use_actor
         for attr in dir(params):
             if (attr.startswith("use_")
@@ -41,11 +43,9 @@ class TestParametersFactory:
 
     @pytest.mark.parametrize(
         "agent_name,true_param", [
-        # ("plus-tasker", "use_tasker"),
         ("plus-summarizer", "use_summarizer"),
         ("plus-planner", "use_planner"),
         ("plus-memorizer", "use_memorizer"),
-        ("plus-reasoner", "use_reasoner"),
     ])
     def test_create_with_plus(self, agent_name, true_param):
         factory = ParametersFactory()
@@ -55,16 +55,15 @@ class TestParametersFactory:
         for attr in dir(params):
             if attr.startswith("use_") \
                     and attr != "use_actor" \
+                    and attr != "use_reasoner" \
                     and attr != true_param:
                 assert not getattr(params, attr)
 
     @pytest.mark.parametrize(
         "agent_name,false_param", [
-        # ("minus-tasker", "use_tasker"),
         ("minus-summarizer", "use_summarizer"),
         ("minus-planner", "use_planner"),
         ("minus-memorizer", "use_memorizer"),
-        ("minus-reasoner", "use_reasoner"),
     ])
     def test_create_with_minus(self, agent_name, false_param):
         factory = ParametersFactory()
