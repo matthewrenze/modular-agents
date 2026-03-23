@@ -4,15 +4,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Set parameters
-# agent_name = "react"
-# agent_name = "baseline"
-agent_name = "plus-tasker"
-# agent_name = "plus-reasoner"
-# agent_name = "minus-tasker"
-# agent_name = "minus-reasoner"
-# agent_name = "topline"
+# agent_name = "react-kn-v4.0"
+# agent_name = "modular-base-v4.0"
+# agent_name = "modular-full-v4.0"
 
-model_name = "gpt-5.2"
+model_name = "gpt-5.4"
 input_folder_path = "../data/results"
 output_folder_path = f"../data/plots/by-episode/{model_name}"
 

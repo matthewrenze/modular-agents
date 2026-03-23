@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 # Set parameters
-model_name = "gpt-4.1-mini"
+model_name = "gpt-5.4"
 input_folder_path = "../data/results"
 
 # Load results

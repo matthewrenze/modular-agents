@@ -5,8 +5,8 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
-# model_name = "gpt-5.2"
-# model_name = "gpt-5-mini"
+# model_name = "gpt-5.4"
+# model_name = "gpt-5.4-mini"
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-model-and-agent"
 
@@ -50,10 +50,10 @@ summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Order models
 model_order = [
-    "gpt-5-mini",
     "kimi-k2.5",
     "claude-sonnet-4-6",
-    "gpt-5.2",
+    "gpt-5.4-mini",
+    "gpt-5.4",
     "glm-5",
 ]
 
@@ -64,19 +64,18 @@ summaries["model_name"] = pd.Categorical(
 
 # Order agents
 agent_order = [
-    # "react-k0-v3.0",
-    # "react-k1-v3.0",
-    "react-kn-v3.0",
-    "baseline-v3.0",
-    "plus-planner-v3.1",
-    "plus-summarizer-v3.0",
-    "plus-memorizer-v3.1",
-    "plus-reasoner-v3.0",
-    # "minus-planner-v3.0",
-    # "minus-summarizer-v3.0",
-    # "minus-memorizer-v3.0",
-    # "minus-reasoner-v3.0",
-    "topline-v3.0",
+    "react-k0-v4.0",
+    "react-k1-v4.0",
+    "react-kn-v4.0",
+    "modular-base-v4.0",
+    "plus-planner-v3.0",
+    "plus-planner-v4.0",
+    "plus-summarizer-v4.0",
+    "plus-memorizer-v4.0",
+    "minus-planner-v4.0",
+    "minus-summarizer-v4.0",
+    "minus-memorizer-v4.0",
+    "modular-full-v4.0",
 ]
 
 summaries["agent_name"] = pd.Categorical(

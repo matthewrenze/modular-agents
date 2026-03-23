@@ -8,7 +8,7 @@ summaries = pd.read_csv(input_file_path)
 
 # Filter the rows
 # summaries = summaries[summaries["eval_name"].str.endswith("-100")]
-summaries = summaries[summaries["model_name"] == "gpt-5.2"]
+summaries = summaries[summaries["model_name"] == "gpt-5.4"]
 
 # Group by model and sum the cost
 # Note: only two decimal places for cost

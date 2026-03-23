@@ -9,7 +9,7 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Set parameters
-model_name = "gpt-5.2"
+model_name = "gpt-5.4"
 input_v1_file_path = "../data/summaries-v1.csv"
 input_v2_file_path = "../data/summaries-v2.csv"
 input_v3_file_path = "../data/summaries.csv"

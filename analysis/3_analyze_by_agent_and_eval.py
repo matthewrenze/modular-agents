@@ -5,8 +5,8 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
-model_name = "gpt-5.2"
-# model_name = "gpt-5-mini"
+model_name = "gpt-5.4"
+# model_name = "gpt-5.4-mini"
 # model_name = "claude-sonnet-4-6"
 # model_name = "kimi-k2.5"
 # model_name = "glm-5"
@@ -47,25 +47,18 @@ if summaries["tasks"].nunique() != 1:
 
 # Order agents
 agent_order = [
-    #"react-k0-v3.0",
-    # "react-k1-v3.0",
-    # "react-kn-v3.0",
-    # "baseline-v3.0",
+    "react-k0-v4.0",
+    "react-k1-v4.0",
+    "react-kn-v4.0",
+    "modular-base-v4.0",
     "plus-planner-v3.0",
-    "plus-planner-v3.1",
-    "plus-planner-v3.2",
-    "plus-planner-v3.3",
-    "plus-planner-v3.4",
-    # "plus-summarizer-v3.0",
-    # "plus-memorizer-v3.0",
-    # "plus-memorizer-v3.1",
-    # "plus-reasoner-v3.0",
-    # "minus-planner-v3.0",
-    # "minus-summarizer-v3.0",
-    # "minus-memorizer-v3.0",
-    # "minus-reasoner-v3.0",
-    "topline-v3.0",
-    # "topline-v3.4"
+    "plus-planner-v4.0",
+    "plus-summarizer-v4.0",
+    "plus-memorizer-v4.0",
+    "minus-planner-v4.0",
+    "minus-summarizer-v4.0",
+    "minus-memorizer-v4.0",
+    "modular-full-v4.0",
 ]
 
 summaries["agent_name"] = pd.Categorical(
