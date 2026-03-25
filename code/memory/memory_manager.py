@@ -14,7 +14,8 @@ class MemoryManager:
 
             # Handle invalid update lines
             if ":" not in update_line:
-                raise ValueError(f"Invalid memory update: {update_line}")
+                memories["error"] = f"Invalid memory update operation: '{update_line}'"
+                continue
 
             # Parse the memory key and value
             key, value = update_line.split(":", 1)

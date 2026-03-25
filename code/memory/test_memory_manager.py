@@ -22,3 +22,12 @@ class TestMemoryManager:
             "item 2": "key 2 = value 2",
             "item 4": "value 4",
         }
+
+    def test_handle_error(self):
+        memories = {}
+        updates = "invalid update line"
+        manager = MemoryManager()
+        actual = manager.execute(memories, updates)
+
+        assert "error" in actual
+        assert actual["error"] == "Invalid memory update operation: 'invalid update line'"

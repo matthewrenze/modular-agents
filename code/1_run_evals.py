@@ -46,7 +46,7 @@ agent_names = [
     # "plus-planner-v4.0",
     # "plus-summarizer-v4.0",
     # "plus-memorizer-v4.0",
-    "minus-planner-v4.0",
+    # "minus-planner-v4.0",
     # "minus-summarizer-v4.0",
     # "minus-memorizer-v4.0",
     # "modular-full-v4.0"
