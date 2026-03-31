@@ -17,6 +17,10 @@ class FireworksModel(Model):
         model_name = self.model_name.replace(".", "p")
         model_name = f"accounts/fireworks/models/{model_name}"
 
+        # Hack to make GLM-5-fast work
+        if model_name.endswith("glm-5-fast"):
+            model_name = f"accounts/fireworks/routers/glm-5-fast"
+
         # Create the parameters
         params = {
             "model": model_name,

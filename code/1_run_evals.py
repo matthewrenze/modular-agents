@@ -31,9 +31,9 @@ model_names = [
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
-    "gpt-5.4-mini",
+    # "gpt-5.4-mini",
     # "gpt-5.4",
-    # "glm-5"
+    "glm-5-fast"
     # "kimi-k2.5"
 ]
 
@@ -42,7 +42,7 @@ agent_names = [
     # "react-k0-v4.0",
     # "react-k1-v4.0",
     # "react-kn-v4.0",
-    # "modular-base-v4.0",
+    "modular-base-v4.0",
     # "plus-planner-v4.0",
     # "plus-summarizer-v4.0",
     # "plus-memorizer-v4.0",
