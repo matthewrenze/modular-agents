@@ -39,9 +39,17 @@ class ClaudeModel(Model):
                 content = response.content[0].text
 
                 # Accumulate tokens
-                self.input_tokens += response.usage.input_tokens
-                self.output_tokens += response.usage.output_tokens
-                self.total_tokens += response.usage.input_tokens + response.usage.output_tokens
+                input_tokens = response.usage.input_tokens
+                output_tokens = response.usage.output_tokens
+                total_tokens = input_tokens + output_tokens
+
+                # Update tokens
+                self.update_tokens(
+                    cached_tokens=0,
+                    input_tokens=response.usage.input_tokens,
+                    reasoning_tokens=0,
+                    output_tokens=response.usage.output_tokens,
+                    total_tokens=total_tokens)
 
                 return content
 

@@ -48,13 +48,15 @@ class OpenAiModel(Model):
                 prompt_tokens = getattr(response.usage, "prompt_tokens", 0)
                 reasoning_tokens = getattr(response.usage.completion_tokens_details, "reasoning_tokens", 0)
                 completion_tokens = getattr(response.usage, "completion_tokens", 0)
+                total_tokens = getattr(response.usage, "total_tokens", 0)
 
-                # Accumulate tokens
-                self.cached_tokens += cached_tokens
-                self.input_tokens += prompt_tokens - cached_tokens
-                self.reasoning_tokens += reasoning_tokens
-                self.output_tokens += completion_tokens - reasoning_tokens
-                self.total_tokens += getattr(response.usage, "total_tokens", 0)
+                # Update tokens
+                self.update_tokens(
+                    cached_tokens=cached_tokens,
+                    input_tokens=prompt_tokens - cached_tokens,
+                    reasoning_tokens=reasoning_tokens,
+                    output_tokens=completion_tokens - reasoning_tokens,
+                    total_tokens=total_tokens)
 
                 return content
             except Exception as e:

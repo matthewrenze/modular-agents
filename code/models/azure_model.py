@@ -37,12 +37,13 @@ class AzureModel(Model):
                 if content is None:
                     raise ValueError("Received empty response from LLM API.")
 
-                # Accumulate tokens
-                self.cached_tokens += 0
-                self.input_tokens += response.usage.prompt_tokens
-                self.reasoning_tokens += 0
-                self.output_tokens += response.usage.completion_tokens
-                self.total_tokens += response.usage.total_tokens
+                # Update tokens
+                self.update_tokens(
+                    cached_tokens=0,
+                    input_tokens=response.usage.prompt_tokens,
+                    reasoning_tokens=0,
+                    output_tokens=response.usage.completion_tokens,
+                    total_tokens=response.usage.total_tokens)
 
                 return content
             except Exception as e:

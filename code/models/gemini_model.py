@@ -44,12 +44,20 @@ class GeminiModel(Model):
                 # Hack to prevent the "non-text parts in response" warning
                 content = response.candidates[0].content.parts[0].text
 
-                # Accumulate tokens
+                # Get tokens
                 usage = response.usage_metadata
-                self.input_tokens += usage.prompt_token_count
-                self.reasoning_tokens += usage.thoughts_token_count or 0
-                self.output_tokens += usage.candidates_token_count or 0
-                self.total_tokens += usage.total_token_count
+                input_tokens = usage.prompt_token_count
+                reasoning_tokens = usage.thoughts_token_count or 0
+                output_tokens = usage.candidates_token_count or 0
+                total_tokens = usage.total_token_count
+
+                # Update tokens
+                self.update_tokens(
+                    cached_tokens=0,
+                    input_tokens=input_tokens,
+                    reasoning_tokens=reasoning_tokens,
+                    output_tokens=output_tokens,
+                    total_tokens=total_tokens)
 
                 return content
             except Exception as e:

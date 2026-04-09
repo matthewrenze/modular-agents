@@ -30,10 +30,10 @@ model_names = [
     # "claude-sonnet-4-6",
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
-    # "gpt-5.2",
+    "gpt-5.2",
     # "gpt-5.4-mini",
     # "gpt-5.4",
-    "glm-5-fast"
+    # "glm-5-fast"
     # "kimi-k2.5"
 ]
 
@@ -181,6 +181,9 @@ for params in runs:
             # Run the agent in the environment
             for step_id in range(params.max_steps):
 
+                # Set up the model
+                model.reset_step()
+
                 # Set up the state
                 agent_state = AgentState()
                 step_state = StepState(
@@ -306,6 +309,11 @@ for params in runs:
                 details_row.summary = agent_state.summary
                 details_row.thought = agent_state.thought
                 details_row.action = agent_state.action
+                details_row.cached_tokens = model.step_cached_tokens
+                details_row.input_tokens = model.step_input_tokens
+                details_row.reasoning_tokens = model.step_reasoning_tokens
+                details_row.output_tokens = model.step_output_tokens
+                details_row.total_tokens = model.step_total_tokens
                 details_manager.add(details_row)
 
                 # Handle end of episode
