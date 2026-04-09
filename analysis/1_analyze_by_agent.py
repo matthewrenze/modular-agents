@@ -9,8 +9,8 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Set parameters
-# model_name = "gpt-5.4"
-model_name = "gpt-5.2"
+model_name = "gpt-5.4"
+# model_name = "gpt-5.2"
 # model_name = "gpt-5-mini"
 # model_name = "claude-sonnet-4-6"
 # model_name = "kimi-k2.5"
@@ -54,17 +54,17 @@ summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000
 
 # Order agents
 agent_order = [
-    "react-k0-v4.0",
+    #"react-k0-v4.0",
     "react-k1-v4.0",
     "react-kn-v4.0",
     "modular-base-v4.0",
-    "plus-planner-v3.0",
-    "plus-planner-v4.0",
-    "plus-summarizer-v4.0",
-    "plus-memorizer-v4.0",
-    "minus-planner-v4.0",
-    "minus-summarizer-v4.0",
-    "minus-memorizer-v4.0",
+    # "plus-planner-v3.0",
+    # "plus-planner-v4.0",
+    # "plus-summarizer-v4.0",
+    # "plus-memorizer-v4.0",
+    # "minus-planner-v4.0",
+    # "minus-summarizer-v4.0",
+    # "minus-memorizer-v4.0",
     "modular-full-v4.0",
 ]
 
@@ -77,10 +77,10 @@ pastel = sns.color_palette("tab10")
 palette = {
     name:
         pastel[7] if name.startswith("react") else      # grey
-        pastel[0] if name.startswith("baseline") else   # blue
+        pastel[0] if name.startswith("modular-base") else   # blue
         pastel[2] if name.startswith("plus") else       # green
         pastel[1] if name.startswith("minus") else      # orange
-        pastel[0] if name.startswith("topline") else    # blue
+        pastel[0] if name.startswith("modular-full") else    # blue
         pastel[7]                                       # grey
     for name in agent_order
 }

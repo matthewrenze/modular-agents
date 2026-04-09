@@ -27,6 +27,7 @@ summaries = summaries.groupby(["model_name", "agent_name"], as_index=False).agg(
     "total_steps": "sum",
     "total_tokens": "sum",
     "total_reward": "sum",
+    "errors": "sum",
 })
 
 # Compute averages
@@ -53,8 +54,9 @@ model_order = [
     "kimi-k2.5",
     "claude-sonnet-4-6",
     "gpt-5.4-mini",
+    "gpt-5.2",
     "gpt-5.4",
-    "glm-5",
+    # "glm-5",
 ]
 
 summaries["model_name"] = pd.Categorical(
@@ -64,17 +66,17 @@ summaries["model_name"] = pd.Categorical(
 
 # Order agents
 agent_order = [
-    "react-k0-v4.0",
+    # "react-k0-v4.0",
     "react-k1-v4.0",
     "react-kn-v4.0",
     "modular-base-v4.0",
-    "plus-planner-v3.0",
-    "plus-planner-v4.0",
-    "plus-summarizer-v4.0",
-    "plus-memorizer-v4.0",
-    "minus-planner-v4.0",
-    "minus-summarizer-v4.0",
-    "minus-memorizer-v4.0",
+    # "plus-planner-v3.0",
+    # "plus-planner-v4.0",
+    # "plus-summarizer-v4.0",
+    # "plus-memorizer-v4.0",
+    # "minus-planner-v4.0",
+    # "minus-summarizer-v4.0",
+    # "minus-memorizer-v4.0",
     "modular-full-v4.0",
 ]
 
@@ -196,3 +198,27 @@ plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent")
 plt.savefig(f"{output_folder_path}/{reward_per_token_file_name}", bbox_inches='tight')
 plt.show()
+
+# Create plot for errors (all red to denote errors)
+errors_file_name = f"errors-by-model-and-agent.png"
+sns.set_style("whitegrid")
+plt.figure(figsize=(12, 6))
+ax = sns.barplot(
+    x="model_name",
+    y="errors",
+    hue="agent_name",
+    data=summaries,
+    color="red")
+plt.title(f"Errors by Model and Agent")
+plt.xlabel("Model")
+plt.ylabel("Errors")
+plt.legend(title="Agent")
+plt.ylim(0, 100)
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
+for p in ax.patches:
+    ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.savefig(f"{output_folder_path}/{errors_file_name}", bbox_inches='tight')
+plt.show()
+
+
