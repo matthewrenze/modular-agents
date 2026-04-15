@@ -23,7 +23,7 @@ from states.writer.state_writer import StateWriter
 from reviews.writer.review_writer import ReviewWriter
 
 # Set provider
-use_azure = False
+use_azure = True
 
 # Set models
 model_names = [
@@ -39,17 +39,17 @@ model_names = [
 
 # Set agents
 agent_names = [
-    # "react-k0-v4.1",
-    # "react-k1-v4.1",
-    # "react-kn-v4.1",
-    # "modular-base-v4.1",
-    # "plus-planner-v4.1",
-    # "plus-summarizer-v4.1",
-    # "plus-memorizer-v4.1",
-    # "minus-planner-v4.1",
-    # "minus-summarizer-v4.1",
-    # "minus-memorizer-v4.1",
-    "modular-full-v4.1"
+    # "react-k0-v4.2",
+    # "react-k1-v4.2",
+    # "react-kn-v4.2",
+    # "modular-base-v4.2",
+    # "plus-planner-v4.2",
+    # "plus-summarizer-v4.2",
+    # "plus-memorizer-v4.2",
+    # "minus-planner-v4.2",
+    # "minus-summarizer-v4.2",
+    # "minus-memorizer-v4.2",
+    "modular-full-v4.2"
 ]
 # Set evals
 eval_size = 1

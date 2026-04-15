@@ -52,7 +52,7 @@ Here are some examples of valid memory statements:
 - "reminder 3: Remember to turn off the stove after cooking"
 
 ## What Memories to Store
-You must create memories that are:
+You MUST create memories that are:
  - Task relevant spatial relationships between rooms (e.g., "kitchen: rooms = {south = living room, east = ?}, doors = {east = oak door}")
  - Doors that are active obstacles and their properties (e.g., "wooden door: location = living room, state = {closed, locked}, key = silver key")
  - Task relevant object locations and properties (e.g., "copper coin: location = {room = bedroom, in = drawer}")
@@ -62,7 +62,7 @@ You must create memories that are:
  - Reminders (e.g., "reminder 1: Remember to turn off the stove after cooking")
 
 ## What Memories NOT to Store
-You must NOT create memories that are:
+You MUST NOT create memories that are:
  - transient (e.g., "door: state = opening") 
  - irrelevant to the task or future steps (e.g., "sky: color = blue")
  - doors that are not an obstacle (e.g., "archway: location = hallway, state = open")
@@ -73,7 +73,7 @@ You must update or delete any memories that are:
  - no longer true
  - contradicted by new information
  - redundant with other object memories
-   - However, bi-directional room relationships are ok 
+   - However, bi-directional room relationships are REQUIRED
    - And, rooms can reference doors and doors can reference rooms
 
 ## Rules
@@ -87,6 +87,10 @@ You must update or delete any memories that are:
  - Use an immutable unique name for the key of an entity (e.g., given "fried diced orange carrot" use "orange carrot" instead of "carrot" or "fried diced orange carrot")
  - You can use "?" to indicate unknown information in a memory (e.g., "kitchen: rooms = {south = ?}")
   - However, you MUST update the memory to fill in the "?" when the information becomes available (e.g., "kitchen: rooms = {south = living room}")
+ - Only record a room connection when the agent SUCCESSFULLY moved in that direction, confirmed by the location change.
+ - Always record room directions bidirectionally (e.g., if "kitchen: rooms = {south = living room}" then you must also have "living room: rooms = {north = kitchen}")
+ - Only use standard cardinal directions (i.e., north, south, east, west) to describe room relationships. 
+ - Never update an existing known room connection unless a new successful move contradicts it. 
 
 # Output Format
 Each line in your response is a single memory update in one of these forms:
