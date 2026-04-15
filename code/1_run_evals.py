@@ -23,7 +23,7 @@ from states.writer.state_writer import StateWriter
 from reviews.writer.review_writer import ReviewWriter
 
 # Set provider
-use_azure = True
+use_azure = False
 
 # Set models
 model_names = [
@@ -128,7 +128,7 @@ for params in runs:
         # Create the log
         renderer = RendererFactory.create()
         log = Log(renderer, params, episode_id)
-        log.head(f"--- Starting {params.model_name} - {params.agent_name} - {params.eval_name} - episode {episode_id} / {num_episodes} ---")
+        log.head(f"--- Starting {params.model_name} - {params.agent_name} - {params.eval_name} - episode {episode_id} ---")
         
         # Create the episode
         episode = eval.iloc[episode_id - 1].to_dict()

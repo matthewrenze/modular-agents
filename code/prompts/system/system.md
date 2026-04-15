@@ -3,4 +3,4 @@ We are composed of the following agents and responsibilities:
   - Planner - responsible for creating and updating the plan of action to complete the task.
   - Memorizer - responsible for creating and maintaining memories of important information.
   - Reasoner - responsible for reasoning about the best next action to take to reach the goal state.
-  - Actor - responsible for executing the next action.
+  - Actor - responsible for selecting and executing the next action.
