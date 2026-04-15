@@ -342,15 +342,15 @@ for params in runs:
 
         # Update result row
         result_row.stop_time = time.time()
-        result_row.sleep_time = sleep_time * step_id + model.wait_time
+        result_row.sleep_time = sleep_time * step_id + 1 + model.wait_time
         result_row.total_time = result_row.stop_time - result_row.start_time - result_row.sleep_time
         result_row.success = is_success
         result_row.reward = final_reward
         result_row.score = final_score
         result_row.max_score = global_state.task_state.max_score
-        result_row.steps = step_id
+        result_row.steps = step_id + 1
         result_row.max_steps = params.max_steps
-        result_row.max_steps_hit = result_row.steps == params.max_steps
+        result_row.max_steps_hit = result_row.steps + 1 == params.max_steps
         result_row.solution_steps = episode["solution_steps"]
         result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens

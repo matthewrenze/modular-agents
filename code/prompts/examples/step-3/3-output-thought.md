@@ -1,1 +1,1 @@
-Now that the wooden door is unlocked, I can open it to the north and find the kitchen.
+Now that the wooden door is unlocked, I can open it, go to the north, and find the kitchen.
