@@ -16,14 +16,34 @@ model_name = "gpt-5.2"
 # model_name = "kimi-k2.5"
 # model_name = "glm-5-fast"
 
-input_file_path = "../data/summaries.csv"
-output_folder_path = "../data/plots/by-agent"
+
+output_folder_path = "../data/plots/by-agent-for-presentation"
+
+# Create the output folder
+os.makedirs(output_folder_path, exist_ok=True)
+
+input_v1_file_path = "../data/summaries-v1.csv"
+input_v2_file_path = "../data/summaries-v2.csv"
+input_v3_file_path = "../data/summaries-v3.csv"
+input_v4_file_path = "../data/summaries.csv"
+output_folder_path = "../data/plots/by-version"
 
 # Create the output folder
 os.makedirs(output_folder_path, exist_ok=True)
 
 # Load the data
-summaries = pd.read_csv(input_file_path)
+summaries_v1 = pd.read_csv(input_v1_file_path)
+summaries_v2 = pd.read_csv(input_v2_file_path)
+summaries_v3 = pd.read_csv(input_v3_file_path)
+summaries_v4 = pd.read_csv(input_v4_file_path)
+
+# Merge the data
+summaries = [summaries_v1, summaries_v2, summaries_v3, summaries_v4]
+summaries = pd.concat(summaries, ignore_index=True)
+
+# Rename agents
+summaries["agent_name"] = summaries["agent_name"].str.replace("baseline", "modular-base", regex=False)
+summaries["agent_name"] = summaries["agent_name"].str.replace("topline", "modular-full", regex=False)
 
 # Filter rows
 summaries = summaries[summaries["model_name"] == model_name]
@@ -55,20 +75,16 @@ summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000
 # Order agents
 agent_order = [
     #"react-k0-v4.0",
-    "react-k1-v4.0",
-    "react-kn-v4.0",
-    # "react-kn-v4.0-azure",
-    # "react-kn-v4.0-openai",
-    "modular-base-v4.0",
-    "plus-planner-v4.0",
-    "plus-summarizer-v4.0",
-    "plus-memorizer-v4.0",
-    "minus-planner-v4.0",
-    "minus-summarizer-v4.0",
-    "minus-memorizer-v4.0",
-    "modular-full-v4.0",
-    # "modular-full-v4.0-azure",
-    # "modular-full-v4.0-openai",
+    "react-k1-v3.0",
+    "react-kn-v3.0",
+    "modular-base-v3.0",
+    "plus-planner-v3.0",
+    "plus-summarizer-v3.0",
+    "plus-memorizer-v3.0",
+    "minus-planner-v3.0",
+    "minus-summarizer-v3.0",
+    "minus-memorizer-v3.0",
+    "modular-full-v3.0",
 ]
 
 summaries["agent_name"] = pd.Categorical(

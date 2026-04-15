@@ -5,11 +5,11 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
-model_name = "gpt-5.4"
+model_name = "gpt-5.2"
 # model_name = "gpt-5.4-mini"
 # model_name = "claude-sonnet-4-6"
 # model_name = "kimi-k2.5"
-# model_name = "glm-5"
+# model_name = "glm-5-fast"
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-agent-and-eval"
 
@@ -50,7 +50,9 @@ agent_order = [
     # "react-k0-v4.0",
     # "react-k1-v4.0",
     "react-kn-v4.0",
-    "modular-base-v4.0",
+    "react-kn-v4.0-azure",
+    "react-kn-v4.0-openai",
+    # "modular-base-v4.0",
     # "plus-planner-v3.0",
     # "plus-planner-v4.0",
     # "plus-summarizer-v4.0",
@@ -59,6 +61,8 @@ agent_order = [
     # "minus-summarizer-v4.0",
     # "minus-memorizer-v4.0",
     "modular-full-v4.0",
+    "modular-full-v4.0-azure",
+    "modular-full-v4.0-openai",
 ]
 
 summaries["agent_name"] = pd.Categorical(

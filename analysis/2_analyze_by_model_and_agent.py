@@ -51,12 +51,12 @@ summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Order models
 model_order = [
-    "kimi-k2.5",
-    "claude-sonnet-4-6",
     "gpt-5.4-mini",
-    "gpt-5.2",
     "gpt-5.4",
-    # "glm-5",
+    "kimi-k2.5",
+    "glm-5-fast",
+    "claude-sonnet-4-6",
+    "gpt-5.2",
 ]
 
 summaries["model_name"] = pd.Categorical(
@@ -68,7 +68,6 @@ summaries["model_name"] = pd.Categorical(
 agent_order = [
     # "react-k0-v4.0",
     "react-k1-v4.0",
-    "react-kn-v4.0",
     "modular-base-v4.0",
     # "plus-planner-v3.0",
     # "plus-planner-v4.0",
@@ -77,6 +76,7 @@ agent_order = [
     # "minus-planner-v4.0",
     # "minus-summarizer-v4.0",
     # "minus-memorizer-v4.0",
+    "react-kn-v4.0",
     "modular-full-v4.0",
 ]
 

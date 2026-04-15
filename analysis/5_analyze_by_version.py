@@ -9,10 +9,11 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Set parameters
-model_name = "gpt-5.4"
+model_name = "gpt-5.2"
 input_v1_file_path = "../data/summaries-v1.csv"
 input_v2_file_path = "../data/summaries-v2.csv"
-input_v3_file_path = "../data/summaries.csv"
+input_v3_file_path = "../data/summaries-v3.csv"
+input_v4_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-version"
 
 # Create the output folder
@@ -22,9 +23,15 @@ os.makedirs(output_folder_path, exist_ok=True)
 summaries_v1 = pd.read_csv(input_v1_file_path)
 summaries_v2 = pd.read_csv(input_v2_file_path)
 summaries_v3 = pd.read_csv(input_v3_file_path)
+summaries_v4 = pd.read_csv(input_v4_file_path)
 
 # Merge the data
-all_summaries = pd.concat([summaries_v1, summaries_v2, summaries_v3], ignore_index=True)
+all_summaries = [summaries_v1, summaries_v2, summaries_v3, summaries_v4]
+all_summaries = pd.concat(all_summaries, ignore_index=True)
+
+# Rename agents
+all_summaries["agent_name"] = all_summaries["agent_name"].str.replace("baseline", "modular-base", regex=False)
+all_summaries["agent_name"] = all_summaries["agent_name"].str.replace("topline", "modular-full", regex=False)
 
 # Filter rows
 all_summaries = all_summaries[all_summaries["model_name"] == model_name]
@@ -56,12 +63,12 @@ agent_bases = [
     "react-k0",
     "react-k1",
     "react-kn",
-    "baseline",
+    "modular-base",
     "plus-planner",
     "plus-summarizer",
     "plus-memorizer",
     "plus-reasoner",
-    "topline"]
+    "modular-full"]
 
 for agent_base in agent_bases:
 
