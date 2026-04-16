@@ -87,7 +87,8 @@ You must update or delete any memories that are:
  - Use an immutable unique name for the key of an entity (e.g., given "fried diced orange carrot" use "orange carrot" instead of "carrot" or "fried diced orange carrot")
  - You can use "?" to indicate unknown information in a memory (e.g., "kitchen: rooms = {south = ?}")
   - However, you MUST update the memory to fill in the "?" when the information becomes available (e.g., "kitchen: rooms = {south = living room}")
- - Only record a room connection when the agent SUCCESSFULLY moved in that direction, confirmed by the location change.
+ - Only record a named room connection (e.g., north = kitchen) when the agent SUCCESSFULLY moved in that direction, confirmed by the location change.
+ - Always record observed exits as "?" when the room description lists them, but we have not yet successfully moved in that direction (e.g., "kitchen: rooms = {south = ?, east = ?}")
  - Always record room directions bidirectionally (e.g., if "kitchen: rooms = {south = living room}" then you must also have "living room: rooms = {north = kitchen}")
  - Only use standard cardinal directions (i.e., north, south, east, west) to describe room relationships. 
  - Never update an existing known room connection unless a new successful move contradicts it. 

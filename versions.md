@@ -68,4 +68,7 @@
    - added instructions to memorizer to handle room relationships better
    - only add rooms once successful transition is verified
    - made bi-directional room relationships mandatory
+- v4.3 (76%)
+   - added instruction to memorizer to only use named room destinations if verified by successful transition
+   - added instruction to memorizer to always use "?" for room exits with unknown destinations
 

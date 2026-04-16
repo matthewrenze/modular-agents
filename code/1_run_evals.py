@@ -39,17 +39,17 @@ model_names = [
 
 # Set agents
 agent_names = [
-    # "react-k0-v4.2",
-    # "react-k1-v4.2",
-    # "react-kn-v4.2",
-    # "modular-base-v4.2",
-    # "plus-planner-v4.2",
-    # "plus-summarizer-v4.2",
-    # "plus-memorizer-v4.2",
-    # "minus-planner-v4.2",
-    # "minus-summarizer-v4.2",
-    # "minus-memorizer-v4.2",
-    "modular-full-v4.2"
+    # "react-k0-v4.3",
+    # "react-k1-v4.3",
+    # "react-kn-v4.3",
+    # "modular-base-v4.3",
+    # "plus-planner-v4.3",
+    # "plus-summarizer-v4.3",
+    # "plus-memorizer-v4.3",
+    # "minus-planner-v4.3",
+    # "minus-summarizer-v4.3",
+    # "minus-memorizer-v4.3",
+    "modular-full-v4.3"
 ]
 # Set evals
 eval_size = 1
