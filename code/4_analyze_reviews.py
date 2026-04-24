@@ -9,46 +9,58 @@ from reviews.analysis.analysis_writer import AnalysisWriter
 from typing import cast
 from logs.console import warn
 
+# Set provider
+# FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
+use_azure = False
+
+# Set train/test split
+# FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
+split_name = "train"
+
 # Set models
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 model_names = [
-    # "gpt-5-mini",
-    "gpt-5.2"
+    # "claude-sonnet-4-6",
+    # "deepseek-v3.2"
+    # "gemini-3.1-pro-preview",
+    # "gpt-5.2",
+    "gpt-5.4-mini",
+    # "gpt-5.4",
+    # "glm-5-fast"
+    # "kimi-k2.5"
 ]
-
 
 # Set agents
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 agent_names = [
-    "react-k0-v3.0",
-    "react-k1-v3.0",
-    "react-kn-v3.0",
-    "baseline-v3.0",
-    "plus-planner-v3.0",
-    "plus-summarizer-v3.0",
-    "plus-memorizer-v3.0",
-    "plus-reasoner-v3.0",
-    "minus-planner-v3.0",
-    "minus-summarizer-v3.0",
-    "minus-memorizer-v3.0",
-    "minus-reasoner-v3.0"
-    "topline-v3.0"
+    # "react-k0-v5.0",
+    # "react-k1-v5.0",
+    # "react-kn-v5.0",
+    "modular-base-v5.0",
+    # "plus-planner-v5.0",
+    # "plus-summarizer-v5.0",
+    # "plus-memorizer-v5.0",
+    # "minus-planner-v5.0",
+    # "minus-summarizer-v5.0",
+    # "minus-memorizer-v5.0",
+    # "modular-full-v5.0"
 ]
-
 # Set evals
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 eval_size = 10
 eval_env_names = [
-    ("tw-simple-1", "textworld"),
-    ("tw-treasure-1", "textworld"),
-    ("tw-treasure-2", "textworld"),
-    ("tw-treasure-3", "textworld"),
-    ("tw-coin-1", "textworld"),
-    ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
-    ("tw-cooking-1", "textworld"),
-    ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    ("tw-quick-1", "textworld"),
+    # # #
+    # ("tw-simple-1", "textworld"),
+    # ("tw-treasure-1", "textworld"),
+    # ("tw-treasure-2", "textworld"),
+    # ("tw-treasure-3", "textworld"),
+    # ("tw-coin-1", "textworld"),
+    # ("tw-coin-2", "textworld"),
+    # ("tw-coin-3", "textworld"),
+    # ("tw-cooking-1", "textworld"),
+    # ("tw-cooking-2", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Create the runs
@@ -57,11 +69,12 @@ parameters_factory = ParametersFactory()
 for eval_env_name in eval_env_names:
     eval_name, env_name = eval_env_name
     params = parameters_factory.create(
+        split_name=split_name,
         model_name=model_names[0],
-        agent_name = agent_names[0],
-        env_name = env_name,
-        eval_name = eval_name,
-        eval_size = eval_size)
+        agent_name=agent_names[0],
+        env_name=env_name,
+        eval_name=eval_name,
+        eval_size=eval_size)
     runs.append(params)
 
 print(f"--- Analyzing {model_names[0]} - {agent_names[0]}  ---")
@@ -82,7 +95,7 @@ for params in runs:
 
     for episode_id in episode_ids:
 
-        print(f"--- Reading {params.agent_name} - {params.model_name} - {params.eval_name} - {episode_id} of {len(episode_ids)}---")
+        print(f"--- Reading {params.split_name} - {params.agent_name} - {params.model_name} - {params.eval_name} - episode-{episode_id} ---")
 
         try:
 
@@ -119,7 +132,7 @@ for params in runs:
 # Analyze the reviews
 print("Performing analysis of reviews...")
 params = runs[0]
-model = ModelFactory().create(params)
+model = ModelFactory().create(params, use_azure)
 analyzer = AgentFactory().create("analyzer", params, model)
 analyzer = cast(Analyzer, analyzer)
 analysis = analyzer.analyze(reviews)

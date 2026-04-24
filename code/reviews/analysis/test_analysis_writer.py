@@ -8,13 +8,14 @@ from reviews.analysis.analysis_writer import AnalysisWriter
 class TestAnalysisWriter:
     def test_write_review(self, monkeypatch):
         params = Parameters(
+            split_name="test",
             agent_name="agent",
             model_name="model",
             eval_name="eval")
         analysis = "analysis"
 
-        expected_folder = "../data/analysis"
-        expected_file = f"{expected_folder}/model - agent.txt"
+        expected_folder = "../data/artifacts/test/model/agent/analysis"
+        expected_file = f"{expected_folder}/test - model - agent - analysis.txt"
         expected_text = "analysis"
 
         captured = {"makedirs": None, "open": None, "text": None}

@@ -4,11 +4,12 @@ from params.parameters import Parameters
 class AnalysisWriter:
     def write(self, params: Parameters, analysis: str):
 
-        # Create the folder
-        folder_path = f"../data/analysis"
-        os.makedirs(folder_path, exist_ok=True)
+        # Create the file path
+        folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}"
+        file_name = f"{params.split_name} - {params.model_name} - {params.agent_name} - analysis.txt"
+        file_path = f"{folder_path}/{file_name}"
 
-        # Write the analysis
-        file_path = f"{folder_path}/{params.model_name} - {params.agent_name}.txt"
+        # Write analysis
+        os.makedirs(folder_path, exist_ok=True)
         with open(file_path, "w", encoding="utf-8") as file:
             file.write(analysis)

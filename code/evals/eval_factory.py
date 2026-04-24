@@ -5,13 +5,9 @@ class EvalFactory:
 
     @staticmethod
     def create(params: Parameters):
-        if params.eval_name.startswith("tw-curriculum-"):
-            file_path = f"../data/evals/tw-curriculum/{params.eval_name}.jsonl"
-            eval = pd.read_json(file_path, lines=True)
-            return eval
-        elif params.eval_name.startswith("tw-"):
+        if params.eval_name.startswith("tw-"):
             base_name = params.eval_name.rsplit("-", 1)[0]
-            file_path = f"../data/evals/{base_name}/{params.eval_name}.jsonl"
+            file_path = f"../data/evals/{params.split_name}/{base_name}/{params.eval_name}.jsonl"
             eval = pd.read_json(file_path, lines=True)
             return eval
         else:

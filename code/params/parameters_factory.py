@@ -1,10 +1,15 @@
 from params.parameters import Parameters
 
 class ParametersFactory:
-    def create(self, model_name: str, agent_name: str, env_name: str, eval_name: str, eval_size: int):
+    def create(self, split_name: str, model_name: str, agent_name: str, env_name: str, eval_name: str, eval_size: int):
+
+        # Handle invalid split name
+        if split_name not in ["train", "test"]:
+            raise ValueError("Split name must be 'train' or 'test'.")
 
         # Set parameters
         parameters = Parameters(
+            split_name=split_name,
             model_name=model_name,
             agent_name=agent_name,
             env_name=env_name,

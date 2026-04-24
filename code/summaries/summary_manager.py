@@ -19,16 +19,18 @@ class SummaryManager:
         if summaries is None or summaries.empty:
             return False
 
+        split_matches = summaries["split_name"] == params.split_name
         model_matches = summaries["model_name"] == params.model_name
         agent_matches = summaries["agent_name"] == params.agent_name
         eval_matches = summaries["eval_name"] == params.eval_name
         size_matches = summaries["tasks"] == params.eval_size
-        all_matches = summaries[model_matches & agent_matches & eval_matches & size_matches]
+        all_matches = summaries[split_matches & model_matches & agent_matches & eval_matches & size_matches]
 
         return not all_matches.empty
 
     def summarize(self, results):
         summary = SummaryRow()
+        summary.split_name = results["split_name"].iloc[0]
         summary.model_name = results["model_name"].iloc[0]
         summary.agent_name = results["agent_name"].iloc[0]
         summary.eval_name = results["eval_name"].iloc[0]
@@ -70,11 +72,12 @@ class SummaryManager:
                 # Append the new summary
                 summaries = pd.concat([summaries, pd.DataFrame([summary.__dict__])], ignore_index=True)
 
-                # HACK: Move the model_name to the first column
+                # HACK: Move the split_name and model_name to the first columns
                 summaries = summaries[["model_name"] + [c for c in summaries.columns if c != "model_name"]]
+                summaries = summaries[["split_name"] + [c for c in summaries.columns if c != "split_name"]]
 
                 # Sort the summaries
-                summaries.sort_values(by=["model_name", "agent_name", "eval_name"], inplace=True)
+                summaries.sort_values(by=["split_name", "model_name", "agent_name", "eval_name"], inplace=True)
 
                 temp_path = self.file_path + ".tmp"
                 summaries.to_csv(temp_path, index=False)

@@ -2,6 +2,16 @@ import pytest
 from params.parameters_factory import ParametersFactory
 
 class TestParametersFactory:
+    def test_create(self):
+        factory = ParametersFactory()
+        params = factory.create( "test", "model", "react-kn", "env", "eval",10)
+        assert params.split_name == "test"
+        assert params.model_name == "model"
+        assert params.agent_name == "react-kn"
+        assert params.env_name == "env"
+        assert params.eval_name == "eval"
+        assert params.eval_size == 10
+
     @pytest.mark.parametrize(
         "agent_name,true_param", [
         ("react-k0", "use_react_k0"),
@@ -9,7 +19,7 @@ class TestParametersFactory:
         ("react-kn", "use_react_kn")])
     def test_create_react(self, agent_name, true_param):
         factory = ParametersFactory()
-        params = factory.create( "model", agent_name, "env", "eval",10)
+        params = factory.create( "test", "model", agent_name, "env", "eval",10)
         assert params.agent_name == agent_name
         assert getattr(params, true_param)
         for attr in dir(params):
@@ -18,7 +28,7 @@ class TestParametersFactory:
 
     def test_create_baseline(self):
         factory = ParametersFactory()
-        params = factory.create("model", "modular-base",  "env", "eval", 10)
+        params = factory.create("test","model", "modular-base",  "env", "eval", 10)
         assert params.agent_name == "modular-base"
         assert params.use_actor
         for attr in dir(params):
@@ -29,7 +39,7 @@ class TestParametersFactory:
 
     def test_create_topline(self):
         factory = ParametersFactory()
-        params = factory.create("model", "modular-full",  "env", "eval", 10)
+        params = factory.create("test","model", "modular-full",  "env", "eval", 10)
         assert params.agent_name == "modular-full"
         assert params.use_actor
         for attr in dir(params):
@@ -49,7 +59,7 @@ class TestParametersFactory:
     ])
     def test_create_with_plus(self, agent_name, true_param):
         factory = ParametersFactory()
-        params = factory.create("model", agent_name, "env", "eval", 10)
+        params = factory.create("test","model", agent_name, "env", "eval", 10)
         assert params.agent_name == agent_name
         assert getattr(params, true_param)
         for attr in dir(params):
@@ -67,7 +77,7 @@ class TestParametersFactory:
     ])
     def test_create_with_minus(self, agent_name, false_param):
         factory = ParametersFactory()
-        params = factory.create("model", agent_name, "env", "eval", 10)
+        params = factory.create("test","model", agent_name, "env", "eval", 10)
         assert params.agent_name == agent_name
         assert not getattr(params, false_param)
         for attr in dir(params):

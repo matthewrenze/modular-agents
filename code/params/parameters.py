@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Parameters:
+    split_name: str = ""
     model_name: str = ""
     agent_name: str = ""
     env_name: str = ""

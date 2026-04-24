@@ -10,34 +10,48 @@ from reviews.writer.review_writer import ReviewWriter
 from typing import cast
 from logs.console import warn
 
+# Set provider
+# FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
+use_azure = False
+
+# Set train/test split
+# FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
+split_name = "train"
+
 # Set models
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 model_names = [
-    "gpt-5.2"
+    # "claude-sonnet-4-6",
+    # "deepseek-v3.2"
+    # "gemini-3.1-pro-preview",
+    # "gpt-5.2",
+    "gpt-5.4-mini",
+    # "gpt-5.4",
+    # "glm-5-fast"
+    # "kimi-k2.5"
 ]
 
 # Set agents
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 agent_names = [
-    # "react-k0-v3.0",
-    # "react-k1-v3.0",
-    # "react-kn-v3.0",
-    # "baseline-v3.0",
-    # "plus-planner-v3.0"
-    # "plus-summarizer-v3.0",
-    # "plus-memorizer-v3.0",
-    "plus-reasoner-v3.0",
-    # "minus-planner-v3.0"
-    # "minus-summarizer-v3.0",
-    # "minus-memorizer-v3.0",
-    # "minus-reasoner-v3.0"
-    # "topline-v3.0"
+    # "react-k0-v5.0",
+    # "react-k1-v5.0",
+    # "react-kn-v5.0",
+    "modular-base-v5.0",
+    # "plus-planner-v5.0",
+    # "plus-summarizer-v5.0",
+    # "plus-memorizer-v5.0",
+    # "minus-planner-v5.0",
+    # "minus-summarizer-v5.0",
+    # "minus-memorizer-v5.0",
+    # "modular-full-v5.0"
 ]
-
 # Set evals
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 eval_size = 10
 eval_env_names = [
+    ("tw-quick-1", "textworld"),
+    # # #
     # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
@@ -47,10 +61,11 @@ eval_env_names = [
     # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 task_types_map = {
+    "tw-quick": "prepare a meal",
     "tw-simple": "find and place an item",
     "tw-treasure": "find the hidden treasure",
     "tw-coin": "collect a gold coin",
@@ -64,6 +79,7 @@ for model_name in model_names:
         for eval_env_name in eval_env_names:
             eval_name, env_name = eval_env_name
             params = parameters_factory.create(
+                split_name=split_name,
                 model_name=model_name,
                 agent_name = agent_name,
                 env_name = env_name,
@@ -72,7 +88,7 @@ for model_name in model_names:
             runs.append(params)
 
 for params in runs:
-    print(f"--- Reviewing {params.model_name} - {params.agent_name} - {params.eval_name} ---")
+    print(f"--- Reviewing {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - {eval_size} episodes ---")
 
     # Get the episode ids
     eval = EvalFactory().create(params)
@@ -88,7 +104,7 @@ for params in runs:
 
     for episode_id in episode_ids:
 
-        print(f"--- Reviewing {params.model_name} - {params.agent_name} - {params.eval_name} - {episode_id} of {len(episode_ids)} ---")
+        print(f"--- Reviewing {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
 
         try:
 
@@ -114,6 +130,7 @@ for params in runs:
 
             # Create the review header
             header = f"Agent: {params.agent_name}\n"
+            header += f"Split: {params.split_name}\n"
             header += f"Model: {params.model_name}\n"
             header += f"Eval: {params.eval_name}\n"
             header += f"Task: {task_types_map.get(params.eval_name.rsplit("-", 1)[0], '')}\n"
@@ -122,7 +139,7 @@ for params in runs:
             header += f"Duration: {steps} of {max_steps} steps\n"
 
             # Review the episode
-            model = ModelFactory().create(params)
+            model = ModelFactory().create(params, use_azure)
             reviewer = AgentFactory().create("reviewer", params, model)
             reviewer = cast(Reviewer, reviewer)
             review = reviewer.review(task, solution, solution_steps, log_text)

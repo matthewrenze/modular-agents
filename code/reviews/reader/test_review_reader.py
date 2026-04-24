@@ -7,13 +7,14 @@ from reviews.reader.review_reader import ReviewReader
 class TestReviewReader:
     def test_read_review(self, monkeypatch):
         params = Parameters(
+            split_name="split",
             model_name="model",
             agent_name="agent",
             eval_name="eval")
         episode_id = 123
 
-        expected_folder = "../data/reviews/model - agent - eval"
-        expected_file = f"{expected_folder}/{episode_id}.txt"
+        expected_folder = "../data/artifacts/split/model/agent/eval"
+        expected_file = f"{expected_folder}/split - model - agent - eval - episode-{episode_id} - review.txt"
         expected_text = "review"
 
         captured = {"open": None}

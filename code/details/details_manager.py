@@ -22,18 +22,19 @@ class DetailsManager:
 
     def save(self):
         # Create the folder path
+        split_name = self.params.split_name
         model_name = self.params.model_name
         agent_name = self.params.agent_name
         eval_name = self.params.eval_name
         episode_id = self.episode_id
-        subfolder_name = f"/{model_name}/{agent_name}/{eval_name}/episode-{episode_id}"
+        subfolder_name = f"/{split_name}/{model_name}/{agent_name}/{eval_name}/episode-{episode_id}"
         subfolder_path = f"{self.folder_path}/{subfolder_name}"
 
         # Create the folder if it doesn't exist
         os.makedirs(subfolder_path, exist_ok=True)
 
         # Create the file path
-        file_name = f"{model_name} - {agent_name} - {eval_name} - episode-{episode_id} - details.csv"
+        file_name = f"{split_name} - {model_name} - {agent_name} - {eval_name} - episode-{episode_id} - details.csv"
         file_path = f"{subfolder_path}/{file_name}"
 
         # Save the details

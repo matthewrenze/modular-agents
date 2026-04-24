@@ -25,13 +25,16 @@ from reviews.writer.review_writer import ReviewWriter
 # Set provider
 use_azure = False
 
+# Set train/test split
+split_name = "train"
+
 # Set models
 model_names = [
     # "claude-sonnet-4-6",
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
-    "gpt-5.2",
-    # "gpt-5.4-mini",
+    # "gpt-5.2",
+    "gpt-5.4-mini",
     # "gpt-5.4",
     # "glm-5-fast"
     # "kimi-k2.5"
@@ -39,22 +42,24 @@ model_names = [
 
 # Set agents
 agent_names = [
-    # "react-k0-v4.3",
-    # "react-k1-v4.3",
-    # "react-kn-v4.3",
-    # "modular-base-v4.3",
-    # "plus-planner-v4.3",
-    # "plus-summarizer-v4.3",
-    # "plus-memorizer-v4.3",
-    # "minus-planner-v4.3",
-    # "minus-summarizer-v4.3",
-    # "minus-memorizer-v4.3",
-    "modular-full-v4.3"
+    # "react-k0-v5.0",
+    # "react-k1-v5.0",
+    # "react-kn-v5.0",
+    # "modular-base-v5.0",
+    # "plus-planner-v5.0",
+    # "plus-summarizer-v5.0",
+    # "plus-memorizer-v5.0",
+    # "minus-planner-v5.0",
+    # "minus-summarizer-v5.0",
+    # "minus-memorizer-v5.0",
+    "modular-full-v5.0"
 ]
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
-    ("tw-simple-1", "textworld"),
+    ("tw-quick-1", "textworld"),
+    # # #
+    # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -79,6 +84,7 @@ for model_name in model_names:
         for eval_env_name in eval_env_names:
             eval_name, env_name = eval_env_name
             params = parameters_factory.create(
+                split_name=split_name,
                 model_name=model_name,
                 agent_name = agent_name,
                 env_name = env_name,
@@ -97,7 +103,7 @@ state_writer = StateWriter()
 review_writer = ReviewWriter()
 
 for params in runs:
-    print(f"--- Running {params.model_name} - {params.agent_name} - {params.eval_name} ---")
+    print(f"--- Running {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} ---")
 
     # Create components
     results_manager = ResultsManager()
@@ -120,7 +126,7 @@ for params in runs:
 
     # Set up summaries
     if summary_manager.exists(params):
-        warn(f"Summary for {params.model_name} - {params.agent_name} - {params.eval_name} already exists.")
+        warn(f"Summary for {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} already exists.")
         input("Press Enter to continue...")
 
     for episode_id in episode_ids:
@@ -128,7 +134,7 @@ for params in runs:
         # Create the log
         renderer = RendererFactory.create()
         log = Log(renderer, params, episode_id)
-        log.head(f"--- Starting {params.model_name} - {params.agent_name} - {params.eval_name} - episode {episode_id} ---")
+        log.head(f"--- Starting {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
         
         # Create the episode
         episode = eval.iloc[episode_id - 1].to_dict()
