@@ -34,10 +34,14 @@ model_names = [
     # "deepseek-v3.2"
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
-    "gpt-5.4-mini",
+    # "gpt-5.4-mini",
     # "gpt-5.4",
+    "gpt-5.5",
     # "glm-5-fast"
-    # "kimi-k2.5"
+    # "glm-5.1",
+    # "kimi-k2.5-turbo",
+    # "kimi-k2.6",
+    # "qwen3.6-plus",
 ]
 
 # Set agents
