@@ -55,20 +55,23 @@ summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000
 # Order agents
 agent_order = [
     #"react-k0-v4.0",
-    "react-k1-v4.0",
+    # "react-k1-v4.0",
     "react-kn-v4.0",
-    # "react-kn-v4.0-azure",
-    # "react-kn-v4.0-openai",
-    "modular-base-v4.0",
-    "plus-planner-v4.0",
-    "plus-summarizer-v4.0",
-    "plus-memorizer-v4.0",
-    "minus-planner-v4.0",
-    "minus-summarizer-v4.0",
-    "minus-memorizer-v4.0",
+    "react-kn-v4.0-azure",
+    "react-kn-v4.0-openai",
+    # "modular-base-v4.0",
+    # "plus-planner-v4.0",
+    # "plus-summarizer-v4.0",
+    # "plus-memorizer-v4.0",
+    # "minus-planner-v4.0",
+    # "minus-summarizer-v4.0",
+    # "minus-memorizer-v4.0",
     "modular-full-v4.0",
-    # "modular-full-v4.0-azure",
-    # "modular-full-v4.0-openai",
+    "modular-full-v4.0-azure",
+    "modular-full-v4.0-openai",
+    "modular-full-v4.1",
+    "modular-full-v4.2",
+    "modular-full-v4.3"
 ]
 
 summaries["agent_name"] = pd.Categorical(

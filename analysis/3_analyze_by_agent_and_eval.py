@@ -50,8 +50,8 @@ agent_order = [
     # "react-k0-v4.0",
     # "react-k1-v4.0",
     "react-kn-v4.0",
-    "react-kn-v4.0-azure",
-    "react-kn-v4.0-openai",
+    # "react-kn-v4.0-azure",
+    # "react-kn-v4.0-openai",
     # "modular-base-v4.0",
     # "plus-planner-v3.0",
     # "plus-planner-v4.0",
@@ -61,8 +61,11 @@ agent_order = [
     # "minus-summarizer-v4.0",
     # "minus-memorizer-v4.0",
     "modular-full-v4.0",
-    "modular-full-v4.0-azure",
-    "modular-full-v4.0-openai",
+    # "modular-full-v4.0-azure",
+    # "modular-full-v4.0-openai",
+    "modular-full-v4.1",
+    "modular-full-v4.2",
+    "modular-full-v4.3"
 ]
 
 summaries["agent_name"] = pd.Categorical(
