@@ -63,12 +63,12 @@
 # v4.x
  - v4.1 (74%)
    - tightened actor-reasoner action handoff
- - v4.2 
+ - v4.2 (78%)
    - Rolled back v4.1 because it dropped accuracy significantly
    - added instructions to memorizer to handle room relationships better
    - only add rooms once successful transition is verified
    - made bi-directional room relationships mandatory
-- v4.3 (76%)
+- v4.3 (84%)
    - added instruction to memorizer to only use named room destinations if verified by successful transition
    - added instruction to memorizer to always use "?" for room exits with unknown destinations
 
