@@ -46,20 +46,20 @@ summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000
 
 # Rename models
 model_name_mapping = {
-    "gemini-3-flash-preview": "gemini-3-flash",
-    "gemini-3-pro-preview": "gemini-3-pro"}
+    "gemini-3.1-flash-preview": "gemini-3.1-flash",
+    "gemini-3.1-pro-preview": "gemini-3.1-pro"}
 summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Order models
 model_order = [
     "claude-sonnet-4-6",
     "deepseek-v4",
-    "gemini-3.1-pro-preview",
+    "gemini-3.1-pro",
     "gpt-5.2",
     "gpt-5.4-mini",
     "gpt-5.4",
     "gpt-5.5",
-    "glm-5-fast"
+    "glm-5-fast",
     "glm-5.1",
     "kimi-k2.5-turbo",
     "kimi-k2.6",
@@ -81,6 +81,25 @@ summaries["agent_name"] = pd.Categorical(
     summaries["agent_name"],
     categories=agent_order,
     ordered=True)
+
+# Create plot for task completion accuracy
+accuracy_file_name = f"accuracy-by-model-and-agent.png"
+sns.set_style("whitegrid")
+plt.figure(figsize=(12, 6))
+ax = sns.barplot(
+    x="model_name",
+    y="accuracy",
+    hue="agent_name",
+    data=summaries)
+plt.title(f"Accuracy by Model and Agent")
+plt.xlabel("Model")
+plt.ylabel("Accuracy (task completion rate)")
+plt.ylim(0.0, 1.0)
+plt.xticks(rotation=15, ha='right')
+plt.subplots_adjust(bottom=0.2)
+plt.legend(title="Agent")
+plt.savefig(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
+plt.show()
 
 # Create plot for average reward per step
 reward_per_step_file_name = f"avg-reward-per-step-by-model-and-agent.png"
@@ -182,6 +201,7 @@ plt.show()
 
 # Render a table
 markdown_table = summaries[[
+    "model_name",
     "agent_name",
     "avg_reward_per_step",
     "total_time",
