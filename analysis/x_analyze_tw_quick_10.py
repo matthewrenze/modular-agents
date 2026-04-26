@@ -18,6 +18,7 @@ summaries = pd.read_csv(input_file_path)
 summaries = summaries[summaries["split_name"] == "train"]
 # summaries = summaries[summaries["model_name"] == model_name]
 summaries = summaries[summaries["eval_name"].str.startswith("tw-quick-1")]
+# summaries = summaries[summaries["eval_size"] == 10]
 
 # Create groups
 summaries = summaries.groupby(["split_name", "model_name", "agent_name"], as_index=False).agg({

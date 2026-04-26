@@ -42,7 +42,11 @@ class GeminiModel(Model):
                 # content = response.text
 
                 # Hack to prevent the "non-text parts in response" warning
-                content = response.candidates[0].content.parts[0].text
+                # And hack to set STOP token (without empty string) to empty string
+                if response.candidates[0].content.parts is not None:
+                    content = response.candidates[0].content.parts[0].text
+                else:
+                    content = ""
 
                 # Get tokens
                 usage = response.usage_metadata
