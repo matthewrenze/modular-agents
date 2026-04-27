@@ -9,7 +9,7 @@ class FireworksModel(Model):
         super().__init__(model_name)
 
         api_key = os.environ.get("FIREWORKS_API_KEY")
-        self.client = Fireworks(api_key=api_key)
+        self.client = Fireworks(api_key=api_key, timeout=600, max_retries=0)
 
     def get_response(self, messages):
 
@@ -31,6 +31,7 @@ class FireworksModel(Model):
             "messages": messages,
             "top_p": 1.0,
             "temperature": 0.0,
+            "timeout": 180,
         }
 
         # Set retry variables
