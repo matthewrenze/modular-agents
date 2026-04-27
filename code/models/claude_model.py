@@ -35,8 +35,11 @@ class ClaudeModel(Model):
                     max_tokens=4096,
                     messages=messages)
 
-                # Get the content
-                content = response.content[0].text
+                # Get the content (if it exists)
+                if response.content:
+                    content = response.content[0].text
+                else:
+                    content = ""
 
                 # Accumulate tokens
                 input_tokens = response.usage.input_tokens
