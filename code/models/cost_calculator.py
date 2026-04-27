@@ -4,6 +4,7 @@ class CostCalculator:
         self.cost_map = {
             "claude-sonnet-4-6": {"cached": 0.30, "input": 3.00, "output": 15.00},
             "claude-opus-4-6": {"cached": 0.50, "input": 5.00, "output": 25.00},
+            "deepseek-v4-pro": {"cached": 0.15, "input": 1.74, "output": 3.48},
             "gemini-3.1-pro-preview": {"cached": 0.20, "input": 2.00, "output": 12.00},
             "glm-5-fast": {"cached": 0.20, "input": 1.00, "output": 3.20},
             "glm-5.1": {"cached": 0.26, "input": 1.40, "output": 4.40},

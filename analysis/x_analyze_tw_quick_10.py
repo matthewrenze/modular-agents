@@ -53,18 +53,18 @@ summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Order models
 model_order = [
-    "claude-sonnet-4-6",
-    "deepseek-v4",
-    "gemini-3.1-pro",
-    "gpt-5.2",
     "gpt-5.4-mini",
+    "gpt-5.2",
     "gpt-5.4",
+    "claude-sonnet-4-6",
+    "gemini-3.1-pro",
     "gpt-5.5",
-    "glm-5-fast",
-    "glm-5.1",
+    # "deepseek-v4",
     "kimi-k2.5-turbo",
-    "kimi-k2.6",
     "qwen3.6-plus",
+    "glm-5-fast",
+    "kimi-k2.6",
+    "glm-5.1",
 ]
 
 summaries["model_name"] = pd.Categorical(
@@ -83,6 +83,23 @@ summaries["agent_name"] = pd.Categorical(
     categories=agent_order,
     ordered=True)
 
+agent_label_mapping = {
+    "react-kn-v5.0": "ReAct",
+    "modular-full-v5.0": "Modular Full",
+}
+
+summaries["agent_label"] = summaries["agent_name"].map(agent_label_mapping)
+
+agent_label_order = [
+    "ReAct",
+    "Modular Full",
+]
+
+palette = {
+    "ReAct": "tab:grey",
+    "Modular Full": "tab:blue",
+}
+
 # Create plot for task completion accuracy
 accuracy_file_name = f"accuracy-by-model-and-agent.png"
 sns.set_style("whitegrid")
@@ -90,8 +107,10 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
     y="accuracy",
-    hue="agent_name",
-    data=summaries)
+    hue="agent_label",
+    hue_order=agent_label_order,
+    data=summaries,
+    palette=palette)
 plt.title(f"Accuracy by Model and Agent")
 plt.xlabel("Model")
 plt.ylabel("Accuracy (task completion rate)")
@@ -109,8 +128,10 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
     y="avg_reward_per_step",
-    hue="agent_name",
-    data=summaries)
+    hue="agent_label",
+    hue_order=agent_label_order,
+    data=summaries,
+    palette=palette,)
 plt.title(f"Average Reward per Step by Model and Agent")
 plt.xlabel("Model")
 plt.ylabel("Reward per step")
@@ -147,8 +168,10 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
     y="total_time",
-    hue="agent_name",
-    data=summaries)
+    hue="agent_label",
+    hue_order=agent_label_order,
+    data=summaries,
+    palette=palette,)
 plt.title(f"Total Runtime by Model and Agent")
 plt.xlabel("Model")
 plt.ylabel("Total Runtime (seconds)")
@@ -166,8 +189,10 @@ plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
     y="total_cost",
-    hue="agent_name",
-    data=summaries)
+    hue="agent_label",
+    hue_order=agent_label_order,
+    data=summaries,
+    palette=palette,)
 plt.title(f"Total Cost by Model and Agent")
 plt.xlabel("Model")
 plt.ylabel("Total Cost ($USD)")

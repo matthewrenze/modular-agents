@@ -14,6 +14,9 @@ class ModelFactory():
         if params.model_name.startswith("claude"):
             return ClaudeModel(params.model_name)
 
+        elif params.model_name.startswith("deepseek"):
+            return FireworksModel(params.model_name)
+
         elif params.model_name.startswith("gemini"):
             return GeminiModel(params.model_name)
 

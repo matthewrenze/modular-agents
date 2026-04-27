@@ -31,12 +31,12 @@ split_name = "train"
 # Set models
 model_names = [
     # "claude-sonnet-4-6",
-    # "deepseek-v3.2"
+    "deepseek-v4-pro",
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
     # "gpt-5.4-mini",
     # "gpt-5.4",
-    "gpt-5.5",
+    # "gpt-5.5",
     # "glm-5-fast"
     # "glm-5.1",
     # "kimi-k2.5-turbo",
@@ -48,7 +48,7 @@ model_names = [
 agent_names = [
     # "react-k0-v5.0",
     # "react-k1-v5.0",
-    # "react-kn-v5.0",
+    "react-kn-v5.0",
     # "modular-base-v5.0",
     # "plus-planner-v5.0",
     # "plus-summarizer-v5.0",
@@ -56,14 +56,14 @@ agent_names = [
     # "minus-planner-v5.0",
     # "minus-summarizer-v5.0",
     # "minus-memorizer-v5.0",
-    "modular-full-v5.0"
+    # "modular-full-v5.0"
 ]
 # Set evals
-eval_size = 10
+eval_size = 1
 eval_env_names = [
-    ("tw-quick-1", "textworld"),
+    # ("tw-quick-1", "textworld"),
     # # #
-    # ("tw-simple-1", "textworld"),
+    ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
