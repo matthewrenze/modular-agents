@@ -26,12 +26,12 @@ from reviews.writer.review_writer import ReviewWriter
 use_azure = False
 
 # Set train/test split
-split_name = "train"
+split_name = "test"
 
 # Set models
 model_names = [
     # "claude-sonnet-4-6",
-    "deepseek-v4-pro",
+    # "deepseek-v4-pro",
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
     # "gpt-5.4-mini",
@@ -41,14 +41,14 @@ model_names = [
     # "glm-5.1",
     # "kimi-k2.5-turbo",
     # "kimi-k2.6",
-    # "qwen3.6-plus",
+    "qwen3.6-plus",
 ]
 
 # Set agents
 agent_names = [
     # "react-k0-v5.0",
     # "react-k1-v5.0",
-    "react-kn-v5.0",
+    # "react-kn-v5.0",
     # "modular-base-v5.0",
     # "plus-planner-v5.0",
     # "plus-summarizer-v5.0",
@@ -56,14 +56,14 @@ agent_names = [
     # "minus-planner-v5.0",
     # "minus-summarizer-v5.0",
     # "minus-memorizer-v5.0",
-    # "modular-full-v5.0"
+    "modular-full-v5.0"
 ]
 # Set evals
 eval_size = 1
 eval_env_names = [
     # ("tw-quick-1", "textworld"),
     # # #
-    ("tw-simple-1", "textworld"),
+    # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -73,6 +73,9 @@ eval_env_names = [
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
     # ("tw-cooking-3", "textworld"),
+    ##
+    ("tw-coin-3-2", "textworld"),
+    # ("tw-coin-3-70", "textworld"),
 ]
 
 # Set parameters
@@ -122,7 +125,7 @@ for params in runs:
     episode_ids = list(range(1, num_episodes + 1))
     # HACK: select specific episodes for specific num_episodes
     if num_episodes == 1:
-        episode_ids = [10]
+        episode_ids = [1]
     if num_episodes == 10:
         episode_ids = list(range(10, 101, 10))
     if num_episodes == 99:
