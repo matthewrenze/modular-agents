@@ -169,3 +169,4 @@ cython_debug/
 run-from-console-DEV.txt
 run-from-console-PROD.txt
 **/data/**
+.claude/

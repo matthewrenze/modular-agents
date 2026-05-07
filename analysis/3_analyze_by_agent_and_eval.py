@@ -5,16 +5,22 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
-model_name = "gpt-5.2"
+model_name = "gpt-5.4"
 # model_name = "gpt-5.4-mini"
 # model_name = "claude-sonnet-4-6"
-# model_name = "kimi-k2.5"
-# model_name = "glm-5-fast"
+# model_name = "kimi-k2.5-turbo"
+# model_name = "qwen3.6-plus"
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-agent-and-eval"
 
 # Create the output folder
 os.makedirs(output_folder_path, exist_ok=True)
+
+
+def save_plot(file_path, **kwargs):
+    file_stem, _ = os.path.splitext(file_path)
+    for extension in ("pdf", "png"):
+        plt.savefig(f"{file_stem}.{extension}", **kwargs)
 
 # Load the data
 summaries = pd.read_csv(input_file_path)
@@ -30,6 +36,7 @@ summaries = summaries.groupby(["agent_name", "model_name", "eval_name"], as_inde
     "total_steps": "sum",
     "total_tokens": "sum",
     "total_reward": "sum",
+    "errors": "sum",
 })
 
 # Compute averages
@@ -45,27 +52,27 @@ summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000
 if summaries["tasks"].nunique() != 1:
     raise ValueError("Not all groups have the same number of tasks")
 
+# Remove the version from the agent name
+summaries["agent_name"] = summaries["agent_name"].str.removesuffix("-v5.0")
+
 # Order agents
 agent_order = [
-    # "react-k0-v4.0",
-    # "react-k1-v4.0",
-    "react-kn-v4.0",
-    # "react-kn-v4.0-azure",
-    # "react-kn-v4.0-openai",
-    # "modular-base-v4.0",
-    # "plus-planner-v3.0",
-    # "plus-planner-v4.0",
-    # "plus-summarizer-v4.0",
-    # "plus-memorizer-v4.0",
-    # "minus-planner-v4.0",
-    # "minus-summarizer-v4.0",
-    # "minus-memorizer-v4.0",
-    "modular-full-v4.0",
-    # "modular-full-v4.0-azure",
-    # "modular-full-v4.0-openai",
-    "modular-full-v4.1",
-    "modular-full-v4.2",
-    "modular-full-v4.3"
+    "react-kn",
+    "modular-full",
+]
+
+# Order agents
+agent_order = [
+    # "react-k1",
+    "react-kn",
+    # "modular-base",
+    # "plus-planner",
+    # "plus-summarizer",
+    # "plus-memorizer",
+    # "minus-planner",
+    # "minus-summarizer",
+    # "minus-memorizer",
+    "modular-full",
 ]
 
 summaries["agent_name"] = pd.Categorical(
@@ -91,6 +98,18 @@ summaries["eval_name"] = pd.Categorical(
     categories=eval_order,
     ordered=True)
 
+pastel = sns.color_palette("tab10")
+palette = {
+    name:
+        pastel[7] if name.startswith("react") else      # grey
+        pastel[0] if name.startswith("modular-base") else   # blue
+        pastel[2] if name.startswith("plus") else       # green
+        pastel[1] if name.startswith("minus") else      # orange
+        pastel[0] if name.startswith("modular-full") else    # blue
+        pastel[7]                                       # grey
+    for name in agent_order
+}
+
 # Create plot for task completion accuracy
 accuracy_file_name = f"accuracy-by-agent-and-eval-for-{model_name}.png"
 sns.set_style("whitegrid")
@@ -99,7 +118,8 @@ ax = sns.barplot(
     x="eval_name",
     y="accuracy",
     hue="agent_name",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Accuracy by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Accuracy (task completion rate)")
@@ -107,7 +127,7 @@ plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent")
-plt.savefig(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average steps per task
@@ -118,7 +138,8 @@ ax = sns.barplot(
     x="eval_name",
     y="avg_steps_per_task",
     hue="agent_name",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Steps per Task by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Average steps per task")
@@ -126,7 +147,7 @@ plt.xticks(rotation=45, ha='right')
 plt.subplots_adjust(bottom=0.25)
 plt.legend(title="Agent")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
-plt.savefig(f"{output_folder_path}/{steps_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{steps_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average tokens per task
@@ -137,7 +158,8 @@ ax = sns.barplot(
     x="eval_name",
     y="avg_tokens_per_task",
     hue="agent_name",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Tokens by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Average tokens per task")
@@ -145,7 +167,7 @@ plt.xticks(rotation=45, ha='right')
 plt.subplots_adjust(bottom=0.25)
 plt.legend(title="Agent")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
-plt.savefig(f"{output_folder_path}/{tokens_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{tokens_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average reward per task
@@ -156,7 +178,8 @@ ax = sns.barplot(
     x="eval_name",
     y="avg_reward_per_task",
     hue="agent_name",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Reward per Task by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Average reward per task")
@@ -164,7 +187,7 @@ plt.ylim(0.0, 1.0)
 plt.xticks(rotation=45, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent")
-plt.savefig(f"{output_folder_path}/{reward_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{reward_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average reward per step
@@ -175,7 +198,8 @@ ax = sns.barplot(
     x="eval_name",
     y="avg_reward_per_step",
     hue="agent_name",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Reward per Step by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Reward per step")
@@ -183,7 +207,7 @@ plt.ylabel("Reward per step")
 plt.xticks(rotation=45, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent")
-plt.savefig(f"{output_folder_path}/{reward_per_step_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{reward_per_step_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average reward per token
@@ -194,7 +218,8 @@ ax = sns.barplot(
     x="eval_name",
     y="avg_reward_per_m_tokens",
     hue="agent_name",
-    data=summaries)
+    data=summaries,
+    palette=palette)
 plt.title(f"Average Reward per Million Tokens by Agent and Eval with {model_name}")
 plt.xlabel("Eval")
 plt.ylabel("Average reward per million tokens")
@@ -202,7 +227,30 @@ plt.ylabel("Average reward per million tokens")
 plt.xticks(rotation=45, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent")
-plt.savefig(f"{output_folder_path}/{reward_per_token_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{reward_per_token_file_name}", bbox_inches='tight')
+plt.show()
+
+# Create plot for errors (all red to denote errors)
+errors_file_name = f"errors-by-agent-and-eval-for-{model_name}.png"
+sns.set_style("whitegrid")
+plt.figure(figsize=(12, 6))
+error_palette = {agent_name: "red" for agent_name in agent_order}
+ax = sns.barplot(
+    x="eval_name",
+    y="errors",
+    hue="agent_name",
+    data=summaries,
+    palette=error_palette)
+plt.title(f"Errors by Agent and Eval with {model_name}")
+plt.xlabel("Eval")
+plt.ylabel("Errors")
+plt.ylim(0, 100)
+plt.xticks(rotation=45, ha='right')
+plt.subplots_adjust(bottom=0.2)
+plt.legend(title="Agent")
+for p in ax.patches:
+    ax.annotate(f"{int(p.get_height()):,}", (p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+save_plot(f"{output_folder_path}/{errors_file_name}", bbox_inches='tight')
 plt.show()
 
 # Filter any agent names with nan
@@ -212,6 +260,7 @@ summaries = summaries[~summaries["agent_name"].isna()]
 markdown_table = summaries[[
     "agent_name",
     "eval_name",
+    "errors",
     "accuracy",
     "avg_steps_per_task",
     "avg_tokens_per_task",
