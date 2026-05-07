@@ -40,8 +40,8 @@ model_names = [
     # "glm-5-fast"
     # "glm-5.1",
     # "kimi-k2.5-turbo",
-    # "kimi-k2.6",
-    "qwen3.6-plus",
+    "kimi-k2.6",
+    # "qwen3.6-plus",
 ]
 
 # Set agents
@@ -49,19 +49,19 @@ agent_names = [
     # "react-k0-v5.0",
     # "react-k1-v5.0",
     # "react-kn-v5.0",
-    # "modular-base-v5.0",
+    "modular-base-v5.0",
     # "plus-planner-v5.0",
     # "plus-summarizer-v5.0",
     # "plus-memorizer-v5.0",
     # "minus-planner-v5.0",
     # "minus-summarizer-v5.0",
     # "minus-memorizer-v5.0",
-    "modular-full-v5.0"
+    # "modular-full-v5.0"
 ]
 # Set evals
 eval_size = 1
 eval_env_names = [
-    # ("tw-quick-1", "textworld"),
+    ("tw-quick-1", "textworld"),
     # # #
     # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
@@ -74,7 +74,7 @@ eval_env_names = [
     # ("tw-cooking-2", "textworld"),
     # ("tw-cooking-3", "textworld"),
     ##
-    ("tw-coin-3-2", "textworld"),
+    # ("tw-coin-3-2", "textworld"),
     # ("tw-coin-3-70", "textworld"),
 ]
 
@@ -308,6 +308,10 @@ for params in runs:
                     agent_writer.write(params, episode_id, step_id + 1, "actor", actor.messages)
                     agent_state.action = action
                     log.info(f"  Action: {action}")
+                    
+                # Truncate the action (if it's too long)
+                if len(action) > 128:
+                    action = action[:128] + "... [Warning: Action truncated due to length. Use a shorter action.]"
 
                 # Create details row
                 details_row = details_manager.create()
