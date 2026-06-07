@@ -18,6 +18,15 @@ agent_names = [
     "modular-full",
 ]
 
+pastel = sns.color_palette("tab10")
+agent_palette = {
+    name:
+        pastel[7] if name.startswith("react") else      # grey
+        pastel[0] if name.startswith("modular-full") else   # blue
+        pastel[7]
+    for name in agent_names
+}
+
 marginal_trend_degrees = {
     "react-kn": 1,
     "modular-full": 1,
@@ -108,23 +117,24 @@ all_details["cumulative_tokens"] = (
 # Create plot for accuracy
 sns.set_theme(
     style="whitegrid",
-    font="serif",
+    # font="serif",
     font_scale=1.25,
-    rc={
-        "font.family": "serif",
-        "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
-        "mathtext.fontset": "dejavuserif",
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42,
-    },
+    # rc={
+    #     "font.family": "serif",
+    #     "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
+    #     "mathtext.fontset": "dejavuserif",
+    #     "pdf.fonttype": 42,
+    #     "ps.fonttype": 42,
+    # },
 )
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(12, 6))
 sns.scatterplot(
     data=all_details,
     x="step_id",
     y="total_tokens",
     hue="agent_name",
     hue_order=agent_names,
+    palette=agent_palette,
     alpha=0.2
 )
 
@@ -148,6 +158,7 @@ for agent_name in agent_names:
         x="step_id",
         y="total_tokens",
         label=f"{agent_name} trend",
+        color=agent_palette[agent_name],
         linestyle="--"
     )
 
@@ -163,13 +174,14 @@ plt.close()
 
 
 # Create cumulative scatter plot
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(12, 6))
 sns.scatterplot(
     data=all_details,
     x="step_id",
     y="cumulative_tokens",
     hue="agent_name",
     hue_order=agent_names,
+    palette=agent_palette,
     alpha=0.2
 )
 
@@ -193,6 +205,7 @@ for agent_name in agent_names:
         x="step_id",
         y="cumulative_tokens",
         label=f"{agent_name} trend",
+        color=agent_palette[agent_name],
         linestyle="--"
     )
 

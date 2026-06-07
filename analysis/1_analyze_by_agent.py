@@ -85,6 +85,12 @@ palette = {
     for name in agent_order
 }
 
+# Set the theme
+sns.set_theme(
+    style="whitegrid",
+    font="sanserif",
+    font_scale=1.25)
+
 # Create plot for accuracy
 accuracy_file_name = f"accuracy-by-agent-for-{model_name}"
 sns.set_style("whitegrid")
@@ -96,19 +102,20 @@ ax = sns.barplot(
     palette=palette)
 plt.title(f"Accuracy by Agent with {model_name}")
 plt.xlabel("Agent")
-plt.ylabel("Accuracy (task completion rate)")
+plt.ylabel("Accuracy")
 plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
-    ax.annotate(f"{p.get_height():.1%}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+    ax.annotate(f"{p.get_height():.2f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(accuracy_file_name)
 plt.show()
 
 # Create plot for average steps per task
 steps_file_name = f"avg-steps-per-task-by-agent-for-{model_name}"
 sns.set_style("whitegrid")
-plt.figure(figsize=(14, 6))
+plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_steps_per_task",
@@ -122,13 +129,14 @@ plt.subplots_adjust(bottom=0.2)
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
 for p in ax.patches:
     ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(steps_file_name)
 plt.show()
 
 # Create plot for average tokens per task
 tokens_file_name = f"avg-tokens-per-task-by-agent-with-{model_name}"
 sns.set_style("whitegrid")
-plt.figure(figsize=(14, 6))
+plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
     y="avg_tokens_per_task",
@@ -142,6 +150,7 @@ plt.subplots_adjust(bottom=0.2)
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
 for p in ax.patches:
     ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(tokens_file_name)
 plt.show()
 
@@ -162,6 +171,7 @@ plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.2f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(reward_file_name)
 plt.show()
 
@@ -182,6 +192,7 @@ plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.4f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(reward_per_step_file_name)
 plt.show()
 
@@ -201,6 +212,7 @@ plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{p.get_height():.2f}", (p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(reward_per_million_file_name)
 plt.show()
 
@@ -221,6 +233,7 @@ plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
     ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+plt.tight_layout()
 save_plot(accuracy_file_name)
 plt.show()
 
@@ -254,7 +267,7 @@ sns.set_theme(
         "ps.fonttype": 42,
     },
 )
-accuracy_file_name = f"accuracy-by-agent"
+accuracy_file_name = f"accuracy-by-agent-neurips"
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
@@ -267,7 +280,7 @@ plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
-    ax.annotate(f"{p.get_height():.1%}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+    ax.annotate(f"{p.get_height():.2f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
 plt.tight_layout()
 save_plot(accuracy_file_name)
 plt.show()

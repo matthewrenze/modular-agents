@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib.container import BarContainer
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
@@ -104,6 +105,12 @@ palette = {
     for name in agent_order
 }
 
+# Set the theme
+sns.set_theme(
+    style="whitegrid",
+    font="sanserif",
+    font_scale=1.25)
+
 # Create plot for task completion accuracy
 accuracy_file_name = f"accuracy-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
@@ -116,18 +123,22 @@ ax = sns.barplot(
     palette=palette)
 plt.title(f"Accuracy by Model and Agent")
 plt.xlabel("Model")
-plt.ylabel("Accuracy (task completion rate)")
+plt.ylabel("Accuracy")
 plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="lower right")
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["accuracy"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average steps per task
 steps_file_name = f"avg-steps-per-task-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
-plt.figure(figsize=(14, 6))
+plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
     y="avg_steps_per_task",
@@ -139,15 +150,19 @@ plt.xlabel("Model")
 plt.ylabel("Average steps per task")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.25)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="lower right")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_steps_per_task"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{int(values.get(model_name)):,}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{steps_file_name}", bbox_inches='tight')
 plt.show()
 
 # Create plot for average tokens per task
 tokens_file_name = f"avg-tokens-per-task-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
-plt.figure(figsize=(14, 6))
+plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
     y="avg_tokens_per_task",
@@ -156,11 +171,15 @@ ax = sns.barplot(
     palette=palette)
 plt.title(f"Average Tokens by Model and Agent")
 plt.xlabel("Model")
-plt.ylabel("Average tokens per task")
+plt.ylabel("Average tokens per task (millions)")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.25)
-plt.legend(title="Agent")
-ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
+plt.legend(title="Agent", loc="upper center")
+ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x / 1_000_000:.1f}M"))
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_tokens_per_task"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name) / 1_000_000:.2f}M" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{tokens_file_name}", bbox_inches='tight')
 plt.show()
 
@@ -180,7 +199,11 @@ plt.ylabel("Average reward per task")
 plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="lower right")
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_reward_per_task"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{reward_file_name}", bbox_inches='tight')
 plt.show()
 
@@ -200,7 +223,11 @@ plt.ylabel("Reward per step")
 #plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="lower right")
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_reward_per_step"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.4f}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{reward_per_step_file_name}", bbox_inches='tight')
 plt.show()
 
@@ -220,7 +247,11 @@ plt.ylabel("Average reward per million tokens")
 #plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="upper right")
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_reward_per_m_tokens"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{reward_per_token_file_name}", bbox_inches='tight')
 plt.show()
 
@@ -237,12 +268,14 @@ ax = sns.barplot(
 plt.title(f"Errors by Model and Agent")
 plt.xlabel("Model")
 plt.ylabel("Errors")
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="upper right")
 plt.ylim(0, 100)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-for p in ax.patches:
-    ax.annotate(f"{int(p.get_height()):,}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["errors"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{int(values.get(model_name)):,}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{errors_file_name}", bbox_inches='tight')
 plt.show()
 
@@ -262,8 +295,12 @@ plt.xlabel("Model")
 plt.ylabel("Total tasks")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="lower right")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["tasks"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{int(values.get(model_name)):,}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{tasks_file_name}", bbox_inches='tight')
 plt.show()
 
@@ -299,7 +336,7 @@ sns.set_theme(
         "ps.fonttype": 42,
     },
 )
-accuracy_file_name = f"accuracy-by-model.pdf"
+accuracy_file_name = f"accuracy-by-model-neurips.pdf"
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
@@ -312,7 +349,11 @@ ax.set_ylabel("Accuracy")
 plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
-plt.legend(title="Agent")
+plt.legend(title="Agent", loc="lower right")
+for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["accuracy"]
+    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
+    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 plt.tight_layout()
 save_plot(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
 plt.show()
