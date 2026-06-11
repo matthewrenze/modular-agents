@@ -33,6 +33,7 @@ class ClaudeModel(Model):
                 response = self.client.messages.create(
                     model=self.model_name,
                     max_tokens=4096,
+                    extra_body={"cache_control": {"type": "ephemeral"}},
                     messages=messages)
 
                 # Get the content (if it exists)
@@ -42,16 +43,20 @@ class ClaudeModel(Model):
                     content = ""
 
                 # Accumulate tokens
-                input_tokens = response.usage.input_tokens
-                output_tokens = response.usage.output_tokens
-                total_tokens = input_tokens + output_tokens
+                usage = response.usage
+                cached_tokens = usage.cache_read_input_tokens or 0
+                cache_creation_tokens = usage.cache_creation_input_tokens or 0
+                prompt_tokens = usage.input_tokens or 0
+                input_tokens = prompt_tokens + cache_creation_tokens
+                output_tokens = usage.output_tokens or 0
+                total_tokens = cached_tokens + input_tokens + output_tokens
 
                 # Update tokens
                 self.update_tokens(
-                    cached_tokens=0,
-                    input_tokens=response.usage.input_tokens,
+                    cached_tokens=cached_tokens,
+                    input_tokens=input_tokens,
                     reasoning_tokens=0,
-                    output_tokens=response.usage.output_tokens,
+                    output_tokens=output_tokens,
                     total_tokens=total_tokens)
 
                 return content

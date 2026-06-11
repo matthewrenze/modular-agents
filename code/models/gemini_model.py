@@ -50,14 +50,16 @@ class GeminiModel(Model):
 
                 # Get tokens
                 usage = response.usage_metadata
-                input_tokens = usage.prompt_token_count
+                cached_tokens = usage.cached_content_token_count or 0
+                prompt_tokens = usage.prompt_token_count or 0
+                input_tokens = prompt_tokens - cached_tokens
                 reasoning_tokens = usage.thoughts_token_count or 0
                 output_tokens = usage.candidates_token_count or 0
                 total_tokens = usage.total_token_count
 
                 # Update tokens
                 self.update_tokens(
-                    cached_tokens=0,
+                    cached_tokens=cached_tokens,
                     input_tokens=input_tokens,
                     reasoning_tokens=reasoning_tokens,
                     output_tokens=output_tokens,

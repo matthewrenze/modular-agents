@@ -29,6 +29,7 @@ class FireworksModel(Model):
         params = {
             "model": model_path,
             "messages": messages,
+            # "extra_body": {"prompt_cache_key": model_path},
             "top_p": 1.0,
             "temperature": 0.0,
             "timeout": 1800,
