@@ -26,7 +26,7 @@ from reviews.writer.review_writer import ReviewWriter
 use_azure = False
 
 # Set train/test split
-split_name = "test"
+split_name = "train"
 
 # Set models
 model_names = [
@@ -35,13 +35,13 @@ model_names = [
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
     # "gpt-5.4-mini",
-    # "gpt-5.4",
+    "gpt-5.4",
     # "gpt-5.5",
     # "glm-5-fast"
     # "glm-5.1",
     # "kimi-k2.5-turbo",
     # "kimi-k2.6",
-    "qwen3.6-plus",
+    # "qwen3.6-plus",
 ]
 
 # Set agents
@@ -56,7 +56,7 @@ agent_names = [
     # "minus-planner-v5.0",
     # "minus-summarizer-v5.0",
     # "minus-memorizer-v5.0",
-    "modular-full-v5.0"
+    # "modular-full-v5.0"
 ]
 # Set evals
 eval_size = 1
