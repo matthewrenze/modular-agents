@@ -1,1 +1,1 @@
-_Note: In step 7, the agent recovers from the previous failure step. This is to demonstrate successful recovery._
+_Note: Step 7 demonstrates a successful recovery. In this step, the agent recovers from the previous mistake._

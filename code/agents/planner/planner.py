@@ -16,18 +16,13 @@ class Planner(Agent):
         user_content = self.renderer.render_task(state.task_state)
         user_content += "\n"
 
-        # Add the history
+        # Add the previous history
         if self.params.use_summarizer:
             previous_steps = state.step_history[:-1]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
-        # Add the memories
-        if self.params.use_memorizer:
-            user_content += self.renderer.render_memories(state.memories)
-            user_content += "\n"
-
-        # Add the plan
+        # Add the previous plan
         if self.params.use_planner:
             user_content += self.renderer.render_plan(state.plan)
             user_content += "\n"
@@ -43,8 +38,12 @@ class Planner(Agent):
         current_step = state.step_history[-1]
         user_content += self.renderer.render_step(current_step, state.task_state)
         user_content += self.renderer.render_env(current_step.env_state, state.task_state)
-        # user_content += self.renderer.render_agent(current_step.agent_state)
         user_content += "\n"
+
+        # Add the current memories
+        if self.params.use_memorizer:
+            user_content += self.renderer.render_memories(state.memories)
+            user_content += "\n"
 
         # Add the user prompt
         user_message = {"role": "user", "content": user_content}

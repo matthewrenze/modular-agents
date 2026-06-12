@@ -39,37 +39,35 @@ class ExamplesFactory:
             # Add the previous thought and action (for the reasoner and actor)
             if (subagent == "reasoner" or subagent == "actor") and step > 1:
                 content += "Agent:\n"
-
-                # Add the previous thought (for the reasoner and actor)
                 if params.use_reasoner:
                     content += f"  Thought: {self.get_part(step - 1, 'output-thought')}"
-
-                # Add the previous action (for the reasoner and actor)
                 content += f"  Action: {self.get_part(step - 1, 'output-action')}"
 
-            # Add the previous action (for the summarizer and planner only)
+            # Add the previous thought and action (for the summarizer and planner only)
             if (subagent == "summarizer" or subagent == "planner") and step > 1:
                 content += f"Step: {step - 1} of 10\n"
                 content += "Agent:\n"
+                if params.use_reasoner:
+                    content += f"  Thought: {self.get_part(step - 1, 'output-thought')}"
                 content += f"  Action: {self.get_part(step - 1, 'output-action')}"
 
             # Add current environment
             content += self.get_part(step, "input-env")
 
-            # Add the previous memories (for the actor and the reasoner)
-            if (subagent == "actor" or subagent == "reasoner") \
+            # Add the current thought (for the actor)
+            if subagent == "actor" and params.use_reasoner:
+                content += "Agent:\n"
+                content += f"  Thought: {self.get_part(step, 'output-thought')}"
+
+            # Add the current memories (for the actor and the reasoner)
+            if subagent in ("planner", "reasoner", "actor") \
                     and params.use_memorizer:
-                content += self.get_part(step, "input-memories")
+                content += self.get_part(step + 1, "input-memories")
 
             # Add the updated plan (for the actor and reasoner)
             if (subagent == "actor" or subagent == "reasoner") \
                     and params.use_planner:
                 content += self.get_part(step + 1, "input-plan")
-
-            # Add the current thought (for the actor)
-            if subagent == "actor" and params.use_reasoner:
-                content += "Agent:\n"
-                content += f"  Thought: {self.get_part(step, 'output-thought')}"
 
             content += "\n### Output\n"
 
@@ -90,7 +88,7 @@ class ExamplesFactory:
                 content += self.get_part(step, "output-thought")
 
             if subagent == "actor":
-                content += self.get_part(step, f"output-action")
+                content += self.get_part(step, "output-action")
 
             content += "\n"
 

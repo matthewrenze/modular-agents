@@ -46,24 +46,24 @@ model_names = [
 
 # Set agents
 agent_names = [
-    # "react-k0-v5.0",
-    # "react-k1-v5.0",
-    # "react-kn-v5.0",
-    # "modular-base-v5.0",
-    # "plus-planner-v5.0",
-    # "plus-summarizer-v5.0",
-    # "plus-memorizer-v5.0",
-    # "minus-planner-v5.0",
-    # "minus-summarizer-v5.0",
-    # "minus-memorizer-v5.0",
-    "modular-full-v5.0"
+    # "react-k0-v6.0",
+    # "react-k1-v6.0",
+    # "react-kn-v6.0",
+    # "modular-base-v6.0",
+    # "plus-planner-v6.0",
+    # "plus-summarizer-v6.0",
+    # "plus-memorizer-v6.0",
+    # "minus-planner-v6.0",
+    # "minus-summarizer-v6.0",
+    # "minus-memorizer-v6.0",
+    "modular-full-v6.0"
 ]
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
     # ("tw-quick-1", "textworld"),
     # # #
-    ("tw-simple-1", "textworld"),
+    # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
@@ -72,7 +72,7 @@ eval_env_names = [
     # ("tw-coin-3", "textworld"),
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 # Set parameters
@@ -356,7 +356,7 @@ for params in runs:
 
         # Update result row
         result_row.stop_time = time.time()
-        result_row.sleep_time = sleep_time * step_id + 1 + model.wait_time
+        result_row.sleep_time = (sleep_time * (step_id + 1)) + model.wait_time
         result_row.total_time = result_row.stop_time - result_row.start_time - result_row.sleep_time
         result_row.success = is_success
         result_row.reward = final_reward
@@ -364,7 +364,7 @@ for params in runs:
         result_row.max_score = global_state.task_state.max_score
         result_row.steps = step_id + 1
         result_row.max_steps = params.max_steps
-        result_row.max_steps_hit = result_row.steps + 1 == params.max_steps
+        result_row.max_steps_hit = result_row.steps + 1 == params.max_steps and not is_done
         result_row.solution_steps = episode["solution_steps"]
         result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens
@@ -374,7 +374,7 @@ for params in runs:
         result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.cached_tokens, model.input_tokens)
         result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.reasoning_tokens, model.output_tokens)
         result_row.total_cost = result_row.input_cost + result_row.output_cost
-        result_row.reward_per_step = final_reward / step_id if step_id > 0 else 0.0
+        result_row.reward_per_step = final_reward / step_id + 1
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
         results_manager.add(result_row)
 

@@ -1,1 +1,1 @@
-_Note: In step 6, the actor chooses the wrong action. This is an example of a common failure case._
+_Note: Step 6 intentionally demonstrates a common failure case. The agent makes a mistake by forgetting to take the orange carrot from the counter before attempting to dice it._
