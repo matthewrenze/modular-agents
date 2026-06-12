@@ -18,7 +18,7 @@ class Actor(Agent):
 
         # Add the history
         if self.params.use_summarizer:
-            previous_steps = state.step_history[:-2]
+            previous_steps = state.step_history[:-1]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
@@ -27,9 +27,8 @@ class Actor(Agent):
         for index, step in enumerate(current_steps):
             user_content += self.renderer.render_step(step, state.task_state)
             user_content += self.renderer.render_env(step.env_state, state.task_state)
-            if index < len(current_steps) - 1:
-                user_content += self.renderer.render_agent(step.agent_state)
-                user_content += "\n"
+            user_content += self.renderer.render_agent(step.agent_state)
+            user_content += "\n"
 
         # Add the memories
         if self.params.use_memorizer:

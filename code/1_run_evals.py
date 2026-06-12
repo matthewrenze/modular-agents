@@ -56,7 +56,7 @@ agent_names = [
     # "minus-planner-v5.0",
     # "minus-summarizer-v5.0",
     # "minus-memorizer-v5.0",
-    # "modular-full-v5.0"
+    "modular-full-v5.0"
 ]
 # Set evals
 eval_size = 1
@@ -73,9 +73,6 @@ eval_env_names = [
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
     # ("tw-cooking-3", "textworld"),
-    ##
-    # ("tw-coin-3-2", "textworld"),
-    # ("tw-coin-3-70", "textworld"),
 ]
 
 # Set parameters

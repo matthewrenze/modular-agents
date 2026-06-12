@@ -18,7 +18,7 @@ class Reasoner(Agent):
 
         # Add the history
         if self.params.use_summarizer:
-            previous_steps = state.step_history[:-2]
+            previous_steps = state.step_history[:-1]
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
