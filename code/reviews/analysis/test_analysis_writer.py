@@ -14,7 +14,7 @@ class TestAnalysisWriter:
             eval_name="eval")
         analysis = "analysis"
 
-        expected_folder = "../data/artifacts/test/model/agent/analysis"
+        expected_folder = "../data/artifacts/test/model/agent"
         expected_file = f"{expected_folder}/test - model - agent - analysis.txt"
         expected_text = "analysis"
 
