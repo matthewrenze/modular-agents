@@ -6,6 +6,8 @@ from matplotlib.container import BarContainer
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
+version_suffix = "-v6.0"
+plot_file_types = ["pdf", "png"]
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-model-and-agent"
 
@@ -15,7 +17,7 @@ os.makedirs(output_folder_path, exist_ok=True)
 
 def save_plot(file_path, **kwargs):
     file_stem, _ = os.path.splitext(file_path)
-    for extension in ("pdf", "png"):
+    for extension in plot_file_types:
         plt.savefig(f"{file_stem}.{extension}", **kwargs)
 
 # Load the data
@@ -61,14 +63,14 @@ summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Order models
 model_order = [
-    "claude-sonnet-4-6",
-    "gemini-3.1-pro",
-    "gpt-5.2",
+    # "claude-sonnet-4-6",
+    # "gemini-3.1-pro",
+    # "gpt-5.2",
     "gpt-5.4",
-    "gpt-5.5",
-    "glm-5",
-    "kimi-k2.5",
-    "qwen3.6-plus",
+    # "gpt-5.5",
+    # "glm-5",
+    # "kimi-k2.5",
+    # "qwen3.6-plus",
 ]
 
 # Filter out any models not in the list
@@ -80,7 +82,7 @@ summaries["model_name"] = pd.Categorical(
     ordered=True)
 
 # Remove the version from the agent name
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix("-v5.0")
+summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 
 # Order agents
 agent_order = [

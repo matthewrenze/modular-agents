@@ -1,15 +1,16 @@
 import os
+from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Set parameters
-# agent_name = "react-kn-v4.0"
-# agent_name = "modular-base-v4.0"
-# agent_name = "modular-full-v4.0"
+agent_name = "react-kn-v6.0"
+# agent_name = "modular-base-v6.0"
+# agent_name = "modular-full-v6.0"
 
 model_name = "gpt-5.4"
-input_folder_path = "../data/results"
+input_folder_path = "../data/artifacts"
 output_folder_path = f"../data/plots/by-episode/{model_name}"
 
 # Create the output folder
@@ -17,9 +18,8 @@ os.makedirs(output_folder_path, exist_ok=True)
 
 # Load the data
 all_results = pd.DataFrame()
-input_file_names = os.listdir(input_folder_path)
-for input_file_name in input_file_names:
-    input_file_path = f"{input_folder_path}/{input_file_name}"
+input_file_paths = sorted(Path(input_folder_path).rglob("*results.csv"))
+for input_file_path in input_file_paths:
     input_results = pd.read_csv(input_file_path)
     all_results = pd.concat([all_results, input_results], ignore_index=True)
 

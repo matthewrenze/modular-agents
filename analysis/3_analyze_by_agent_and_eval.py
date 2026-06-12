@@ -10,6 +10,8 @@ model_name = "gpt-5.4"
 # model_name = "claude-sonnet-4-6"
 # model_name = "kimi-k2.5-turbo"
 # model_name = "qwen3.6-plus"
+version_suffix = "-v6.0"
+plot_file_types = ["pdf", "png"]
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-agent-and-eval"
 
@@ -19,7 +21,7 @@ os.makedirs(output_folder_path, exist_ok=True)
 
 def save_plot(file_path, **kwargs):
     file_stem, _ = os.path.splitext(file_path)
-    for extension in ("pdf", "png"):
+    for extension in plot_file_types:
         plt.savefig(f"{file_stem}.{extension}", **kwargs)
 
 # Load the data
@@ -53,7 +55,7 @@ if summaries["tasks"].nunique() != 1:
     raise ValueError("Not all groups have the same number of tasks")
 
 # Remove the version from the agent name
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix("-v5.0")
+summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 
 # Order agents
 agent_order = [

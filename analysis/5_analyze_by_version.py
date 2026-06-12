@@ -10,24 +10,27 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Set parameters
 model_name = "gpt-5.2"
-input_v1_file_path = "../data/summaries-v1.csv"
-input_v2_file_path = "../data/summaries-v2.csv"
-input_v3_file_path = "../data/summaries-v3.csv"
-input_v4_file_path = "../data/summaries.csv"
+input_file_paths = [
+    "../data/summaries-v1.csv",
+    "../data/summaries-v2.csv",
+    "../data/summaries-v3.csv",
+    "../data/summaries-v4.csv",
+    "../data/summaries-v5.csv",
+    "../data/summaries.csv",
+]
 output_folder_path = "../data/plots/by-version"
 
 # Create the output folder
 os.makedirs(output_folder_path, exist_ok=True)
 
-# Load the data
-summaries_v1 = pd.read_csv(input_v1_file_path)
-summaries_v2 = pd.read_csv(input_v2_file_path)
-summaries_v3 = pd.read_csv(input_v3_file_path)
-summaries_v4 = pd.read_csv(input_v4_file_path)
+# Load the summaries
+summaries_list = []
+for input_file_path in input_file_paths:
+    summaries = pd.read_csv(input_file_path)
+    summaries_list.append(summaries)
 
-# Merge the data
-all_summaries = [summaries_v1, summaries_v2, summaries_v3, summaries_v4]
-all_summaries = pd.concat(all_summaries, ignore_index=True)
+# Merge the summaries
+all_summaries = pd.concat(summaries_list, ignore_index=True)
 
 # Rename agents
 all_summaries["agent_name"] = all_summaries["agent_name"].str.replace("baseline", "modular-base", regex=False)

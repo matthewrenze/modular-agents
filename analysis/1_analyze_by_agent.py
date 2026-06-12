@@ -10,6 +10,8 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Set parameters
 model_name = "gpt-5.4"
+version_suffix = "-v6.0"
+plot_file_types = ["pdf", "png"]
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-agent"
 
@@ -18,7 +20,7 @@ os.makedirs(output_folder_path, exist_ok=True)
 
 
 def save_plot(file_name):
-    for extension in ("pdf", "png"):
+    for extension in plot_file_types:
         plt.savefig(os.path.join(output_folder_path, f"{file_name}.{extension}"), bbox_inches='tight')
 
 # Load the data
@@ -52,7 +54,7 @@ if summaries["tasks"].nunique() != 1:
     raise ValueError("Not all groups have the same number of tasks")
 
 # Remove the version from the agent name
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix("-v5.0")
+summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 
 # Order agents
 agent_order = [

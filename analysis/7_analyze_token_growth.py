@@ -65,7 +65,7 @@ for f in Path(root_folder_path).rglob("*details.csv"):
     file_name_parts = f.stem.split(" - ")
     split_name_parsed = file_name_parts[0]
     model_name_parsed = file_name_parts[1]
-    agent_name_parsed = file_name_parts[2].removesuffix("-v5.0")
+    agent_name_parsed = file_name_parts[2].removesuffix("-v6.0")
     eval_name_parsed = file_name_parts[3]
     episode_id = int(file_name_parts[4].replace("episode-", ""))
 
@@ -162,7 +162,7 @@ sns.scatterplot(
 )
 
 # Create cumulative trend lines
-projection_steps = pd.DataFrame({"step_id": np.arange(1, 301)})
+projection_steps = pd.DataFrame({"step_id": np.arange(1, 401)})
 
 for agent_name in agent_names:
     agent_details = all_details[all_details["agent_name"] == agent_name]
@@ -187,7 +187,7 @@ for agent_name in agent_names:
 plt.title(f"Cumulative Token Growth by Step - {model_name}")
 plt.xlabel("Step")
 plt.ylabel("Cumulative Tokens (millions)")
-plt.xlim(0, 300)
+plt.xlim(0, 400)
 plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x / 1_000_000:,.1f}"))
 plt.legend(title="Agent")
 plt.tight_layout()

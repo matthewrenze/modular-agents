@@ -11,6 +11,7 @@ from matplotlib.ticker import PercentFormatter
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # Set parameters
+version_suffix = "-v6.0"
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/token-caching"
 output_table_file_stem = os.path.join(output_folder_path, "token-caching-efficiency-by-model-and-agent")
@@ -29,14 +30,14 @@ model_name_mapping = {
 }
 
 model_order = [
-    "claude-sonnet-4-6",
-    "gemini-3.1-pro",
-    "gpt-5.2",
+    # "claude-sonnet-4-6",
+    # "gemini-3.1-pro",
+    # "gpt-5.2",
     "gpt-5.4",
-    "gpt-5.5",
-    "glm-5",
-    "kimi-k2.5",
-    "qwen3.6-plus",
+    # "gpt-5.5",
+    # "glm-5",
+    # "kimi-k2.5",
+    # "qwen3.6-plus",
 ]
 
 pastel = sns.color_palette("tab10")
@@ -86,7 +87,7 @@ if missing_columns:
 
 # Filter rows
 summaries = summaries[summaries["eval_name"].str.startswith("tw-", na=False)].copy()
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix("-v5.0")
+summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 summaries = summaries[summaries["agent_name"].isin(agent_order)].copy()
 summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=False)].copy()
 summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
