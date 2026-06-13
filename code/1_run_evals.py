@@ -364,7 +364,7 @@ for params in runs:
         result_row.max_score = global_state.task_state.max_score
         result_row.steps = step_id + 1
         result_row.max_steps = params.max_steps
-        result_row.max_steps_hit = result_row.steps + 1 == params.max_steps and not is_done
+        result_row.max_steps_hit = result_row.steps == params.max_steps and not is_done
         result_row.solution_steps = episode["solution_steps"]
         result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens
@@ -374,7 +374,7 @@ for params in runs:
         result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.cached_tokens, model.input_tokens)
         result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.reasoning_tokens, model.output_tokens)
         result_row.total_cost = result_row.input_cost + result_row.output_cost
-        result_row.reward_per_step = final_reward / step_id + 1
+        result_row.reward_per_step = final_reward / (step_id + 1)
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
         results_manager.add(result_row)
 

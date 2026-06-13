@@ -72,3 +72,23 @@
    - added instruction to memorizer to only use named room destinations if verified by successful transition
    - added instruction to memorizer to always use "?" for room exits with unknown destinations
 
+# v5.x
+ - Added test/train split
+ - Updated folder/file paths
+ - Fixed review/analysis
+ - Added new models
+ - Added tw-quick-1 eval
+ - Added token growth analysis
+ - Added fix for Gemini-STOP-token-without-empty-string bug
+ - Added support for deepseek-v4
+
+# v6.x
+ - Added caching to Claude and Gemini
+ - Fixed the actor-with-no-CoT bug
+ - Fixed the examples-used-stale-memories bug
+ - Fixed reward-per-step (off by 1) bug
+ - Fixed max-steps-operator-precedence bug
+ - Fixed sleep-time-operator-precedence bug
+ - Changed history from [:-2] to [:-1] in reasoner and actor
+ - Clarified notes in examples #6 and #7
+ 
