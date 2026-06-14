@@ -32,19 +32,18 @@ class ExamplesFactory:
                 content += self.get_part(step, "input-plan")
 
             # Add previous environment (for the reasoner and actor)
-            if (subagent == "reasoner" or subagent == "actor") \
-                    and step > 1:
+            if subagent in ("reasoner", "actor") and step > 1:
                 content += self.get_part(step - 1, "input-env")
 
             # Add the previous thought and action (for the reasoner and actor)
-            if (subagent == "reasoner" or subagent == "actor") and step > 1:
+            if subagent in ("reasoner", "actor") and step > 1:
                 content += "Agent:\n"
                 if params.use_reasoner:
                     content += f"  Thought: {self.get_part(step - 1, 'output-thought')}"
                 content += f"  Action: {self.get_part(step - 1, 'output-action')}"
 
-            # Add the previous thought and action (for the summarizer and planner only)
-            if (subagent == "summarizer" or subagent == "planner") and step > 1:
+            # Add the previous thought and action (for the summarizer, planner, and memorizer)
+            if subagent in ("summarizer", "planner", "memorizer") and step > 1:
                 content += f"Step: {step - 1} of 10\n"
                 content += "Agent:\n"
                 if params.use_reasoner:
@@ -65,8 +64,7 @@ class ExamplesFactory:
                 content += self.get_part(step + 1, "input-memories")
 
             # Add the updated plan (for the actor and reasoner)
-            if (subagent == "actor" or subagent == "reasoner") \
-                    and params.use_planner:
+            if subagent in ("actor", "reasoner") and params.use_planner:
                 content += self.get_part(step + 1, "input-plan")
 
             content += "\n### Output\n"
@@ -101,7 +99,6 @@ class ExamplesFactory:
             return None
         with open(file_path, "r") as file:
             return file.read() + "\n"
-
 
     @staticmethod
     def get_part(step: int, part: str) -> str:
