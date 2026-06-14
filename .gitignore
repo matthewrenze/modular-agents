@@ -170,3 +170,9 @@ run-from-console-DEV.txt
 run-from-console-PROD.txt
 **/data/**
 .claude/
+
+# Audit working files (root-level only; leading slash avoids ignoring code/evals/)
+/CLAUDE.md
+/docs/
+# /evals/ is TEMPORARY — un-ignore when ready to commit the eval generator (P4-01)
+/evals/
