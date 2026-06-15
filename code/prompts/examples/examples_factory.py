@@ -31,19 +31,19 @@ class ExamplesFactory:
             if subagent == "planner" and params.use_planner:
                 content += self.get_part(step, "input-plan")
 
-            # Add previous environment (for the reasoner and actor)
-            if subagent in ("reasoner", "actor") and step > 1:
+            # Add previous environment (for the reasoner, actor, and planner)
+            if subagent in ("reasoner", "actor", "planner") and step > 1:
                 content += self.get_part(step - 1, "input-env")
 
-            # Add the previous thought and action (for the reasoner and actor)
-            if subagent in ("reasoner", "actor") and step > 1:
+            # Add the previous thought and action (for the reasoner, actor, and planner)
+            if subagent in ("reasoner", "actor", "planner") and step > 1:
                 content += "Agent:\n"
                 if params.use_reasoner:
                     content += f"  Thought: {self.get_part(step - 1, 'output-thought')}"
                 content += f"  Action: {self.get_part(step - 1, 'output-action')}"
 
-            # Add the previous thought and action (for the summarizer, planner, and memorizer)
-            if subagent in ("summarizer", "planner", "memorizer") and step > 1:
+            # Add the previous thought and action (for the summarizer and memorizer)
+            if subagent in ("summarizer", "memorizer") and step > 1:
                 content += f"Step: {step - 1} of 10\n"
                 content += "Agent:\n"
                 if params.use_reasoner:

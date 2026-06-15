@@ -31,6 +31,7 @@ class Planner(Agent):
         if len(state.step_history) >= 2:
             previous_step = state.step_history[-2]
             user_content += self.renderer.render_step(previous_step, state.task_state)
+            user_content += self.renderer.render_env(previous_step.env_state, state.task_state)
             user_content += self.renderer.render_agent(previous_step.agent_state)
             user_content += "\n"
 
