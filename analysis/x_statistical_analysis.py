@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -10,6 +11,25 @@ agent_a = "react-kn"
 agent_b = "modular-full"
 bootstrap_resamples = 10_000
 bootstrap_seed = 20260504
+output_file_path = "../data/analysis.txt"
+
+
+class Tee:
+	def __init__(self, *streams):
+		self.streams = streams
+
+	def write(self, text):
+		for stream in self.streams:
+			stream.write(text)
+
+	def flush(self):
+		for stream in self.streams:
+			stream.flush()
+
+
+output_file = open(output_file_path, "w", encoding="utf-8")
+console_stream = sys.stdout
+sys.stdout = Tee(console_stream, output_file)
 
 
 def format_number(value, digits=4):
@@ -150,6 +170,70 @@ def print_metric_results(data, group_label):
 		print(f"  Wilcoxon signed-rank p-value: {format_p_value(p_value)}")
 
 
+def print_model_level_results(data, group_label):
+	data = data.sort_values(["model_name", "eval_name", "episode", "agent_name"]).copy()
+	paired = data.pivot_table(
+		index=["model_name", "eval_name", "episode"],
+		columns="agent_name",
+		values=["success", "reward", "reward_per_step", "steps", "total_tokens"],
+		aggfunc="first",
+	)
+
+	if paired.empty:
+		print(f"\n{group_label}")
+		print("No paired data found.")
+		return
+
+	agent_names = set(paired.columns.get_level_values(1))
+	if agent_a not in agent_names or agent_b not in agent_names:
+		print(f"\n{group_label}")
+		print("No paired data found.")
+		return
+
+	paired = paired.dropna()
+
+	if paired.empty:
+		print(f"\n{group_label}")
+		print("No paired data found.")
+		return
+
+	print("\n" + "=" * 100)
+	print(group_label)
+	print("=" * 100)
+	print(f"Clusters (models): {paired.index.get_level_values('model_name').nunique()}")
+
+	metrics = [
+		("success", "accuracy"),
+		("reward", "reward-per-task"),
+		("reward_per_step", "reward-per-step"),
+		("steps", "steps-per-task"),
+		("total_tokens", "tokens-per-task"),
+	]
+
+	for metric_name, label in metrics:
+		differences = paired[(metric_name, agent_b)].astype(float) - paired[(metric_name, agent_a)].astype(float)
+		model_means = differences.groupby(level="model_name").mean()
+		mean_delta = model_means.mean()
+		n_positive = int((model_means > 0).sum())
+		n_negative = int((model_means < 0).sum())
+
+		t_p_value = float(stats.ttest_1samp(model_means, 0.0).pvalue)
+
+		n_nonzero = n_positive + n_negative
+		if n_nonzero == 0:
+			sign_p_value = 1.0
+		else:
+			sign_p_value = stats.binomtest(min(n_positive, n_negative), n=n_nonzero, p=0.5, alternative="two-sided").pvalue
+
+		print(f"\n{label}")
+		for model_name, value in model_means.items():
+			print(f"  {model_name}: {format_number(value)}")
+		print(f"  mean of per-model differences ({agent_b} - {agent_a}): {format_number(mean_delta)}")
+		print(f"  positive: {n_positive}, negative: {n_negative}")
+		print(f"  one-sample t-test p-value: {format_p_value(t_p_value)}")
+		print(f"  sign test p-value: {format_p_value(sign_p_value)}")
+
+
 # Find all result files
 print("Finding result files...")
 result_file_paths = sorted(
@@ -241,17 +325,11 @@ print(f"Paired task groups: {len(task_pairs):,}")
 print(f"Task text matches across pairs: {task_matches}")
 
 
-# Print results overall
-print_metric_results(results, "OVERALL")
+# Print model-level (cluster-aware) results overall
+print_model_level_results(results, "OVERALL (MODEL-LEVEL / CLUSTER-AWARE)")
 
-# # Print results by model
-# for model_name in sorted(results["model_name"].unique()):
-# 	model_results = results[results["model_name"] == model_name].copy()
-# 	print_metric_results(model_results, f"BY MODEL: {model_name}")
-#
-# # Print results by model and eval
-# grouped = results.groupby(["model_name", "eval_name"], as_index=False)
-# for _, group in grouped:
-# 	model_name = group["model_name"].iloc[0]
-# 	eval_name = group["eval_name"].iloc[0]
-# 	print_metric_results(group, f"BY MODEL + EVAL: {model_name} | {eval_name}")
+# Print pooled results
+print_metric_results(results, "OVERALL (POOLED / NON-CLUSTERED) [DON'T USE]")
+
+sys.stdout = console_stream
+output_file.close()
