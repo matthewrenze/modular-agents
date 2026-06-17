@@ -12,6 +12,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 split_name = "test"
 model_name = "gpt-5.4"
+version_suffix = "-v6.0"
 
 agent_names = [
     "react-kn",
@@ -74,7 +75,7 @@ for f in Path(root_folder_path).rglob("*details.csv"):
     file_name_parts = f.stem.split(" - ")
     split_name_parsed = file_name_parts[0]
     model_name_parsed = file_name_parts[1]
-    agent_name_parsed = file_name_parts[2].removesuffix("-v5.0")
+    agent_name_parsed = file_name_parts[2].removesuffix(version_suffix)
     eval_name_parsed = file_name_parts[3]
     episode_id = int(file_name_parts[4].replace("episode-", ""))
 
