@@ -99,7 +99,8 @@ def wilcoxon_p_value(values_a, values_b):
 	return float(result[1])
 
 
-def print_metric_results(data, group_label):
+# Pooled (non-clustered) results. Kept for verification only; do not use for the final analysis.
+def print_pooled_results(data, group_label):
 	data = data.sort_values(["model_name", "eval_name", "episode", "agent_name"]).copy()
 	paired = data.pivot_table(
 		index=["model_name", "eval_name", "episode"],
@@ -330,7 +331,7 @@ print(f"Task text matches across pairs: {task_matches}")
 print_model_level_results(results, "OVERALL (MODEL-LEVEL / CLUSTER-AWARE)")
 
 # Print pooled results
-print_metric_results(results, "OVERALL (POOLED / NON-CLUSTERED) [DON'T USE]")
+print_pooled_results(results, "OVERALL (POOLED / NON-CLUSTERED) [DON'T USE]")
 
 sys.stdout = console_stream
 output_file.close()
