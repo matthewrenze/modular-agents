@@ -375,7 +375,7 @@ for params in runs:
         result_row.input_cost = cost_calculator.get_input_cost(params.model_name, model.cached_tokens, model.input_tokens)
         result_row.output_cost = cost_calculator.get_output_cost(params.model_name, model.reasoning_tokens, model.output_tokens)
         result_row.total_cost = result_row.input_cost + result_row.output_cost
-        result_row.reward_per_step = final_reward / (step_id + 1)
+        result_row.reward_per_step = (final_reward / result_row.steps) if result_row.steps > 0 else 0.0
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
         results_manager.add(result_row)
 

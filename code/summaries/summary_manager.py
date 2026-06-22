@@ -52,8 +52,8 @@ class SummaryManager:
         summary.total_cost = results["total_cost"].sum()
         summary.total_time = results["total_time"].sum()
         summary.avg_reward_per_task = summary.total_reward / summary.tasks if summary.tasks > 0 else 0
-        summary.avg_reward_per_step = summary.total_reward / summary.total_steps if summary.total_steps > 0 else 0
-        summary.avg_reward_per_token = (summary.total_reward / summary.total_tokens) if summary.total_tokens > 0 else 0
+        summary.avg_reward_per_step = results["reward_per_step"].mean()
+        summary.avg_reward_per_token = results["reward_per_token"].mean()
         return summary
 
     def append(self, summary):
