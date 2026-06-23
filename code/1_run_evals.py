@@ -48,7 +48,7 @@ model_names = [
 agent_names = [
     # "react-k0-v6.0",
     # "react-k1-v6.0",
-    "react-kn-v6.0",
+    # "react-kn-v6.0",
     # "modular-base-v6.0",
     # "plus-planner-v6.0",
     # "plus-summarizer-v6.0",
@@ -56,7 +56,7 @@ agent_names = [
     # "minus-planner-v6.0",
     # "minus-summarizer-v6.0",
     # "minus-memorizer-v6.0",
-    # "modular-full-v6.0"
+    "modular-full-v6.0"
 ]
 # Set evals
 eval_size = 1
@@ -167,7 +167,6 @@ for params in runs:
         final_reward = 0.0
         final_score = 0
         step_id = 0
-        is_done = False
         is_success = False
 
         # Create result row
@@ -189,7 +188,7 @@ for params in runs:
             actor.reset()
 
             # Run the agent in the environment
-            for step_id in range(params.max_steps):
+            for step_id in range(params.max_steps + 1):
 
                 # Set up the model
                 model.reset_step()
@@ -216,6 +215,19 @@ for params in runs:
                 global_state.task_state.step_id = step_id + 1
                 step_state.env_state = env_state
 
+                # If max steps reached, end the episode
+                if step_id == params.max_steps and not env_state.is_done:
+                    result_row.max_steps_hit = True
+                    env_state.is_done = True
+
+                # Handle the end of episode
+                if env_state.is_done:
+                    final_score = env_state.score
+                    final_reward = env_state.reward
+                    is_success = final_reward == 1.0
+                    global_state.task_state.success = is_success
+                    break
+
                 # Log the step
                 log.step(step_state, global_state.task_state)
 
@@ -234,110 +246,101 @@ for params in runs:
                 # Log the environment state
                 log.env(env_state, global_state.task_state)
 
-                if not env_state.is_done:
-                    # Log the agent state
-                    log.info(f"Agent:")
+                # Log the agent state
+                log.info(f"Agent:")
 
-                    # Use the ReAct-k0 agent
-                    if params.use_react_k0:
-                        thought, action = react_k0.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "react_k0", react_k0.messages)
-                        agent_state.thought = thought
-                        agent_state.action = action
-                        log.info(f"  Thought: {thought}")
-                        log.info(f"  Action: {action}")
+                # Use the ReAct-k0 agent
+                if params.use_react_k0:
+                    thought, action = react_k0.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react_k0", react_k0.messages)
+                    agent_state.thought = thought
+                    agent_state.action = action
+                    log.info(f"  Thought: {thought}")
+                    log.info(f"  Action: {action}")
 
-                    # Use the ReAct-k1 agent
-                    if params.use_react_k1:
-                        thought, action = react_k1.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "react_k1", react_k1.messages)
-                        agent_state.thought = thought
-                        agent_state.action = action
-                        log.info(f"  Thought: {thought}")
-                        log.info(f"  Action: {action}")
+                # Use the ReAct-k1 agent
+                if params.use_react_k1:
+                    thought, action = react_k1.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react_k1", react_k1.messages)
+                    agent_state.thought = thought
+                    agent_state.action = action
+                    log.info(f"  Thought: {thought}")
+                    log.info(f"  Action: {action}")
 
-                    # Use the ReAct-kn agent
-                    if params.use_react_kn:
-                        thought, action = react_kn.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "react", react_kn.messages)
-                        agent_state.thought = thought
-                        agent_state.action = action
-                        log.info(f"  Thought: {thought}")
-                        log.info(f"  Action: {action}")
+                # Use the ReAct-kn agent
+                if params.use_react_kn:
+                    thought, action = react_kn.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "react", react_kn.messages)
+                    agent_state.thought = thought
+                    agent_state.action = action
+                    log.info(f"  Thought: {thought}")
+                    log.info(f"  Action: {action}")
 
-                    # Get the summarizer's summary
-                    if params.use_summarizer:
-                        summary = summarizer.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "summarizer", summarizer.messages)
-                        agent_state.summary = summary
-                        log.info(f"  Summary: {summary}")
+                # Get the summarizer's summary
+                if params.use_summarizer:
+                    summary = summarizer.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "summarizer", summarizer.messages)
+                    agent_state.summary = summary
+                    log.info(f"  Summary: {summary}")
 
-                    # Get the memorizer's memory updates
-                    if params.use_memorizer:
-                        memory_updates = memorizer.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "memorizer", memorizer.messages)
-                        global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
-                        agent_state.memory = memory_updates
-                        memory_updates = renderer.render_memory_updates(memory_updates)
-                        log.info(f"  Memory:\n{memory_updates}")
+                # Get the memorizer's memory updates
+                if params.use_memorizer:
+                    memory_updates = memorizer.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "memorizer", memorizer.messages)
+                    global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
+                    agent_state.memory = memory_updates
+                    memory_updates = renderer.render_memory_updates(memory_updates)
+                    log.info(f"  Memory:\n{memory_updates}")
 
-                    # Get the planner's plan
-                    if params.use_planner:
-                        new_plan = planner.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
-                        if new_plan.strip() != "NO_CHANGE":
-                            global_state.plan = new_plan
-                            agent_state.plan = new_plan
-                        else:
-                            agent_state.plan = global_state.plan
-                        new_plan = renderer.render_plan_updates(new_plan)
-                        log.info(f"  Plan:\n{new_plan}")
+                # Get the planner's plan
+                if params.use_planner:
+                    new_plan = planner.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "planner", planner.messages)
+                    if new_plan.strip() != "NO_CHANGE":
+                        global_state.plan = new_plan
+                        agent_state.plan = new_plan
+                    else:
+                        agent_state.plan = global_state.plan
+                    new_plan = renderer.render_plan_updates(new_plan)
+                    log.info(f"  Plan:\n{new_plan}")
 
-                    # Get the reasoner's thought
-                    if params.use_reasoner:
-                        thought = reasoner.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "reasoner", reasoner.messages)
-                        agent_state.thought = thought
-                        log.info(f"  Thought: {thought}")
+                # Get the reasoner's thought
+                if params.use_reasoner:
+                    thought = reasoner.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "reasoner", reasoner.messages)
+                    agent_state.thought = thought
+                    log.info(f"  Thought: {thought}")
 
-                    # Get the agent's action
-                    if params.use_actor:
-                        action = actor.execute(global_state)
-                        agent_writer.write(params, episode_id, step_id + 1, "actor", actor.messages)
-                        agent_state.action = action
-                        log.info(f"  Action: {action}")
-                    
-                    # Truncate the action (if it's too long)
-                    if len(action) > 128:
-                        action = action[:128] + "... [Warning: Action truncated due to length. Use a shorter action.]"
+                # Get the agent's action
+                if params.use_actor:
+                    action = actor.execute(global_state)
+                    agent_writer.write(params, episode_id, step_id + 1, "actor", actor.messages)
+                    agent_state.action = action
+                    log.info(f"  Action: {action}")
+                
+                # Truncate the action (if it's too long)
+                if len(action) > 128:
+                    action = action[:128] + "... [Warning: Action truncated due to length. Use a shorter action.]"
 
-                    # Create details row
-                    details_row = details_manager.create()
-                    details_row.step_id = step_id + 1
-                    details_row.feedback = env_state.feedback
-                    details_row.location = env_state.location
-                    details_row.description = env_state.description
-                    details_row.inventory = env_state.inventory
-                    details_row.score = env_state.score
-                    details_row.reward = env_state.reward
-                    details_row.is_done = env_state.is_done
-                    details_row.summary = agent_state.summary
-                    details_row.thought = agent_state.thought
-                    details_row.action = agent_state.action
-                    details_row.cached_tokens = model.step_cached_tokens
-                    details_row.input_tokens = model.step_input_tokens
-                    details_row.reasoning_tokens = model.step_reasoning_tokens
-                    details_row.output_tokens = model.step_output_tokens
-                    details_row.total_tokens = model.step_total_tokens
-                    details_manager.add(details_row)
-
-                # Handle end of episode
-                if env_state.is_done:
-                    final_score = env_state.score
-                    final_reward = env_state.reward
-                    is_success = final_reward == 1.0
-                    global_state.task_state.success = is_success
-                    break
+                # Create details row
+                details_row = details_manager.create()
+                details_row.step_id = step_id + 1
+                details_row.feedback = env_state.feedback
+                details_row.location = env_state.location
+                details_row.description = env_state.description
+                details_row.inventory = env_state.inventory
+                details_row.score = env_state.score
+                details_row.reward = env_state.reward
+                details_row.is_done = env_state.is_done
+                details_row.summary = agent_state.summary
+                details_row.thought = agent_state.thought
+                details_row.action = agent_state.action
+                details_row.cached_tokens = model.step_cached_tokens
+                details_row.input_tokens = model.step_input_tokens
+                details_row.reasoning_tokens = model.step_reasoning_tokens
+                details_row.output_tokens = model.step_output_tokens
+                details_row.total_tokens = model.step_total_tokens
+                details_manager.add(details_row)
 
                 # Sleep for n seconds to avoid API throttling
                 time.sleep(sleep_time)
@@ -365,7 +368,6 @@ for params in runs:
         result_row.max_score = global_state.task_state.max_score
         result_row.steps = len(details_manager.get_table())
         result_row.max_steps = params.max_steps
-        result_row.max_steps_hit = result_row.steps == params.max_steps and not is_done
         result_row.solution_steps = episode["solution_steps"]
         result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens
