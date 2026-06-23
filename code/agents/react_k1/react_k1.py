@@ -33,7 +33,8 @@ class ReactK1(Agent):
             self.messages.append(previous_user_message)
 
             # Add the previous step model (agent) message
-            previous_agent_content = self.renderer.render_agent(previous_step.agent_state)
+            previous_agent_state = previous_step.agent_state
+            previous_agent_content = f"Thought: {previous_agent_state.thought}\nAction: {previous_agent_state.action}"
             previous_agent_message = {"role": "assistant", "content": previous_agent_content}
             self.messages.append(previous_agent_message)
 
