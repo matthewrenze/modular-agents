@@ -20,7 +20,6 @@ from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
 from messages.messages_writer import MessagesWriter
 from states.writer.state_writer import StateWriter
-from reviews.writer.review_writer import ReviewWriter
 
 # Set provider
 use_azure = False
@@ -104,7 +103,6 @@ env_factory = EnvFactory()
 cost_calculator = CostCalculator()
 agent_writer = MessagesWriter()
 state_writer = StateWriter()
-review_writer = ReviewWriter()
 
 for params in runs:
     print(f"--- Running {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} ---")
@@ -163,7 +161,6 @@ for params in runs:
         # Reset the variables
         global_state = GlobalState()
         action = ""
-        answer = ""
         final_reward = 0.0
         final_score = 0
         step_id = 0
