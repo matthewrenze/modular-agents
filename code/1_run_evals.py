@@ -356,9 +356,9 @@ for params in runs:
         log.close()
 
         # Update result row
-        result_row.stop_time = time.time()
+        result_row.end_time = time.time()
         result_row.sleep_time = (sleep_time * (step_id + 1)) + model.wait_time
-        result_row.total_time = result_row.stop_time - result_row.start_time - result_row.sleep_time
+        result_row.total_time = result_row.end_time - result_row.start_time - result_row.sleep_time
         result_row.success = is_success
         result_row.reward = final_reward
         result_row.score = final_score
