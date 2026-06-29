@@ -42,7 +42,7 @@ all_summaries = all_summaries[all_summaries["eval_name"].str.startswith("tw-")]
 
 # Create groups
 all_summaries = all_summaries.groupby(["agent_name", "model_name"], as_index=False).agg({
-    "tasks": "sum",
+    "episodes": "sum",
     "successes": "sum",
     "total_steps": "sum",
     "total_tokens": "sum",
@@ -50,17 +50,17 @@ all_summaries = all_summaries.groupby(["agent_name", "model_name"], as_index=Fal
 })
 
 # Compute averages
-all_summaries["accuracy"] = all_summaries["successes"] / all_summaries["tasks"]
-all_summaries["avg_steps_per_task"] = all_summaries["total_steps"] / all_summaries["tasks"]
-all_summaries["avg_tokens_per_task"] = all_summaries["total_tokens"] / all_summaries["tasks"]
-all_summaries["avg_reward_per_task"] = all_summaries["total_reward"] / all_summaries["tasks"]
+all_summaries["accuracy"] = all_summaries["successes"] / all_summaries["episodes"]
+all_summaries["avg_steps_per_episode"] = all_summaries["total_steps"] / all_summaries["episodes"]
+all_summaries["avg_tokens_per_episode"] = all_summaries["total_tokens"] / all_summaries["episodes"]
+all_summaries["avg_reward_per_episode"] = all_summaries["total_reward"] / all_summaries["episodes"]
 all_summaries["avg_reward_per_step"] = all_summaries["total_reward"] / all_summaries["total_steps"]
 all_summaries["avg_reward_per_token"] = all_summaries["total_reward"] / all_summaries["total_tokens"]
 all_summaries["avg_reward_per_m_tokens"] = all_summaries["avg_reward_per_token"] * 1_000_000
 
 # Verify all groups have same number of episodes
-if all_summaries["tasks"].nunique() != 1:
-    raise ValueError("Not all groups have the same number of tasks")
+if all_summaries["episodes"].nunique() != 1:
+    raise ValueError("Not all groups have the same number of episodes")
 
 agent_bases = [
     "react-k0",
@@ -104,9 +104,9 @@ for agent_base in agent_bases:
     markdown_table = summaries[[
         "agent_name",
         "accuracy",
-        "avg_steps_per_task",
-        "avg_tokens_per_task",
-        "avg_reward_per_task",
+        "avg_steps_per_episode",
+        "avg_tokens_per_episode",
+        "avg_reward_per_episode",
         "avg_reward_per_step",
         "avg_reward_per_m_tokens"]] \
         .to_markdown(index=False, floatfmt=".2f")

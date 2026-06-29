@@ -32,7 +32,7 @@ summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=
 
 # Create groups
 summaries = summaries.groupby(["model_name", "agent_name"], as_index=False).agg({
-    "tasks": "sum",
+    "episodes": "sum",
     "successes": "sum",
     "total_steps": "sum",
     "total_tokens": "sum",
@@ -43,15 +43,15 @@ summaries = summaries.groupby(["model_name", "agent_name"], as_index=False).agg(
 })
 
 # Compute averages
-summaries["accuracy"] = summaries["successes"] / summaries["tasks"]
-summaries["avg_steps_per_task"] = summaries["total_steps"] / summaries["tasks"]
-summaries["avg_tokens_per_task"] = summaries["total_tokens"] / summaries["tasks"]
-summaries["avg_reward_per_task"] = summaries["total_reward"] / summaries["tasks"]
+summaries["accuracy"] = summaries["successes"] / summaries["episodes"]
+summaries["avg_steps_per_episode"] = summaries["total_steps"] / summaries["episodes"]
+summaries["avg_tokens_per_episode"] = summaries["total_tokens"] / summaries["episodes"]
+summaries["avg_reward_per_episode"] = summaries["total_reward"] / summaries["episodes"]
 summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000_000
 
 # Verify all groups have same number of episodes
-if summaries["tasks"].nunique() != 1:
-    raise ValueError("Not all groups have the same number of tasks")
+if summaries["episodes"].nunique() != 1:
+    raise ValueError("Not all groups have the same number of episodes")
 
 # Rename models
 model_name_mapping = {
@@ -137,73 +137,73 @@ for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarC
 save_plot(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
 plt.show()
 
-# Create plot for average steps per task
-steps_file_name = f"avg-steps-per-task-by-model-and-agent.pdf"
+# Create plot for average steps per episode
+steps_file_name = f"avg-steps-per-episode-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
-    y="avg_steps_per_task",
+    y="avg_steps_per_episode",
     hue="agent_name",
     data=summaries,
     palette=palette)
-plt.title(f"Average Steps per Task by Model and Agent")
+plt.title(f"Average Steps per Episode by Model and Agent")
 plt.xlabel("Model")
-plt.ylabel("Average steps per task")
+plt.ylabel("Average steps per episode")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.25)
 plt.legend(title="Agent", loc="lower right")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
 for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
-    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_steps_per_task"]
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_steps_per_episode"]
     labels = ["" if pd.isna(values.get(model_name)) else f"{int(values.get(model_name)):,}" for model_name in model_order]
     ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{steps_file_name}", bbox_inches='tight')
 plt.show()
 
-# Create plot for average tokens per task
-tokens_file_name = f"avg-tokens-per-task-by-model-and-agent.pdf"
+# Create plot for average tokens per episode
+tokens_file_name = f"avg-tokens-per-episode-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
-    y="avg_tokens_per_task",
+    y="avg_tokens_per_episode",
     hue="agent_name",
     data=summaries,
     palette=palette)
 plt.title(f"Average Tokens by Model and Agent")
 plt.xlabel("Model")
-plt.ylabel("Average tokens per task (millions)")
+plt.ylabel("Average tokens per episode (millions)")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.25)
 plt.legend(title="Agent", loc="upper center")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{x / 1_000_000:.1f}M"))
 for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
-    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_tokens_per_task"]
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_tokens_per_episode"]
     labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name) / 1_000_000:.2f}M" for model_name in model_order]
     ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{tokens_file_name}", bbox_inches='tight')
 plt.show()
 
-# Create plot for average reward per task
-reward_file_name = f"avg-reward-per-task-by-model-and-agent.pdf"
+# Create plot for average reward per episode
+reward_file_name = f"avg-reward-per-episode-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
-    y="avg_reward_per_task",
+    y="avg_reward_per_episode",
     hue="agent_name",
     data=summaries,
     palette=palette)
-plt.title(f"Average Reward per Task by Model and Agent")
+plt.title(f"Average Reward per Episode by Model and Agent")
 plt.xlabel("Model")
-plt.ylabel("Average reward per task")
+plt.ylabel("Average reward per episode")
 plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent", loc="lower right")
 for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
-    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_reward_per_task"]
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["avg_reward_per_episode"]
     labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
     ax.bar_label(container, labels=labels, padding=3, fontsize=9)
 save_plot(f"{output_folder_path}/{reward_file_name}", bbox_inches='tight')
@@ -282,28 +282,28 @@ save_plot(f"{output_folder_path}/{errors_file_name}", bbox_inches='tight')
 plt.show()
 
 
-# Create plot for total tasks
-tasks_file_name = f"tasks-by-model-and-agent.pdf"
+# Create plot for total episodes
+episodes_file_name = f"episodes-by-model-and-agent.pdf"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="model_name",
-    y="tasks",
+    y="episodes",
     hue="agent_name",
     data=summaries,
     palette=palette )
-plt.title(f"Total Tasks by Model and Agent")
+plt.title(f"Total Episodes by Model and Agent")
 plt.xlabel("Model")
-plt.ylabel("Total tasks")
+plt.ylabel("Total episodes")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent", loc="lower right")
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
 for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
-    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["tasks"]
+    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["episodes"]
     labels = ["" if pd.isna(values.get(model_name)) else f"{int(values.get(model_name)):,}" for model_name in model_order]
     ax.bar_label(container, labels=labels, padding=3, fontsize=9)
-save_plot(f"{output_folder_path}/{tasks_file_name}", bbox_inches='tight')
+save_plot(f"{output_folder_path}/{episodes_file_name}", bbox_inches='tight')
 plt.show()
 
 # Filter any agent names with nan
@@ -314,9 +314,9 @@ markdown_table = summaries[[
     "model_name",
     "agent_name",
     "accuracy",
-    "avg_steps_per_task",
-    "avg_tokens_per_task",
-    "avg_reward_per_task",
+    "avg_steps_per_episode",
+    "avg_tokens_per_episode",
+    "avg_reward_per_episode",
     "avg_reward_per_step",
     "avg_reward_per_m_tokens"]] \
     .to_markdown(index=False, floatfmt=".2f")

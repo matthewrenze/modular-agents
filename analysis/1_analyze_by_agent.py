@@ -32,7 +32,7 @@ summaries = summaries[summaries["eval_name"].str.startswith("tw-")]
 
 # Create groups
 summaries = summaries.groupby(["agent_name", "model_name"], as_index=False).agg({
-    "tasks": "sum",
+    "episodes": "sum",
     "successes": "sum",
     "total_steps": "sum",
     "total_tokens": "sum",
@@ -43,15 +43,15 @@ summaries = summaries.groupby(["agent_name", "model_name"], as_index=False).agg(
 })
 
 # Compute averages
-summaries["accuracy"] = summaries["successes"] / summaries["tasks"]
-summaries["avg_steps_per_task"] = summaries["total_steps"] / summaries["tasks"]
-summaries["avg_tokens_per_task"] = summaries["total_tokens"] / summaries["tasks"]
-summaries["avg_reward_per_task"] = summaries["total_reward"] / summaries["tasks"]
+summaries["accuracy"] = summaries["successes"] / summaries["episodes"]
+summaries["avg_steps_per_episode"] = summaries["total_steps"] / summaries["episodes"]
+summaries["avg_tokens_per_episode"] = summaries["total_tokens"] / summaries["episodes"]
+summaries["avg_reward_per_episode"] = summaries["total_reward"] / summaries["episodes"]
 summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000_000
 
 # Verify all groups have same number of episodes
-if summaries["tasks"].nunique() != 1:
-    raise ValueError("Not all groups have the same number of tasks")
+if summaries["episodes"].nunique() != 1:
+    raise ValueError("Not all groups have the same number of episodes")
 
 # Remove the version from the agent name
 summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
@@ -114,18 +114,18 @@ plt.tight_layout()
 save_plot(accuracy_file_name)
 plt.show()
 
-# Create plot for average steps per task
-steps_file_name = f"avg-steps-per-task-by-agent-for-{model_name}"
+# Create plot for average steps per episode
+steps_file_name = f"avg-steps-per-episode-by-agent-for-{model_name}"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
-    y="avg_steps_per_task",
+    y="avg_steps_per_episode",
     data=summaries,
     palette=palette)
-plt.title(f"Average Steps per Task by Agent with {model_name}")
+plt.title(f"Average Steps per Episode by Agent with {model_name}")
 plt.xlabel("Agent")
-plt.ylabel("Average steps per task")
+plt.ylabel("Average steps per episode")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
@@ -135,18 +135,18 @@ plt.tight_layout()
 save_plot(steps_file_name)
 plt.show()
 
-# Create plot for average tokens per task
-tokens_file_name = f"avg-tokens-per-task-by-agent-with-{model_name}"
+# Create plot for average tokens per episode
+tokens_file_name = f"avg-tokens-per-episode-by-agent-with-{model_name}"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
-    y="avg_tokens_per_task",
+    y="avg_tokens_per_episode",
     data=summaries,
     palette=palette)
 plt.title(f"Average Tokens by Agent with {model_name}")
 plt.xlabel("Agent")
-plt.ylabel("Average tokens per task")
+plt.ylabel("Average tokens per episode")
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
@@ -156,18 +156,18 @@ plt.tight_layout()
 save_plot(tokens_file_name)
 plt.show()
 
-# Create plot for average reward per task
-reward_file_name = f"avg-reward-per-task-by-agent-for-{model_name}"
+# Create plot for average reward per episode
+reward_file_name = f"avg-reward-per-episode-by-agent-for-{model_name}"
 sns.set_style("whitegrid")
 plt.figure(figsize=(12, 6))
 ax = sns.barplot(
     x="agent_name",
-    y="avg_reward_per_task",
+    y="avg_reward_per_episode",
     data=summaries,
     palette=palette)
-plt.title(f"Average Reward per Task by Agent with {model_name}")
+plt.title(f"Average Reward per Episode by Agent with {model_name}")
 plt.xlabel("Agent")
-plt.ylabel("Average reward per task")
+plt.ylabel("Average reward per episode")
 plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
@@ -246,9 +246,9 @@ summaries = summaries[~summaries["agent_name"].isna()]
 markdown_table = summaries[[
     "agent_name",
     "accuracy",
-    "avg_steps_per_task",
-    "avg_tokens_per_task",
-    "avg_reward_per_task",
+    "avg_steps_per_episode",
+    "avg_tokens_per_episode",
+    "avg_reward_per_episode",
     "avg_reward_per_step",
     "avg_reward_per_m_tokens"]] \
     .to_markdown(index=False, floatfmt=".2f")

@@ -5,7 +5,7 @@ class SummaryRow:
         self.agent_name = ""
         self.eval_name = ""
         self.eval_size = 0
-        self.tasks = 0
+        self.episodes = 0
         self.successes = 0
         self.failures = 0
         self.errors = 0
@@ -23,6 +23,6 @@ class SummaryRow:
         self.output_cost = 0.0
         self.total_cost = 0.0
         self.total_time = 0.0
-        self.avg_reward_per_task = 0.0
+        self.avg_reward_per_episode = 0.0
         self.avg_reward_per_step = 0.0
         self.avg_reward_per_token = 0.0

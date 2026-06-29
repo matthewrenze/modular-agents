@@ -22,7 +22,7 @@ summaries = summaries[summaries["eval_name"].str.startswith("tw-quick-1")]
 
 # Create groups
 summaries = summaries.groupby(["split_name", "model_name", "agent_name"], as_index=False).agg({
-    "tasks": "sum",
+    "episodes": "sum",
     "successes": "sum",
     "total_steps": "sum",
     "total_tokens": "sum",
@@ -33,17 +33,17 @@ summaries = summaries.groupby(["split_name", "model_name", "agent_name"], as_ind
 })
 
 # Compute averages
-summaries["accuracy"] = summaries["successes"] / summaries["tasks"]
-summaries["avg_steps_per_task"] = summaries["total_steps"] / summaries["tasks"]
-summaries["avg_tokens_per_task"] = summaries["total_tokens"] / summaries["tasks"]
-summaries["avg_reward_per_task"] = summaries["total_reward"] / summaries["tasks"]
+summaries["accuracy"] = summaries["successes"] / summaries["episodes"]
+summaries["avg_steps_per_episode"] = summaries["total_steps"] / summaries["episodes"]
+summaries["avg_tokens_per_episode"] = summaries["total_tokens"] / summaries["episodes"]
+summaries["avg_reward_per_episode"] = summaries["total_reward"] / summaries["episodes"]
 summaries["avg_reward_per_step"] = summaries["total_reward"] / summaries["total_steps"]
 summaries["avg_reward_per_token"] = summaries["total_reward"] / summaries["total_tokens"]
 summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000_000
 
 # # Verify all groups have same number of episodes
-# if summaries["tasks"].nunique() != 1:
-#     raise ValueError("Not all groups have the same number of tasks")
+# if summaries["episodes"].nunique() != 1:
+#     raise ValueError("Not all groups have the same number of episodes")
 
 # Rename models
 model_name_mapping = {

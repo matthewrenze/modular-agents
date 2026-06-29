@@ -53,7 +53,7 @@ required_columns = {
     "model_name",
     "agent_name",
     "eval_name",
-    "tasks",
+    "episodes",
     "cached_tokens",
     "input_tokens",
 }
@@ -94,7 +94,7 @@ summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Aggregate prompt token caching stats
 summaries = summaries.groupby(["model_name", "agent_name"], as_index=False).agg({
-    "tasks": "sum",
+    "episodes": "sum",
     "cached_tokens": "sum",
     "input_tokens": "sum",
 })
@@ -102,9 +102,9 @@ summaries = summaries.groupby(["model_name", "agent_name"], as_index=False).agg(
 summaries["prompt_tokens"] = summaries["cached_tokens"] + summaries["input_tokens"]
 summaries["pct_cached"] = summaries["cached_tokens"].div(summaries["prompt_tokens"]).fillna(0.0)
 summaries["pct_uncached"] = summaries["input_tokens"].div(summaries["prompt_tokens"]).fillna(0.0)
-summaries["avg_prompt_tokens_per_task"] = summaries["prompt_tokens"].div(summaries["tasks"]).fillna(0.0)
-summaries["avg_cached_tokens_per_task"] = summaries["cached_tokens"].div(summaries["tasks"]).fillna(0.0)
-summaries["avg_uncached_tokens_per_task"] = summaries["input_tokens"].div(summaries["tasks"]).fillna(0.0)
+summaries["avg_prompt_tokens_per_episode"] = summaries["prompt_tokens"].div(summaries["episodes"]).fillna(0.0)
+summaries["avg_cached_tokens_per_episode"] = summaries["cached_tokens"].div(summaries["episodes"]).fillna(0.0)
+summaries["avg_uncached_tokens_per_episode"] = summaries["input_tokens"].div(summaries["episodes"]).fillna(0.0)
 
 summaries = summaries[summaries["model_name"].isin(model_order)].copy()
 summaries["model_name"] = pd.Categorical(
@@ -121,44 +121,44 @@ summaries = summaries.sort_values(["agent_name", "model_name"]).reset_index(drop
 
 # Build an overall summary by agent to make the winner easy to inspect
 agent_summary = summaries.groupby("agent_name", as_index=False).agg({
-    "tasks": "sum",
+    "episodes": "sum",
     "cached_tokens": "sum",
     "input_tokens": "sum",
     "prompt_tokens": "sum",
 })
 agent_summary["pct_cached"] = agent_summary["cached_tokens"].div(agent_summary["prompt_tokens"]).fillna(0.0)
 agent_summary["pct_uncached"] = agent_summary["input_tokens"].div(agent_summary["prompt_tokens"]).fillna(0.0)
-agent_summary["avg_prompt_tokens_per_task"] = agent_summary["prompt_tokens"].div(agent_summary["tasks"]).fillna(0.0)
-agent_summary["avg_cached_tokens_per_task"] = agent_summary["cached_tokens"].div(agent_summary["tasks"]).fillna(0.0)
-agent_summary["avg_uncached_tokens_per_task"] = agent_summary["input_tokens"].div(agent_summary["tasks"]).fillna(0.0)
+agent_summary["avg_prompt_tokens_per_episode"] = agent_summary["prompt_tokens"].div(agent_summary["episodes"]).fillna(0.0)
+agent_summary["avg_cached_tokens_per_episode"] = agent_summary["cached_tokens"].div(agent_summary["episodes"]).fillna(0.0)
+agent_summary["avg_uncached_tokens_per_episode"] = agent_summary["input_tokens"].div(agent_summary["episodes"]).fillna(0.0)
 agent_summary.insert(0, "model_name", "ALL")
 agent_summary = agent_summary[[
     "model_name",
     "agent_name",
-    "tasks",
+    "episodes",
     "cached_tokens",
     "input_tokens",
     "prompt_tokens",
     "pct_cached",
     "pct_uncached",
-    "avg_cached_tokens_per_task",
-    "avg_uncached_tokens_per_task",
-    "avg_prompt_tokens_per_task",
+    "avg_cached_tokens_per_episode",
+    "avg_uncached_tokens_per_episode",
+    "avg_prompt_tokens_per_episode",
 ]]
 
 report_table = pd.concat([
     summaries[[
         "model_name",
         "agent_name",
-        "tasks",
+        "episodes",
         "cached_tokens",
         "input_tokens",
         "prompt_tokens",
         "pct_cached",
         "pct_uncached",
-        "avg_cached_tokens_per_task",
-        "avg_uncached_tokens_per_task",
-        "avg_prompt_tokens_per_task",
+        "avg_cached_tokens_per_episode",
+        "avg_uncached_tokens_per_episode",
+        "avg_prompt_tokens_per_episode",
     ]],
     agent_summary,
 ], ignore_index=True)
@@ -177,9 +177,9 @@ for column in [
     "cached_tokens",
     "input_tokens",
     "prompt_tokens",
-    "avg_cached_tokens_per_task",
-    "avg_uncached_tokens_per_task",
-    "avg_prompt_tokens_per_task",
+    "avg_cached_tokens_per_episode",
+    "avg_uncached_tokens_per_episode",
+    "avg_prompt_tokens_per_episode",
 ]:
     report_table_markdown[column] = report_table_markdown[column].map(lambda x: f"{x:,.0f}")
 markdown_table = report_table_markdown.to_markdown(index=False)

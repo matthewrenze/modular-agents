@@ -13,7 +13,7 @@ summaries = summaries[summaries["model_name"] == "gpt-5.4"]
 # Group by model and sum the cost
 # Note: only two decimal places for cost
 groups = ["agent_name", "model_name", "eval_name"]
-fields = ["tasks", "total_cost"]
+fields = ["episodes", "total_cost"]
 cost_by_group = summaries \
     .groupby(groups)[fields] \
     .sum() \

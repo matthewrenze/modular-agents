@@ -23,7 +23,7 @@ class SummaryManager:
         model_matches = summaries["model_name"] == params.model_name
         agent_matches = summaries["agent_name"] == params.agent_name
         eval_matches = summaries["eval_name"] == params.eval_name
-        size_matches = summaries["tasks"] == params.eval_size
+        size_matches = summaries["episodes"] == params.eval_size
         all_matches = summaries[split_matches & model_matches & agent_matches & eval_matches & size_matches]
 
         return not all_matches.empty
@@ -34,11 +34,11 @@ class SummaryManager:
         summary.model_name = results["model_name"].iloc[0]
         summary.agent_name = results["agent_name"].iloc[0]
         summary.eval_name = results["eval_name"].iloc[0]
-        summary.tasks = len(results)
+        summary.episodes = len(results)
         summary.successes = len(results[results["reward"] == 1.0])
         summary.failures = len(results[results["reward"] < 1.0])
         summary.errors = len(results[results["error"] != ""])
-        summary.accuracy = summary.successes / summary.tasks
+        summary.accuracy = summary.successes / summary.episodes
         summary.total_reward = results["reward"].sum()
         summary.total_steps = results["steps"].sum()
         summary.max_steps_hit = results["max_steps_hit"].sum()
@@ -52,7 +52,7 @@ class SummaryManager:
         summary.output_cost = results["output_cost"].sum()
         summary.total_cost = results["total_cost"].sum()
         summary.total_time = results["total_time"].sum()
-        summary.avg_reward_per_task = summary.total_reward / summary.tasks if summary.tasks > 0 else 0
+        summary.avg_reward_per_episode = summary.total_reward / summary.episodes if summary.episodes > 0 else 0
         summary.avg_reward_per_step = results["reward_per_step"].mean()
         summary.avg_reward_per_token = results["reward_per_token"].mean()
         return summary

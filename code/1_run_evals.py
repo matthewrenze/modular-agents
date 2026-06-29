@@ -397,7 +397,7 @@ for params in runs:
     summary_manager.append(summary)
 
     # Display the summaries
-    print(f"Total Tasks: {summary.tasks}")
+    print(f"Total Episodes: {summary.episodes}")
     print(f"Accuracy: {summary.accuracy:.0%}")
     print(f"Correct Tasks: {summary.successes}")
     print(f"Failed Tasks: {summary.failures}")
@@ -405,7 +405,7 @@ for params in runs:
     print(f"Total Tokens: {summary.total_tokens}")
     print(f"Total Cost: ${summary.total_cost:.2f}")
     print(f"Total Time: {summary.total_time:.2f} seconds")
-    print(f"Avg Reward per Task: {summary.avg_reward_per_task:.2f}")
+    print(f"Avg Reward per Episode: {summary.avg_reward_per_episode:.2f}")
     print(f"Avg Reward per Step: {summary.avg_reward_per_step:.4f}")
     print(f"Avg Reward per Token: {summary.avg_reward_per_token:.6f}")
     print("--- END OF EVAL ---" )
