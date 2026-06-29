@@ -42,6 +42,7 @@ class SummaryManager:
         summary.total_reward = results["reward"].sum()
         summary.total_steps = results["steps"].sum()
         summary.max_steps_hit = results["max_steps_hit"].sum()
+        summary.model_version = results["model_version"].iloc[0]
         summary.cached_tokens = results["cached_tokens"].sum()
         summary.input_tokens = results["input_tokens"].sum()
         summary.reasoning_tokens = results["reasoning_tokens"].sum()

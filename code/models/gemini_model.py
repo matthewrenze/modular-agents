@@ -48,6 +48,9 @@ class GeminiModel(Model):
                 else:
                     content = ""
 
+                # Get model version
+                self.model_version = response.model_version
+
                 # Get tokens
                 usage = response.usage_metadata
                 cached_tokens = usage.cached_content_token_count or 0

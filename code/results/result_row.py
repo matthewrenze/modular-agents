@@ -2,6 +2,7 @@ class ResultRow:
     def __init__(self):
         self.split_name = ""
         self.model_name = ""
+        self.model_version = ""
         self.agent_name = ""
         self.eval_name = ""
         self.eval_size = 0

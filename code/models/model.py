@@ -4,6 +4,7 @@ class Model:
 
     def __init__(self, model_name: str) -> None:
         self.model_name = model_name
+        self.model_version = ""
         self.cached_tokens = 0
         self.input_tokens = 0
         self.reasoning_tokens = 0

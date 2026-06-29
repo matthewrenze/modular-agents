@@ -4,9 +4,6 @@ import anthropic
 from logs.console import warn
 from models.model import Model
 
-# TODO: Need to lock the version number of the anthropic models (instead of using aliases)
-# TODO: e.g., "claude-sonnet-4-0" => claude-sonnet-4-20250514
-
 class ClaudeModel(Model):
     def __init__(self, model_name):
         super().__init__(model_name)
@@ -41,6 +38,9 @@ class ClaudeModel(Model):
                     content = response.content[0].text
                 else:
                     content = ""
+
+                # Get model version
+                self.model_version = response.model
 
                 # Accumulate tokens
                 usage = response.usage

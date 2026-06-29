@@ -366,6 +366,7 @@ for params in runs:
         result_row.steps = len(details_manager.get_table())
         result_row.max_steps = params.max_steps
         result_row.solution_steps = episode["solution_steps"]
+        result_row.model_version = model.model_version
         result_row.cached_tokens = model.cached_tokens
         result_row.input_tokens = model.input_tokens
         result_row.reasoning_tokens = model.reasoning_tokens

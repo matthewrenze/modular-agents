@@ -13,6 +13,7 @@ class SummaryRow:
         self.total_reward = 0.0
         self.total_steps = 0
         self.max_steps_hit = 0
+        self.model_version = ""
         self.cached_tokens = 0
         self.input_tokens = 0
         self.reasoning_tokens = 0

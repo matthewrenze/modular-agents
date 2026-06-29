@@ -37,6 +37,9 @@ class AzureModel(Model):
                 if content is None:
                     raise ValueError("Received empty response from LLM API.")
 
+                # Get model version
+                self.model_version = response.model
+
                 # Update tokens
                 self.update_tokens(
                     cached_tokens=0,

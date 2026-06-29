@@ -43,6 +43,9 @@ class OpenAiModel(Model):
                 if content is None:
                     raise ValueError("Received empty response from LLM API.")
 
+                # Get model version
+                self.model_version = response.model
+
                 # Get tokens
                 cached_tokens = getattr(response.usage.prompt_tokens_details, "cached_tokens", 0)
                 prompt_tokens = getattr(response.usage, "prompt_tokens", 0)
