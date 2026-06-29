@@ -4,7 +4,6 @@ class SummaryRow:
         self.model_name = ""
         self.agent_name = ""
         self.eval_name = ""
-        self.eval_size = 0
         self.episodes = 0
         self.successes = 0
         self.failures = 0
