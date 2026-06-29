@@ -52,10 +52,12 @@ class ParametersFactory:
             parameters = self.minus_all(parameters)
             if "summarizer" in agent_name:
                 parameters.use_summarizer = True
-            if "planner" in agent_name:
+            elif "planner" in agent_name:
                 parameters.use_planner = True
-            if "memorizer" in agent_name:
+            elif "memorizer" in agent_name:
                 parameters.use_memorizer = True
+            else:
+                raise ValueError(f"Agent name '{agent_name}' names no known module.")
             parameters.use_reasoner = True
             parameters.use_actor = True
             return parameters
@@ -65,10 +67,12 @@ class ParametersFactory:
             parameters = self.plus_all(parameters)
             if "summarizer" in agent_name:
                 parameters.use_summarizer = False
-            if "planner" in agent_name:
+            elif "planner" in agent_name:
                 parameters.use_planner = False
-            if "memorizer" in agent_name:
+            elif "memorizer" in agent_name:
                 parameters.use_memorizer = False
+            else:
+                raise ValueError(f"Agent name '{agent_name}' names no known module.")
             parameters.use_actor = True
             return parameters
 

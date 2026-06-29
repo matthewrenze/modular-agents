@@ -88,3 +88,10 @@ class TestParametersFactory:
                     and attr != "use_react_k1" \
                     and attr != "use_react_kn":
                 assert getattr(params, attr)
+
+    @pytest.mark.parametrize(
+        "agent_name", ["plus-planer", "minus-planer", "plus-foo", "minus-foo"])
+    def test_create_rejects_unknown_module(self, agent_name):
+        factory = ParametersFactory()
+        with pytest.raises(ValueError):
+            factory.create("test", "model", agent_name, "env", "eval", 10)
