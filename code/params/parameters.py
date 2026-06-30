@@ -8,6 +8,7 @@ class Parameters:
     env_name: str = ""
     eval_name: str = ""
     eval_size: int = 0
+    episode_id: int = 0
     max_steps: int = 0
 
     # Feature toggles

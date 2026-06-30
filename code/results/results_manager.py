@@ -14,7 +14,6 @@ class ResultsManager:
         row.model_name = params.model_name
         row.agent_name = params.agent_name
         row.eval_name = params.eval_name
-        row.eval_size = params.eval_size
         return row
 
     def add(self, row):

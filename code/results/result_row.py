@@ -5,7 +5,6 @@ class ResultRow:
         self.model_version = ""
         self.agent_name = ""
         self.eval_name = ""
-        self.eval_size = 0
         self.episode = 0
         self.task = ""
         self.revised_task = ""

@@ -144,6 +144,7 @@ for params in runs:
         max_steps = int(solution_steps * 1.5)
         max_steps = max(steps_floor, min(steps_ceiling, max_steps))
         params.max_steps = max_steps
+        params.episode_id = episode_id
         
         # Create entities
         model = model_factory.create(params, use_azure)
@@ -168,7 +169,7 @@ for params in runs:
 
         # Create result row
         result_row = results_manager.create(params)
-        result_row.episode = episode_id
+        result_row.episode = params.episode_id
         result_row.start_time = time.time()
 
         try:

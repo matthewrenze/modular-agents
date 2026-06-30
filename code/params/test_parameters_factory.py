@@ -12,6 +12,16 @@ class TestParametersFactory:
         assert params.eval_name == "eval"
         assert params.eval_size == 10
 
+    def test_create_defaults_eval_size(self):
+        factory = ParametersFactory()
+        params = factory.create("test", "model", "react-kn", "env", "eval")
+        assert params.eval_size == 0
+
+    def test_create_sets_episode_id(self):
+        factory = ParametersFactory()
+        params = factory.create("test", "model", "react-kn", "env", "eval", episode_id=5)
+        assert params.episode_id == 5
+
     @pytest.mark.parametrize(
         "agent_name,true_param", [
         ("react-k0", "use_react_k0"),

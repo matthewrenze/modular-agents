@@ -1,7 +1,7 @@
 from params.parameters import Parameters
 
 class ParametersFactory:
-    def create(self, split_name: str, model_name: str, agent_name: str, env_name: str, eval_name: str, eval_size: int):
+    def create(self, split_name: str, model_name: str, agent_name: str, env_name: str, eval_name: str, eval_size: int = 0, episode_id: int = 0):
 
         # Handle invalid split name
         if split_name not in ["train", "test"]:
@@ -15,6 +15,7 @@ class ParametersFactory:
             env_name=env_name,
             eval_name=eval_name,
             eval_size=eval_size,
+            episode_id=episode_id,
             max_steps=0)
 
         # Create the react-k0 agent
