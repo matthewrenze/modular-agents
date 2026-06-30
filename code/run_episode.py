@@ -324,6 +324,21 @@ def run_episode(split_name, model_name, agent_name, env_name, eval_name, episode
     # Write the state
     state_writer.write(global_state, params)
 
+    # Display the episode summary
+    print(f"--- Summary for {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
+    print(f"Success: {result_row.success}")
+    print(f"Reward: {result_row.reward:.2f}")
+    print(f"Score: {result_row.score}/{result_row.max_score}")
+    print(f"Steps: {result_row.steps}")
+    print(f"Total Tokens: {result_row.total_tokens}")
+    print(f"Total Cost: ${result_row.total_cost:.2f}")
+    print(f"Total Time: {result_row.total_time:.2f} seconds")
+    print(f"Reward per Step: {result_row.reward_per_step:.4f}")
+    print(f"Reward per Token: {result_row.reward_per_token:.6f}")
+    print(f"Error: {result_row.error}")
+    print("--- END OF EPISODE ---")
+    print("")
+
     return 1 if errored else 0
 
 
