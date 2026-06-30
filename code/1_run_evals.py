@@ -378,7 +378,7 @@ for params in runs:
         result_row.total_cost = result_row.input_cost + result_row.output_cost
         result_row.reward_per_step = (final_reward / result_row.steps) if result_row.steps > 0 else 0.0
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
-        results_manager.add(result_row)
+        results_manager.save_row(params, result_row)
 
         # Save the details
         details_manager.save()
@@ -389,11 +389,12 @@ for params in runs:
         # Sleep for n seconds to avoid API throttling
         time.sleep(sleep_time)
 
-    # Save the results
-    results_manager.save()
+    # Load the results for the summary
+    results_manager.load(params)
 
     # Save the summary
     results = results_manager.get_table()
+    results["error"] = results["error"].fillna("")
     summary = summary_manager.summarize(results)
     summary_manager.append(summary)
 
