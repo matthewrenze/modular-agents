@@ -16,8 +16,8 @@ class TestStateWriter:
             split_name="split",
             model_name="model",
             agent_name="agent",
-            eval_name="eval")
-        episode_id = 123
+            eval_name="eval",
+            episode_id=123)
         state = GlobalState(
             task_state=TaskState(
                 task="task 1",
@@ -81,7 +81,7 @@ class TestStateWriter:
         monkeypatch.setattr(state_writer, "open", fake_open, raising=False)
 
         writer = StateWriter()
-        writer.write(state, params, episode_id)
+        writer.write(state, params)
 
         assert captured["makedirs"] == (expected_folder, True)
         assert captured["open"] == (expected_file_path, "w", "utf-8")

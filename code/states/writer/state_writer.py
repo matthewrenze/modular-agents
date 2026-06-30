@@ -6,7 +6,9 @@ from states.global_state import GlobalState
 
 class StateWriter:
 
-    def write(self, state: GlobalState, params: Parameters, episode_id: int):
+    def write(self, state: GlobalState, params: Parameters):
+
+        episode_id = params.episode_id
 
         # Create the folder
         folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"

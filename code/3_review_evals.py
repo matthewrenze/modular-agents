@@ -104,6 +104,8 @@ for params in runs:
 
     for episode_id in episode_ids:
 
+        params.episode_id = episode_id
+
         print(f"--- Reviewing {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
 
         try:
@@ -146,7 +148,7 @@ for params in runs:
 
             # Write the reviewer's messages
             messages_writer = MessagesWriter()
-            messages_writer.write(params, episode_id, 1, "reviewer", reviewer.messages)
+            messages_writer.write(params, 1, "reviewer", reviewer.messages)
 
             # Add the header
             review = header + review

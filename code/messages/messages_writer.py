@@ -4,7 +4,9 @@ from params.parameters import Parameters
 
 class MessagesWriter:
 
-    def write(self, params: Parameters, episode_id: int, step_id: int, subagent: str, messages: list):
+    def write(self, params: Parameters, step_id: int, subagent: str, messages: list):
+
+        episode_id = params.episode_id
 
         # Create the folder
         folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}/messages"

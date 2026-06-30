@@ -15,8 +15,9 @@ RED = "\033[91m"
 RESET = "\033[0m"
 
 class Log:
-    def __init__(self, renderer: Renderer, params: Parameters, episode_id):
+    def __init__(self, renderer: Renderer, params: Parameters):
         self.renderer = renderer
+        episode_id = params.episode_id
         folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
         file_name = f"{params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - log.txt"
         file_path = f"{folder_path}/{file_name}"

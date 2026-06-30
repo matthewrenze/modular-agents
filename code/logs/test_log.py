@@ -16,11 +16,11 @@ class TestLog:
             agent_name="test-agent",
             env_name="test-env",
             eval_name="test-eval",
+            episode_id=1,
             max_steps=10)
-        episode_id = 1
 
         # Act
-        log = Log(renderer, params, episode_id)
+        log = Log(renderer, params)
         log.head("head")
         log.info("info")
         log.debug("debug")

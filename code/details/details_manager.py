@@ -4,11 +4,11 @@ from details.details_row import DetailsRow
 from params.parameters import Parameters
 
 class DetailsManager:
-    def __init__(self, params: Parameters, episode_id: int):
+    def __init__(self, params: Parameters):
         self.folder_path = "../data/artifacts"
         self.details = pd.DataFrame()
         self.params = params
-        self.episode_id = episode_id
+        self.episode_id = params.episode_id
 
     def create(self):
         row = DetailsRow()
