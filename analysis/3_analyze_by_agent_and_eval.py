@@ -5,12 +5,12 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
+version = "v6.0"
 model_name = "gpt-5.4"
 # model_name = "gpt-5.4-mini"
 # model_name = "claude-sonnet-4-6"
 # model_name = "kimi-k2.5-turbo"
 # model_name = "qwen3.6-plus"
-version_suffix = "-v6.0"
 plot_file_types = ["pdf", "png"]
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-agent-and-eval"
@@ -28,6 +28,7 @@ def save_plot(file_path, **kwargs):
 summaries = pd.read_csv(input_file_path)
 
 # Filter rows
+summaries = summaries[summaries["version"] == version]
 summaries = summaries[summaries["model_name"] == model_name]
 summaries = summaries[summaries["eval_name"].str.startswith("tw-")]
 
@@ -53,9 +54,6 @@ summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000
 # Verify all groups have same number of episodes
 if summaries["episodes"].nunique() != 1:
     raise ValueError("Not all groups have the same number of episodes")
-
-# Remove the version from the agent name
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 
 # Order agents
 agent_order = [

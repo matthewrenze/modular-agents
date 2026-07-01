@@ -6,7 +6,7 @@ from matplotlib.container import BarContainer
 from matplotlib.ticker import FuncFormatter
 
 # Set parameters
-version_suffix = "-v6.0"
+version = "v6.0"
 plot_file_types = ["pdf", "png"]
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-model-and-agent"
@@ -24,6 +24,7 @@ def save_plot(file_path, **kwargs):
 summaries = pd.read_csv(input_file_path)
 
 # Filter rows
+summaries = summaries[summaries["version"] == version]
 # summaries = summaries[summaries["model_name"] == model_name]
 summaries = summaries[summaries["eval_name"].str.startswith("tw-")]
 
@@ -80,9 +81,6 @@ summaries["model_name"] = pd.Categorical(
     summaries["model_name"],
     categories=model_order,
     ordered=True)
-
-# Remove the version from the agent name
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 
 # Order agents
 agent_order = [

@@ -11,7 +11,7 @@ from matplotlib.ticker import PercentFormatter
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # Set parameters
-version_suffix = "-v6.0"
+version = "v6.0"
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/token-caching"
 output_table_file_stem = os.path.join(output_folder_path, "token-caching-efficiency-by-model-and-agent")
@@ -86,8 +86,8 @@ if missing_columns:
     raise ValueError(f"Missing required columns in summaries.csv: {missing_columns_text}")
 
 # Filter rows
+summaries = summaries[summaries["version"] == version].copy()
 summaries = summaries[summaries["eval_name"].str.startswith("tw-", na=False)].copy()
-summaries["agent_name"] = summaries["agent_name"].str.removesuffix(version_suffix)
 summaries = summaries[summaries["agent_name"].isin(agent_order)].copy()
 summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=False)].copy()
 summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)

@@ -6,10 +6,10 @@ from scipy import stats
 
 
 # Set parameters
-input_folder_path = "../data/artifacts/test/"
+version = "v6.0"
+input_folder_path = f"../data/artifacts/{version}/"
 agent_a = "react-kn"
 agent_b = "modular-full"
-version_suffix = "-v6.0"
 bootstrap_resamples = 10_000
 bootstrap_seed = 20260504
 output_file_path = "../data/analysis.txt"
@@ -254,7 +254,6 @@ for result_file_path in result_file_paths:
 	results.append(result)
 
 results = pd.concat(results, ignore_index=True)
-results["agent_name"] = results["agent_name"].str.removesuffix(version_suffix)
 results = results[results["agent_name"].isin([agent_a, agent_b])].copy()
 results["success"] = results["success"].astype(str).str.lower().isin(["true", "1"])
 

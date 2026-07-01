@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Set parameters
-agent_name = "react-kn-v6.0"
-# agent_name = "modular-base-v6.0"
-# agent_name = "modular-full-v6.0"
+version = "v6.0"
+agent_name = "react-kn"
+# agent_name = "modular-base"
+# agent_name = "modular-full"
 
 model_name = "gpt-5.4"
-input_folder_path = "../data/artifacts"
+input_folder_path = f"../data/artifacts/{version}"
 output_folder_path = f"../data/plots/by-episode/{model_name}"
 
 # Create the output folder

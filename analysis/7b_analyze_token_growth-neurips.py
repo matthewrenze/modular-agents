@@ -10,9 +10,9 @@ import seaborn as sns
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
-split_name = "test"
+version = "v6.0"
+split_name = "train"
 model_name = "gpt-5.4"
-version_suffix = "-v6.0"
 
 agent_names = [
     "react-kn",
@@ -51,7 +51,7 @@ eval_names = [
     "tw-cooking-3",
 ]
 
-root_folder_path = f"../data/artifacts/{split_name}"
+root_folder_path = f"../data/artifacts/{version}/{split_name}"
 plot_folder_path = "../data/plots/token-growth"
 marginal_plot_file_path = f"{plot_folder_path}/marginal-token-growth.png"
 cumulative_plot_file_path = f"{plot_folder_path}/cumulative-token-growth.png"
@@ -73,11 +73,11 @@ frames = []
 for f in Path(root_folder_path).rglob("*details.csv"):
     frame = pd.read_csv(f)
     file_name_parts = f.stem.split(" - ")
-    split_name_parsed = file_name_parts[0]
-    model_name_parsed = file_name_parts[1]
-    agent_name_parsed = file_name_parts[2].removesuffix(version_suffix)
-    eval_name_parsed = file_name_parts[3]
-    episode_id = int(file_name_parts[4].replace("episode-", ""))
+    split_name_parsed = file_name_parts[1]
+    model_name_parsed = file_name_parts[2]
+    agent_name_parsed = file_name_parts[3]
+    eval_name_parsed = file_name_parts[4]
+    episode_id = int(file_name_parts[5].replace("episode-", ""))
 
     frame["split_name"] = split_name_parsed
     frame["model_name"] = model_name_parsed
