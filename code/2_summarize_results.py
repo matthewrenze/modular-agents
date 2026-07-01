@@ -37,8 +37,8 @@ for index, result_file_path in enumerate(result_file_paths, start=1):
 summary_table = pd.DataFrame(summary_rows)
 
 # Keep metadata first and order rows consistently
-summary_table = summary_table[["split_name", "model_name", "agent_name", "eval_name"] + [
-    c for c in summary_table.columns if c not in ["split_name", "model_name", "agent_name", "eval_name"]
+summary_table = summary_table[["version", "split_name", "model_name", "agent_name", "eval_name"] + [
+    c for c in summary_table.columns if c not in ["version", "split_name", "model_name", "agent_name", "eval_name"]
 ]]
 summary_table.sort_values(by=["split_name", "model_name", "agent_name", "eval_name"], inplace=True)
 

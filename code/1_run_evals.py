@@ -22,17 +22,17 @@ model_names = [
 
 # Set agents
 agent_names = [
-    # "react-k0-v6.0",
-    # "react-k1-v6.0",
-    # "react-kn-v6.0",
-    # "modular-base-v6.0",
-    # "plus-planner-v6.0",
-    # "plus-summarizer-v6.0",
-    # "plus-memorizer-v6.0",
-    # "minus-planner-v6.0",
-    # "minus-summarizer-v6.0",
-    # "minus-memorizer-v6.0",
-    "modular-full-v6.0"
+    # "react-k0",
+    # "react-k1",
+    # "react-kn",
+    # "modular-base",
+    # "plus-planner",
+    # "plus-summarizer",
+    # "plus-memorizer",
+    # "minus-planner",
+    # "minus-summarizer",
+    # "minus-memorizer",
+    "modular-full"
 ]
 # Set evals
 eval_size = 1

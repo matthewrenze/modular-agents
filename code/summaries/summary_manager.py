@@ -12,6 +12,7 @@ class SummaryManager:
 
     def summarize(self, results):
         summary = SummaryRow()
+        summary.version = results["version"].iloc[0]
         summary.split_name = results["split_name"].iloc[0]
         summary.model_name = results["model_name"].iloc[0]
         summary.agent_name = results["agent_name"].iloc[0]
@@ -55,9 +56,10 @@ class SummaryManager:
                 # Append the new summary
                 summaries = pd.concat([summaries, pd.DataFrame([summary.__dict__])], ignore_index=True)
 
-                # HACK: Move the split_name and model_name to the first columns
+                # HACK: Move the version, split_name, and model_name to the first columns
                 summaries = summaries[["model_name"] + [c for c in summaries.columns if c != "model_name"]]
                 summaries = summaries[["split_name"] + [c for c in summaries.columns if c != "split_name"]]
+                summaries = summaries[["version"] + [c for c in summaries.columns if c != "version"]]
 
                 # Sort the summaries
                 summaries.sort_values(by=["split_name", "model_name", "agent_name", "eval_name"], inplace=True)

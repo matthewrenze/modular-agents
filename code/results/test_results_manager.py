@@ -5,6 +5,7 @@ class TestResultsManager:
 
     def make_params(self, episode_id):
         return Parameters(
+            version="v6.0",
             split_name="test",
             model_name="model",
             agent_name="agent",
@@ -45,3 +46,13 @@ class TestResultsManager:
         self.save_episode(manager, 1)
         assert manager.exists(self.make_params(1))
         assert not manager.exists(self.make_params(2))
+
+    def test_version_threads_to_path_and_first_column(self, tmp_path):
+        manager = self.make_manager(tmp_path)
+        params = self.make_params(1)
+        assert f"/{params.version}/" in manager.get_file_path(params)
+        self.save_episode(manager, 1)
+        manager.load(params)
+        table = manager.get_table()
+        assert table.columns[0] == "version"
+        assert table["version"].iloc[0] == "v6.0"

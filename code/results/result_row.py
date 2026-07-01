@@ -1,5 +1,6 @@
 class ResultRow:
     def __init__(self):
+        self.version = ""
         self.split_name = ""
         self.model_name = ""
         self.model_version = ""

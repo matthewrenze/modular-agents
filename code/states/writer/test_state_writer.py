@@ -13,6 +13,7 @@ from states.agent_state import AgentState
 class TestStateWriter:
     def test_write(self, monkeypatch):
         params = Parameters(
+            version="version",
             split_name="split",
             model_name="model",
             agent_name="agent",
@@ -58,8 +59,8 @@ class TestStateWriter:
             ],
         )
 
-        expected_folder = "../data/artifacts/split/model/agent/eval/episode-123"
-        expected_file_path = f"{expected_folder}/split - model - agent - eval - episode-123 - state.yaml"
+        expected_folder = "../data/artifacts/version/split/model/agent/eval/episode-123"
+        expected_file_path = f"{expected_folder}/version - split - model - agent - eval - episode-123 - state.yaml"
         with open("states/test_file.yaml", "r", encoding="utf-8") as f:
             expected_yaml = f.read()
 

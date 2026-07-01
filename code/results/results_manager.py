@@ -12,6 +12,7 @@ class ResultsManager:
 
     def create(self, params: Parameters):
         row = ResultRow()
+        row.version = params.version
         row.split_name = params.split_name
         row.model_name = params.model_name
         row.agent_name = params.agent_name
@@ -25,8 +26,8 @@ class ResultsManager:
         return self.results
 
     def get_file_path(self, params: Parameters):
-        folder_path = f"{self.folder_path}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}"
-        file_name = f"{params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - results.csv"
+        folder_path = f"{self.folder_path}/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}"
+        file_name = f"{params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - results.csv"
         return f"{folder_path}/{file_name}"
 
     def load(self, params: Parameters):
@@ -38,12 +39,13 @@ class ResultsManager:
         os.makedirs(self.folder_path, exist_ok=True)
 
         # Create the file path
+        version = self.results["version"].iloc[0]
         split_name = self.results["split_name"].iloc[0]
         model_name = self.results["model_name"].iloc[0]
         agent_name = self.results["agent_name"].iloc[0]
         eval_name = self.results["eval_name"].iloc[0]
-        folder_path = f"{self.folder_path}/{split_name}/{model_name}/{agent_name}/{eval_name}"
-        file_name = f"{split_name} - {model_name} - {agent_name} - {eval_name} - results.csv"
+        folder_path = f"{self.folder_path}/{version}/{split_name}/{model_name}/{agent_name}/{eval_name}"
+        file_name = f"{version} - {split_name} - {model_name} - {agent_name} - {eval_name} - results.csv"
         file_path = f"{folder_path}/{file_name}"
 
         # Save the results

@@ -25,6 +25,7 @@ from messages.messages_writer import MessagesWriter
 from states.writer.state_writer import StateWriter
 
 # Set parameters
+version = "v6.0"
 steps_floor = 20
 steps_ceiling = 100
 sleep_time = 1
@@ -42,9 +43,10 @@ def run_episode(split_name, model_name, agent_name, env_name, eval_name, episode
         env_name=env_name,
         eval_name=eval_name,
         episode_id=episode_id)
+    params.version = version
 
     # Echo the resolved config
-    print(f"--- Running {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
+    print(f"--- Running {params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
 
     # Skip if the episode already ran
     results_manager = ResultsManager()
@@ -53,7 +55,7 @@ def run_episode(split_name, model_name, agent_name, env_name, eval_name, episode
         return "skipped"
 
     # Remove the prior episode folder when forcing a re-run
-    folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
+    folder_path = f"../data/artifacts/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
     if force and os.path.exists(folder_path):
         shutil.rmtree(folder_path)
 

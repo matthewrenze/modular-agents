@@ -11,7 +11,7 @@ class StateWriter:
         episode_id = params.episode_id
 
         # Create the folder
-        folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
+        folder_path = f"../data/artifacts/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
         os.makedirs(folder_path, exist_ok=True)
 
         # Deep copy the state
@@ -33,7 +33,7 @@ class StateWriter:
                 agent["memory"] = LiteralStr(mem)
 
         # Write the file
-        file_name = f"{params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - state.yaml"
+        file_name = f"{params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - state.yaml"
         file_path = f"{folder_path}/{file_name}"
         with open(file_path, "w", encoding="utf-8") as file:
             yaml.safe_dump(
