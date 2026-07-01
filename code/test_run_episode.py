@@ -23,8 +23,8 @@ class TestRunEpisode:
         def fail(*args, **kwargs):
             raise AssertionError("should not construct eval when skipping")
         monkeypatch.setattr(EvalFactory, "create", fail)
-        exit_code = run_episode_fn("train", "gpt-5.4", "modular-full", "textworld", "tw-simple-1", 1)
-        assert exit_code == 0
+        status = run_episode_fn("train", "gpt-5.4", "modular-full", "textworld", "tw-simple-1", 1)
+        assert status == "skipped"
 
     def test_invalid_agent_raises(self):
         with pytest.raises(ValueError):

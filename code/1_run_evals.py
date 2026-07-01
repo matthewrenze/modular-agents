@@ -1,9 +1,4 @@
 # Import packages
-from logs.console import warn
-from params.parameters_factory import ParametersFactory
-from evals.eval_factory import EvalFactory
-from results.results_manager import ResultsManager
-from summaries.summary_manager import SummaryManager
 from run_episode import run_episode
 
 # Set train/test split
@@ -56,81 +51,34 @@ eval_env_names = [
     # ("tw-cooking-3", "textworld"),
 ]
 
-# Create the runs
-runs = []
-parameters_factory = ParametersFactory()
+# Select the episodes to run
+if eval_size == 1:
+    episode_ids = [1]
+elif eval_size == 10:
+    episode_ids = list(range(10, 101, 10))
+elif eval_size == 99:
+    episode_ids = [100]
+else:
+    episode_ids = list(range(1, eval_size + 1))
+
+# Run each combo's episodes sequentially (parallelism is by running this in multiple windows)
+counts = {"success": 0, "failure": 0, "error": 0, "skipped": 0}
 for model_name in model_names:
     for agent_name in agent_names:
-        for eval_env_name in eval_env_names:
-            eval_name, env_name = eval_env_name
-            params = parameters_factory.create(
-                split_name=split_name,
-                model_name=model_name,
-                agent_name = agent_name,
-                env_name = env_name,
-                eval_name = eval_name,
-                eval_size = eval_size)
-            runs.append(params)
+        for eval_name, env_name in eval_env_names:
+            for episode_id in episode_ids:
+                status = run_episode(
+                    split_name=split_name,
+                    model_name=model_name,
+                    agent_name=agent_name,
+                    env_name=env_name,
+                    eval_name=eval_name,
+                    episode_id=episode_id)
+                counts[status] += 1
 
-# Create components
-eval_factory = EvalFactory()
-
-for params in runs:
-    print(f"--- Running {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} ---")
-
-    # Create components
-    results_manager = ResultsManager()
-    summary_manager = SummaryManager()
-
-    # Create the eval
-    eval = eval_factory.create(params)
-
-    # Get the episodes to run
-    num_episodes = min(len(eval), eval_size)
-    episode_ids = list(range(1, num_episodes + 1))
-    # HACK: select specific episodes for specific num_episodes
-    if num_episodes == 1:
-        episode_ids = [1]
-    if num_episodes == 10:
-        episode_ids = list(range(10, 101, 10))
-    if num_episodes == 99:
-        episode_ids = [100]
-
-    # Set up summaries
-    if summary_manager.exists(params):
-        warn(f"Summary for {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} already exists.")
-        input("Press Enter to continue...")
-
-    # Run the episodes
-    for episode_id in episode_ids:
-        run_episode(
-            split_name=params.split_name,
-            model_name=params.model_name,
-            agent_name=params.agent_name,
-            env_name=params.env_name,
-            eval_name=params.eval_name,
-            episode_id=episode_id)
-
-    # Load the results for the summary
-    results_manager.load(params)
-
-    # Save the summary
-    results = results_manager.get_table()
-    results["error"] = results["error"].fillna("")
-    summary = summary_manager.summarize(results)
-    summary_manager.append(summary)
-
-    # Display the summaries
-    print(f"Total Episodes: {summary.episodes}")
-    print(f"Accuracy: {summary.accuracy:.0%}")
-    print(f"Correct Tasks: {summary.successes}")
-    print(f"Failed Tasks: {summary.failures}")
-    print(f"Errors: {summary.errors}")
-    print(f"Total Tokens: {summary.total_tokens}")
-    print(f"Total Cost: ${summary.total_cost:.2f}")
-    print(f"Total Time: {summary.total_time:.2f} seconds")
-    print(f"Avg Reward per Episode: {summary.avg_reward_per_episode:.2f}")
-    print(f"Avg Reward per Step: {summary.avg_reward_per_step:.4f}")
-    print(f"Avg Reward per Token: {summary.avg_reward_per_token:.6f}")
-    print("--- END OF EVAL ---" )
-    print("")
+# Report the run tally
+print(f"Total Episodes: {sum(counts.values())}")
+print(f"Succeeded:      {counts['success']}")
+print(f"Failed:         {counts['failure']}")
+print(f"Errored:        {counts['error']}")
+print(f"Skipped:        {counts['skipped']}")

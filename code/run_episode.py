@@ -50,7 +50,7 @@ def run_episode(split_name, model_name, agent_name, env_name, eval_name, episode
     results_manager = ResultsManager()
     if not force and results_manager.exists(params):
         warn(f"Episode {episode_id} already exists. Skipping (use --force to re-run).")
-        return 0
+        return "skipped"
 
     # Remove the prior episode folder when forcing a re-run
     folder_path = f"../data/artifacts/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
@@ -339,7 +339,11 @@ def run_episode(split_name, model_name, agent_name, env_name, eval_name, episode
     print("--- END OF EPISODE ---")
     print("")
 
-    return 1 if errored else 0
+    if errored:
+        return "error"
+    if is_success:
+        return "success"
+    return "failure"
 
 
 def build_parser():
@@ -356,7 +360,7 @@ def build_parser():
 
 if __name__ == "__main__":
     args = build_parser().parse_args()
-    exit_code = run_episode(
+    status = run_episode(
         split_name=args.split,
         model_name=args.model,
         agent_name=args.agent,
@@ -364,4 +368,4 @@ if __name__ == "__main__":
         eval_name=args.eval,
         episode_id=args.episode,
         force=args.force)
-    sys.exit(exit_code)
+    sys.exit(1 if status == "error" else 0)

@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from filelock import FileLock
-from params.parameters import Parameters
 from logs.console import warn
 from summaries.summary_row import SummaryRow
 
@@ -10,23 +9,6 @@ class SummaryManager:
     def __init__(self):
         self.file_path = "../data/summaries.csv"
         self.lock_path = self.file_path + ".lock"
-
-    def exists(self, params: Parameters):
-        if not os.path.exists(self.file_path):
-            return False
-
-        summaries = pd.read_csv(self.file_path)
-        if summaries is None or summaries.empty:
-            return False
-
-        split_matches = summaries["split_name"] == params.split_name
-        model_matches = summaries["model_name"] == params.model_name
-        agent_matches = summaries["agent_name"] == params.agent_name
-        eval_matches = summaries["eval_name"] == params.eval_name
-        size_matches = summaries["episodes"] == params.eval_size
-        all_matches = summaries[split_matches & model_matches & agent_matches & eval_matches & size_matches]
-
-        return not all_matches.empty
 
     def summarize(self, results):
         summary = SummaryRow()
