@@ -11,6 +11,7 @@ class TestLog:
     def test_log_calls(self, mock_makedirs, mock_open_fn, mock_print):
         renderer = RendererFactory.create()
         params = Parameters(
+            version="test-version",
             split_name="test-split",
             model_name="test-model",
             agent_name="test-agent",
@@ -29,11 +30,11 @@ class TestLog:
         log.close()
 
         # Assert folder was created
-        expected_dir = "../data/artifacts/test-split/test-model/test-agent/test-eval/episode-1"
+        expected_dir = "../data/artifacts/test-version/test-split/test-model/test-agent/test-eval/episode-1"
         mock_makedirs.assert_called_once_with(expected_dir, exist_ok=True)
 
         # Assert file was opened
-        expected_file = f"{expected_dir}/test-split - test-model - test-agent - test-eval - episode-1 - log.txt"
+        expected_file = f"{expected_dir}/test-version - test-split - test-model - test-agent - test-eval - episode-1 - log.txt"
         mock_open_fn.assert_called_once_with(
             expected_file, "w", encoding="utf-8", newline="\n")
 
