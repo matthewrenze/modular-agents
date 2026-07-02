@@ -40,7 +40,7 @@ summary_table = pd.DataFrame(summary_rows)
 summary_table = summary_table[["version", "split_name", "model_name", "agent_name", "eval_name"] + [
     c for c in summary_table.columns if c not in ["version", "split_name", "model_name", "agent_name", "eval_name"]
 ]]
-summary_table.sort_values(by=["split_name", "model_name", "agent_name", "eval_name"], inplace=True)
+summary_table.sort_values(by=["version", "split_name", "model_name", "agent_name", "eval_name"], inplace=True)
 
 os.makedirs("../data", exist_ok=True)
 summary_table.to_csv(summary_file_path, index=False)

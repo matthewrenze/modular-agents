@@ -18,7 +18,7 @@ class TestPlanRenderer:
 
     def test_render_empty(self):
         plan = ""
-        expected = "Plan: N/A.\n"
+        expected = "Plan: N/A\n"
 
         renderer = PlanRenderer()
         actual = renderer.render(plan)

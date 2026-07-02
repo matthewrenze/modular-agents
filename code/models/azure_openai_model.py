@@ -64,9 +64,9 @@ class AzureOpenAiModel(Model):
                 # Update tokens
                 self.update_tokens(
                     cached_tokens=cached_tokens,
-                    input_tokens=prompt_tokens,
+                    input_tokens=prompt_tokens - cached_tokens,
                     reasoning_tokens=reasoning_tokens,
-                    output_tokens=completion_tokens,
+                    output_tokens=completion_tokens - reasoning_tokens,
                     total_tokens=total_tokens)
 
                 return content

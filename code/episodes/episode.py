@@ -298,7 +298,7 @@ class Episode:
 
         # Update result row
         result_row.end_time = time.time()
-        result_row.sleep_time = (sleep_time * (step_id + 1)) + model.wait_time
+        result_row.sleep_time = (sleep_time * step_id) + model.wait_time
         result_row.total_time = result_row.end_time - result_row.start_time - result_row.sleep_time
         result_row.success = is_success
         result_row.reward = final_reward

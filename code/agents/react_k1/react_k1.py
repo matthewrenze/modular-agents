@@ -29,6 +29,7 @@ class ReactK1(Agent):
             previous_step = state.step_history[-2]
             previous_user_content = self.renderer.render_step(previous_step, state.task_state)
             previous_user_content += self.renderer.render_env(previous_step.env_state, state.task_state)
+            previous_user_content += "\n"
             previous_user_message = {"role": "user", "content": previous_user_content}
             self.messages.append(previous_user_message)
 
@@ -42,6 +43,7 @@ class ReactK1(Agent):
         current_step = state.step_history[-1]
         current_user_content = self.renderer.render_step(current_step, state.task_state)
         current_user_content += self.renderer.render_env(current_step.env_state, state.task_state)
+        current_user_content += "\n"
         prompt_message = {"role": "user", "content": current_user_content}
         self.messages.append(prompt_message)
 

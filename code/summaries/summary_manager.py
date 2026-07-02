@@ -62,7 +62,7 @@ class SummaryManager:
                 summaries = summaries[["version"] + [c for c in summaries.columns if c != "version"]]
 
                 # Sort the summaries
-                summaries.sort_values(by=["split_name", "model_name", "agent_name", "eval_name"], inplace=True)
+                summaries.sort_values(by=["version", "split_name", "model_name", "agent_name", "eval_name"], inplace=True)
 
                 temp_path = self.file_path + ".tmp"
                 summaries.to_csv(temp_path, index=False)
