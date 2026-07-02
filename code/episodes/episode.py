@@ -154,7 +154,6 @@ class Episode:
 
                 # If max steps reached, end the episode
                 if step_id == params.max_steps and not env_state.is_done:
-                    result_row.max_steps_hit = True
                     env_state.is_done = True
 
                 # Handle the end of episode
@@ -162,6 +161,7 @@ class Episode:
                     final_score = env_state.score
                     final_reward = env_state.reward
                     is_success = final_reward == 1.0
+                    result_row.max_steps_hit = step_id == params.max_steps and final_reward != 1.0
                     global_state.task_state.success = is_success
                     break
 
