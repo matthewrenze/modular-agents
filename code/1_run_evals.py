@@ -1,5 +1,5 @@
 # Import packages
-from run_episode import run_episode
+from episodes.episode import Episode
 
 # Set train/test split
 split_name = "train"
@@ -62,12 +62,13 @@ else:
     episode_ids = list(range(1, eval_size + 1))
 
 # Run each combo's episodes sequentially (parallelism is by running this in multiple windows)
+episode = Episode()
 counts = {"success": 0, "failure": 0, "error": 0, "skipped": 0}
 for model_name in model_names:
     for agent_name in agent_names:
         for eval_name, env_name in eval_env_names:
             for episode_id in episode_ids:
-                status = run_episode(
+                status = episode.run(
                     split_name=split_name,
                     model_name=model_name,
                     agent_name=agent_name,
