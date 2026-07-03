@@ -10,10 +10,18 @@ summary_file_path = "../data/summaries.csv"
 # Find all result files
 print("Finding result files...")
 result_file_paths = []
+fallback_file_paths = []
 for root, _, files in os.walk(artifacts_folder_path):
     for file_name in files:
         if file_name.endswith("results.csv"):
             result_file_paths.append(f"{root}/{file_name}".replace("\\", "/"))
+        elif file_name.startswith("results-") and file_name.endswith(".csv"):
+            fallback_file_paths.append(f"{root}/{file_name}".replace("\\", "/"))
+
+# Stop if any unmerged fallback files exist
+if fallback_file_paths:
+    fallback_files_text = "\n".join(fallback_file_paths)
+    raise ValueError(f"Found unmerged fallback results files:\n{fallback_files_text}")
 
 # Sort paths for stable output
 result_file_paths.sort()

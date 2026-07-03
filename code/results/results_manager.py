@@ -83,10 +83,10 @@ class ResultsManager:
                 os.replace(temp_path, file_path)
 
         except Exception as e:
-            warn(f"Results file is locked. Saving to temporary file.")
             date_time = pd.Timestamp.now().strftime("%Y-%m-%d_%H-%M-%S")
-            temp_file_path = f"{folder_path}/results-{date_time}.csv"
-            pd.DataFrame([row.__dict__]).to_csv(temp_file_path, index=False)
+            fallback_file_path = f"{folder_path}/results-{date_time}.csv"
+            pd.DataFrame([row.__dict__]).to_csv(fallback_file_path, index=False)
+            warn(f"Failed to save results row ({type(e).__name__}: {e}). Row saved to fallback file: {fallback_file_path}")
 
     def exists(self, params: Parameters):
         file_path = self.get_file_path(params)
