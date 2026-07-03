@@ -1,3 +1,4 @@
+import glob
 import os
 import pandas as pd
 from results.results_manager import ResultsManager
@@ -7,16 +8,12 @@ from summaries.summary_manager import SummaryManager
 artifacts_folder_path = "../data/artifacts"
 summary_file_path = "../data/summaries.csv"
 
-# Find all result files
+# Find all result files at the eval level: <version>/<split>/<model>/<agent>/<eval>/
 print("Finding result files...")
-result_file_paths = []
-fallback_file_paths = []
-for root, _, files in os.walk(artifacts_folder_path):
-    for file_name in files:
-        if file_name.endswith("results.csv"):
-            result_file_paths.append(f"{root}/{file_name}".replace("\\", "/"))
-        elif file_name.startswith("results-") and file_name.endswith(".csv"):
-            fallback_file_paths.append(f"{root}/{file_name}".replace("\\", "/"))
+result_file_paths = glob.glob(f"{artifacts_folder_path}/*/*/*/*/*/*results.csv")
+result_file_paths = [path.replace("\\", "/") for path in result_file_paths]
+fallback_file_paths = glob.glob(f"{artifacts_folder_path}/*/*/*/*/*/results-*.csv")
+fallback_file_paths = [path.replace("\\", "/") for path in fallback_file_paths]
 
 # Stop if any unmerged fallback files exist
 if fallback_file_paths:
