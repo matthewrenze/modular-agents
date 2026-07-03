@@ -41,7 +41,7 @@ all_summaries = all_summaries[all_summaries["model_name"] == model_name]
 all_summaries = all_summaries[all_summaries["eval_name"].str.startswith("tw-")]
 
 # Create groups
-all_summaries = all_summaries.groupby(["agent_name", "model_name"], as_index=False).agg({
+all_summaries = all_summaries.groupby(["version", "agent_name", "model_name"], as_index=False).agg({
     "episodes": "sum",
     "successes": "sum",
     "total_steps": "sum",
@@ -86,11 +86,12 @@ for agent_base in agent_bases:
     sns.set_style("whitegrid")
     plt.figure(figsize=(12, 6))
     ax = sns.barplot(
-        x="agent_name",
+        x="version",
         y="accuracy",
+        hue="agent_name",
         data=summaries)
     plt.title(f"Accuracy by Version for {agent_base} with {model_name}")
-    plt.xlabel("Agent")
+    plt.xlabel("Version")
     plt.ylabel("Accuracy (task completion rate)")
     plt.ylim(0.0, 1.0)
     plt.xticks(rotation=15, ha='right')
@@ -102,6 +103,7 @@ for agent_base in agent_bases:
 
     # Render a table
     markdown_table = summaries[[
+        "version",
         "agent_name",
         "accuracy",
         "avg_steps_per_episode",
