@@ -55,9 +55,17 @@ class Episode:
             return "skipped"
 
         # Remove the prior episode folder when forcing a re-run
+        # (retried with backoff: Dropbox transiently locks files while syncing)
         folder_path = f"../data/artifacts/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
         if force and os.path.exists(folder_path):
-            shutil.rmtree(folder_path)
+            for attempt in range(5):
+                try:
+                    shutil.rmtree(folder_path)
+                    break
+                except PermissionError:
+                    if attempt == 4:
+                        raise
+                    time.sleep(2 ** attempt)
 
         # Create components
         model_factory = ModelFactory()

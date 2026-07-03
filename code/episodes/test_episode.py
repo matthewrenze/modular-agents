@@ -69,7 +69,7 @@ def run_episode(monkeypatch):
     """Runs Episode.run with a scripted env, stub agents/model, and all file writers disabled.
     solution_steps=2 clamps max_steps to steps_floor (20). Returns (status, saved result row)."""
 
-    def _run(env, agent=None):
+    def _run(env, agent=None, force=False):
         agent = agent or StubAgent()
         saved = {}
         monkeypatch.setattr(episodes.episode, "sleep_time", 0)
@@ -83,7 +83,7 @@ def run_episode(monkeypatch):
         monkeypatch.setattr(DetailsManager, "save", lambda self: None)
         monkeypatch.setattr(MessagesWriter, "write", lambda self, *args: None)
         monkeypatch.setattr(StateWriter, "write", lambda self, *args: None)
-        status = Episode().run("train", "gpt-5.4", "react-k0", "textworld", "tw-simple-1", 1)
+        status = Episode().run("train", "gpt-5.4", "react-k0", "textworld", "tw-simple-1", 1, force=force)
         return status, saved["row"]
 
     return _run
@@ -137,6 +137,37 @@ class TestEpisode:
         monkeypatch.setattr(EvalFactory, "create", fail)
         status = Episode().run("train", "gpt-5.4", "modular-full", "textworld", "tw-simple-1", 1)
         assert status == "skipped"
+
+    def test_force_retries_rmtree_on_permission_error(self, run_episode, monkeypatch):
+        rmtree_calls = []
+        sleeps = []
+
+        def flaky_rmtree(path):
+            rmtree_calls.append(path)
+            if len(rmtree_calls) < 3:
+                raise PermissionError("locked by Dropbox")
+
+        monkeypatch.setattr(episodes.episode.os.path, "exists", lambda path: True)
+        monkeypatch.setattr(episodes.episode.shutil, "rmtree", flaky_rmtree)
+        monkeypatch.setattr(episodes.episode.time, "sleep", lambda seconds: sleeps.append(seconds))
+        status, row = run_episode(FakeEnv(done_after=3, reward=1.0), force=True)
+        assert status == "success"
+        assert len(rmtree_calls) == 3
+        assert sleeps[:2] == [1, 2]
+
+    def test_force_reraises_rmtree_permission_error_after_five_attempts(self, monkeypatch):
+        rmtree_calls = []
+
+        def locked_rmtree(path):
+            rmtree_calls.append(path)
+            raise PermissionError("locked by Dropbox")
+
+        monkeypatch.setattr(episodes.episode.os.path, "exists", lambda path: True)
+        monkeypatch.setattr(episodes.episode.shutil, "rmtree", locked_rmtree)
+        monkeypatch.setattr(episodes.episode.time, "sleep", lambda seconds: None)
+        with pytest.raises(PermissionError):
+            Episode().run("train", "gpt-5.4", "react-k0", "textworld", "tw-simple-1", 1, force=True)
+        assert len(rmtree_calls) == 5
 
     def test_invalid_agent_raises(self):
         with pytest.raises(ValueError):
