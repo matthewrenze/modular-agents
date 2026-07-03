@@ -24,6 +24,10 @@ for input_file_path in input_file_paths:
     input_results = pd.read_csv(input_file_path)
     all_results = pd.concat([all_results, input_results], ignore_index=True)
 
+# Verify the results contain exactly one split
+if all_results["split_name"].nunique() != 1:
+    raise ValueError("Results contain both train and test evals.")
+
 # Filter rows
 all_results = all_results[all_results["agent_name"] == agent_name]
 all_results = all_results[all_results["model_name"] == model_name]

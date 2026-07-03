@@ -254,6 +254,11 @@ for result_file_path in result_file_paths:
 	results.append(result)
 
 results = pd.concat(results, ignore_index=True)
+
+# Verify the results contain exactly one split
+if results["split_name"].nunique() != 1:
+	raise ValueError("Results contain both train and test evals.")
+
 results = results[results["agent_name"].isin([agent_a, agent_b])].copy()
 results["success"] = results["success"].astype(str).str.lower().isin(["true", "1"])
 

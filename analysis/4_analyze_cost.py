@@ -1,6 +1,7 @@
 import pandas as pd
 
 # Set parameters
+version = "v6.0"
 input_file_path = "../data/summaries.csv"
 
 # Load the data
@@ -8,7 +9,12 @@ summaries = pd.read_csv(input_file_path)
 
 # Filter the rows
 # summaries = summaries[summaries["eval_name"].str.endswith("-100")]
+summaries = summaries[summaries["version"] == version]
 summaries = summaries[summaries["model_name"] == "gpt-5.4"]
+
+# Verify the summaries contain exactly one split
+if summaries["split_name"].nunique() != 1:
+    raise ValueError("Summaries contain both train and test evals.")
 
 # Group by model and sum the cost
 # Note: only two decimal places for cost

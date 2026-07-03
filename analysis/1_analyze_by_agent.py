@@ -31,6 +31,10 @@ summaries = summaries[summaries["version"] == version]
 summaries = summaries[summaries["model_name"] == model_name]
 summaries = summaries[summaries["eval_name"].str.startswith("tw-")]
 
+# Verify the summaries contain exactly one split
+if summaries["split_name"].nunique() != 1:
+    raise ValueError("Summaries contain both train and test evals.")
+
 # Create groups
 summaries = summaries.groupby(["agent_name", "model_name"], as_index=False).agg({
     "episodes": "sum",
