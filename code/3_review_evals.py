@@ -14,6 +14,10 @@ from logs.console import warn
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 use_azure = False
 
+# Set version
+# FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
+version = "v6.0"
+
 # Set train/test split
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 split_name = "train"
@@ -34,17 +38,17 @@ model_names = [
 # Set agents
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 agent_names = [
-    # "react-k0-v5.0",
-    # "react-k1-v5.0",
-    # "react-kn-v5.0",
-    "modular-base-v5.0",
-    # "plus-planner-v5.0",
-    # "plus-summarizer-v5.0",
-    # "plus-memorizer-v5.0",
-    # "minus-planner-v5.0",
-    # "minus-summarizer-v5.0",
-    # "minus-memorizer-v5.0",
-    # "modular-full-v5.0"
+    # "react-k0",
+    # "react-k1",
+    # "react-kn",
+    "modular-base",
+    # "plus-planner",
+    # "plus-summarizer",
+    # "plus-memorizer",
+    # "minus-planner",
+    # "minus-summarizer",
+    # "minus-memorizer",
+    # "modular-full"
 ]
 # Set evals
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
@@ -85,6 +89,7 @@ for model_name in model_names:
                 env_name = env_name,
                 eval_name = eval_name,
                 eval_size = eval_size)
+            params.version = version
             runs.append(params)
 
 for params in runs:

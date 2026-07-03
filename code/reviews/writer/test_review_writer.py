@@ -8,6 +8,7 @@ from reviews.writer.review_writer import ReviewWriter
 class TestReviewWriter:
     def test_write_review(self, monkeypatch):
         params = Parameters(
+            version="version",
             split_name="split",
             model_name="model",
             agent_name="agent",
@@ -15,8 +16,8 @@ class TestReviewWriter:
         episode_id = 123
         review = "review"
 
-        expected_folder = f"../data/artifacts/split/model/agent/eval/episode-{episode_id}"
-        expected_file = f"{expected_folder}/split - model - agent - eval - episode-{episode_id} - review.txt"
+        expected_folder = f"../data/artifacts/version/split/model/agent/eval/episode-{episode_id}"
+        expected_file = f"{expected_folder}/version - split - model - agent - eval - episode-{episode_id} - review.txt"
         expected_text = "review"
 
         captured = {"makedirs": None, "open": None, "text": None}
