@@ -221,6 +221,12 @@ def print_model_level_results(data, group_label):
 
 		t_p_value = float(stats.ttest_1samp(model_means, 0.0).pvalue)
 
+		n_models = len(model_means)
+		standard_error = model_means.std(ddof=1) / np.sqrt(n_models)
+		t_critical = stats.t.ppf(0.975, df=n_models - 1)
+		ci_low = mean_delta - t_critical * standard_error
+		ci_high = mean_delta + t_critical * standard_error
+
 		n_nonzero = n_positive + n_negative
 		if n_nonzero == 0:
 			sign_p_value = 1.0
@@ -231,6 +237,7 @@ def print_model_level_results(data, group_label):
 		for model_name, value in model_means.items():
 			print(f"  {model_name}: {format_number(value)}")
 		print(f"  mean of per-model differences ({agent_b} - {agent_a}): {format_number(mean_delta)}")
+		print(f"  95% t-based CI: [{format_number(ci_low)}, {format_number(ci_high)}]")
 		print(f"  positive: {n_positive}, negative: {n_negative}")
 		print(f"  one-sample t-test p-value: {format_p_value(t_p_value)}")
 		print(f"  sign test p-value: {format_p_value(sign_p_value)}")
@@ -329,6 +336,8 @@ task_matches = (task_pairs[agent_a] == task_pairs[agent_b]).all()
 
 print(f"Paired task groups: {len(task_pairs):,}")
 print(f"Task text matches across pairs: {task_matches}")
+if not task_matches:
+	raise ValueError("Task text does not match across pairs.")
 
 
 # Print model-level (cluster-aware) results overall

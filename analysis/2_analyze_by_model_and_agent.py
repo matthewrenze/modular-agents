@@ -35,6 +35,10 @@ if summaries["split_name"].nunique() != 1:
 # Remove deepseek-v4
 summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=False)]
 
+# Verify all evals have the same number of episodes
+if summaries["episodes"].nunique() != 1:
+    raise ValueError("Not all evals have the same number of episodes")
+
 # Create groups
 summaries = summaries.groupby(["model_name", "agent_name"], as_index=False).agg({
     "episodes": "sum",
@@ -53,10 +57,6 @@ summaries["avg_steps_per_episode"] = summaries["total_steps"] / summaries["episo
 summaries["avg_tokens_per_episode"] = summaries["total_tokens"] / summaries["episodes"]
 summaries["avg_reward_per_episode"] = summaries["total_reward"] / summaries["episodes"]
 summaries["avg_reward_per_m_tokens"] = summaries["avg_reward_per_token"] * 1_000_000
-
-# Verify all groups have same number of episodes
-if summaries["episodes"].nunique() != 1:
-    raise ValueError("Not all groups have the same number of episodes")
 
 # Rename models
 model_name_mapping = {
