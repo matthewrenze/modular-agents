@@ -17,14 +17,6 @@ class FireworksModel(Model):
         model_name = self.model_name.replace(".", "p")
         model_path = f"accounts/fireworks/models/{model_name}"
 
-        # Hack to make Kimi-k2.5-turbo work via FirePass
-        if model_name == "kimi-k2p5-turbo":
-            model_path = f"accounts/fireworks/routers/kimi-k2p5-turbo"
-
-        # Hack to make GLM-5-fast work via FirePass
-        if model_name == "glm-5-fast":
-            model_path = f"accounts/fireworks/routers/glm-5-fast"
-
         # Create the parameters
         params = {
             "model": model_path,
