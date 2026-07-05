@@ -1,9 +1,8 @@
 # Import packages
-import os
 import time
-import shutil
 import traceback
-from logs.log import Log
+from artifacts.artifacts import Artifacts
+from logs.log_factory import LogFactory
 from logs.console import warn
 from params.parameters_factory import ParametersFactory
 from details.details_manager import DetailsManager
@@ -49,23 +48,15 @@ class Episode:
         print(f"--- Running {params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
 
         # Skip if the episode already ran
-        results_manager = ResultsManager()
+        artifacts = Artifacts()
+        results_manager = ResultsManager(artifacts)
         if not force and results_manager.exists(params):
             warn(f"Episode {episode_id} already exists. Skipping (use --force to re-run).")
             return "skipped"
 
         # Remove the prior episode folder when forcing a re-run
-        # (retried with backoff: Dropbox transiently locks files while syncing)
-        folder_path = f"../data/artifacts/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
-        if force and os.path.exists(folder_path):
-            for attempt in range(5):
-                try:
-                    shutil.rmtree(folder_path)
-                    break
-                except PermissionError:
-                    if attempt == 4:
-                        raise
-                    time.sleep(2 ** attempt)
+        if force:
+            artifacts.delete_episode(params)
 
         # Create components
         model_factory = ModelFactory()
@@ -73,8 +64,8 @@ class Episode:
         eval_factory = EvalFactory()
         env_factory = EnvFactory()
         cost_calculator = CostCalculator()
-        agent_writer = MessagesWriter()
-        state_writer = StateWriter()
+        agent_writer = MessagesWriter(artifacts)
+        state_writer = StateWriter(artifacts)
 
         # Create entities
         eval = eval_factory.create(params)
@@ -82,7 +73,7 @@ class Episode:
 
         # Create the log
         renderer = RendererFactory.create()
-        log = Log(renderer, params)
+        log = LogFactory().create(renderer, artifacts, params)
         log.head(f"--- Starting {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
 
         # Create the episode
@@ -103,7 +94,7 @@ class Episode:
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
         memory_manager = MemoryManager()
-        details_manager = DetailsManager(params)
+        details_manager = DetailsManager(artifacts, params)
 
         # Reset the variables
         global_state = GlobalState()
@@ -326,7 +317,7 @@ class Episode:
         result_row.total_cost = result_row.input_cost + result_row.output_cost
         result_row.reward_per_step = (final_reward / result_row.steps) if result_row.steps > 0 else 0.0
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
-        results_manager.save_row(params, result_row)
+        results_manager.save(params, result_row)
 
         # Save the details
         details_manager.save()

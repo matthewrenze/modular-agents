@@ -1,4 +1,5 @@
 import regex as re
+from artifacts.artifacts import Artifacts
 from evals.eval_factory import EvalFactory
 from models.model_factory import ModelFactory
 from params.parameters_factory import ParametersFactory
@@ -69,6 +70,7 @@ eval_env_names = [
 
 # Create the runs
 runs = []
+artifacts = Artifacts()
 parameters_factory = ParametersFactory()
 for eval_env_name in eval_env_names:
     eval_name, env_name = eval_env_name
@@ -100,13 +102,15 @@ for params in runs:
 
     for episode_id in episode_ids:
 
+        params.episode_id = episode_id
+
         print(f"--- Reading {params.split_name} - {params.agent_name} - {params.model_name} - {params.eval_name} - episode-{episode_id} ---")
 
         try:
 
             # Read the review
-            review_reader = ReviewReader()
-            review_text = review_reader.read(params, episode_id)
+            review_reader = ReviewReader(artifacts)
+            review_text = review_reader.read(params)
             review_lines = review_text.splitlines()
 
             # Remove the first two lines (agent and model)
@@ -143,7 +147,7 @@ analyzer = cast(Analyzer, analyzer)
 analysis = analyzer.analyze(reviews)
 
 # Write the analysis
-analysis_writer = AnalysisWriter()
+analysis_writer = AnalysisWriter(artifacts)
 analysis_writer.write(params, analysis)
 
 # Print analysis

@@ -1,14 +1,13 @@
-import os
 import pandas as pd
+from artifacts.artifacts import Artifacts
 from details.details_row import DetailsRow
 from params.parameters import Parameters
 
 class DetailsManager:
-    def __init__(self, params: Parameters):
-        self.folder_path = "../data/artifacts"
+    def __init__(self, artifacts: Artifacts, params: Parameters):
+        self.artifacts = artifacts
         self.details = pd.DataFrame()
         self.params = params
-        self.episode_id = params.episode_id
 
     def create(self):
         row = DetailsRow()
@@ -21,22 +20,12 @@ class DetailsManager:
         return self.details
 
     def save(self):
-        # Create the folder path
-        version = self.params.version
-        split_name = self.params.split_name
-        model_name = self.params.model_name
-        agent_name = self.params.agent_name
-        eval_name = self.params.eval_name
-        episode_id = self.episode_id
-        subfolder_name = f"/{version}/{split_name}/{model_name}/{agent_name}/{eval_name}/episode-{episode_id}"
-        subfolder_path = f"{self.folder_path}/{subfolder_name}"
-
         # Create the folder if it doesn't exist
-        os.makedirs(subfolder_path, exist_ok=True)
+        folder_path = self.artifacts.create_episode(self.params)
 
         # Create the file path
-        file_name = f"{version} - {split_name} - {model_name} - {agent_name} - {eval_name} - episode-{episode_id} - details.csv"
-        file_path = f"{subfolder_path}/{file_name}"
+        file_name = self.artifacts.get_file_name(self.params, "details.csv")
+        file_path = f"{folder_path}/{file_name}"
 
         # Save the details
         self.details.to_csv(file_path, index=False)

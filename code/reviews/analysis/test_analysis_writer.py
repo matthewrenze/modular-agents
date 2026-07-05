@@ -1,4 +1,5 @@
 import io
+from artifacts.artifacts import Artifacts
 from params.parameters import Parameters
 from reviews.analysis import analysis_writer
 from reviews.analysis.analysis_writer import AnalysisWriter
@@ -31,7 +32,7 @@ class TestAnalysisWriter:
             assert encoding == "utf-8"
             return _CaptureWriter(lambda text: captured.__setitem__("text", text))
 
-        writer = AnalysisWriter()
+        writer = AnalysisWriter(Artifacts())
         monkeypatch.setattr(analysis_writer.os, "makedirs", fake_makedirs, raising=True)
         monkeypatch.setattr(analysis_writer, "open", fake_open, raising=False)
 

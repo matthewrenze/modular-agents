@@ -1,18 +1,18 @@
-import os
 import yaml
+from artifacts.artifacts import Artifacts
 from params.parameters import Parameters
 from states.global_state import GlobalState
 
 
 class StateWriter:
 
+    def __init__(self, artifacts: Artifacts):
+        self.artifacts = artifacts
+
     def write(self, state: GlobalState, params: Parameters):
 
-        episode_id = params.episode_id
-
         # Create the folder
-        folder_path = f"../data/artifacts/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
-        os.makedirs(folder_path, exist_ok=True)
+        folder_path = self.artifacts.create_episode(params)
 
         # Deep copy the state
         data = state.model_dump(mode="python")
@@ -33,7 +33,7 @@ class StateWriter:
                 agent["memory"] = LiteralStr(mem)
 
         # Write the file
-        file_name = f"{params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - state.yaml"
+        file_name = self.artifacts.get_file_name(params, "state.yaml")
         file_path = f"{folder_path}/{file_name}"
         with open(file_path, "w", encoding="utf-8") as file:
             yaml.safe_dump(

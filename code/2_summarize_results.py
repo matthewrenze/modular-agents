@@ -1,6 +1,7 @@
 import glob
 import os
 import pandas as pd
+from artifacts.artifacts import Artifacts
 from results.results_manager import ResultsManager
 from summaries.summary_manager import SummaryManager
 
@@ -31,7 +32,7 @@ summary_rows = []
 print(f"Summarizing {len(result_file_paths)} results files...")
 for index, result_file_path in enumerate(result_file_paths, start=1):
     print(f"[{index}/{len(result_file_paths)}] Processing: {os.path.basename(result_file_path)}")
-    results_manager = ResultsManager()
+    results_manager = ResultsManager(Artifacts())
     results_manager.results = pd.read_csv(result_file_path)
     results_manager.results["error"] = results_manager.results["error"].fillna("")
     results = results_manager.get_table()

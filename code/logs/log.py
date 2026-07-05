@@ -1,5 +1,3 @@
-import os
-from params.parameters import Parameters
 from renderers.render import Renderer
 from states.task_state import TaskState
 from states.step_state import StepState
@@ -15,14 +13,9 @@ RED = "\033[91m"
 RESET = "\033[0m"
 
 class Log:
-    def __init__(self, renderer: Renderer, params: Parameters):
+    def __init__(self, file, renderer: Renderer):
+        self.file = file
         self.renderer = renderer
-        episode_id = params.episode_id
-        folder_path = f"../data/artifacts/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}/episode-{episode_id}"
-        file_name = f"{params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} - log.txt"
-        file_path = f"{folder_path}/{file_name}"
-        os.makedirs(folder_path, exist_ok=True)
-        self.file = open(file_path, "w", encoding="utf-8", newline="\n")
 
     def head(self, text):
         self.file.write(f"{text}\n")

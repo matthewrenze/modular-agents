@@ -1,6 +1,7 @@
 import io
 import yaml
 
+from artifacts.artifacts import Artifacts
 from states.task_state import TaskState
 from states.writer import state_writer
 from states.writer.state_writer import StateWriter
@@ -65,10 +66,7 @@ class TestStateWriter:
             expected_yaml = f.read()
 
         # Capture calls + written YAML
-        captured = {"makedirs": None, "open": None, "yaml_text": None}
-
-        def fake_makedirs(path, exist_ok=False):
-            captured["makedirs"] = (path, exist_ok)
+        captured = {"open": None, "yaml_text": None}
 
         def fake_open(file_path, mode="r", encoding=None, *args, **kwargs):
             captured["open"] = (file_path, mode, encoding)
@@ -78,13 +76,12 @@ class TestStateWriter:
 
             return _CaptureWriter(lambda text: captured.__setitem__("yaml_text", text))
 
-        monkeypatch.setattr(state_writer.os, "makedirs", fake_makedirs, raising=True)
+        monkeypatch.setattr(Artifacts, "create_episode", lambda self, params: self.get_episode_folder_path(params))
         monkeypatch.setattr(state_writer, "open", fake_open, raising=False)
 
-        writer = StateWriter()
+        writer = StateWriter(Artifacts())
         writer.write(state, params)
 
-        assert captured["makedirs"] == (expected_folder, True)
         assert captured["open"] == (expected_file_path, "w", "utf-8")
 
         expected = yaml.safe_load(expected_yaml)

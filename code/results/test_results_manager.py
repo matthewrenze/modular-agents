@@ -1,3 +1,4 @@
+from artifacts.artifacts import Artifacts
 from params.parameters import Parameters
 from results.results_manager import ResultsManager
 
@@ -13,25 +14,25 @@ class TestResultsManager:
             episode_id=episode_id)
 
     def make_manager(self, tmp_path):
-        manager = ResultsManager()
-        manager.folder_path = str(tmp_path)
-        return manager
+        artifacts = Artifacts()
+        artifacts.folder_path = str(tmp_path)
+        return ResultsManager(artifacts)
 
     def save_episode(self, manager, episode_id, reward=0.0):
         params = self.make_params(episode_id)
         row = manager.create(params)
         row.episode = episode_id
         row.reward = reward
-        manager.save_row(params, row)
+        manager.save(params, row)
 
-    def test_save_row_sorts_by_episode(self, tmp_path):
+    def test_save_sorts_by_episode(self, tmp_path):
         manager = self.make_manager(tmp_path)
         for episode_id in [3, 1, 2]:
             self.save_episode(manager, episode_id)
         manager.load(self.make_params(1))
         assert manager.get_table()["episode"].tolist() == [1, 2, 3]
 
-    def test_save_row_replaces_existing_episode(self, tmp_path):
+    def test_save_replaces_existing_episode(self, tmp_path):
         manager = self.make_manager(tmp_path)
         self.save_episode(manager, 1, reward=0.0)
         self.save_episode(manager, 1, reward=1.0)

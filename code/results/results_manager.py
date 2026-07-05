@@ -1,13 +1,14 @@
 import os
 import pandas as pd
 from filelock import FileLock
+from artifacts.artifacts import Artifacts
 from logs.console import warn
 from results.result_row import ResultRow
 from params.parameters import Parameters
 
 class ResultsManager:
-    def __init__(self):
-        self.folder_path = "../data/artifacts"
+    def __init__(self, artifacts: Artifacts):
+        self.artifacts = artifacts
         self.results = pd.DataFrame()
 
     def create(self, params: Parameters):
@@ -26,32 +27,15 @@ class ResultsManager:
         return self.results
 
     def get_file_path(self, params: Parameters):
-        folder_path = f"{self.folder_path}/{params.version}/{params.split_name}/{params.model_name}/{params.agent_name}/{params.eval_name}"
-        file_name = f"{params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - results.csv"
+        folder_path = self.artifacts.get_eval_folder_path(params)
+        file_name = self.artifacts.get_eval_file_name(params, "results.csv")
         return f"{folder_path}/{file_name}"
 
     def load(self, params: Parameters):
         file_path = self.get_file_path(params)
         self.results = pd.read_csv(file_path)
 
-    def save(self):
-        # Create the folder if it doesn't exist
-        os.makedirs(self.folder_path, exist_ok=True)
-
-        # Create the file path
-        version = self.results["version"].iloc[0]
-        split_name = self.results["split_name"].iloc[0]
-        model_name = self.results["model_name"].iloc[0]
-        agent_name = self.results["agent_name"].iloc[0]
-        eval_name = self.results["eval_name"].iloc[0]
-        folder_path = f"{self.folder_path}/{version}/{split_name}/{model_name}/{agent_name}/{eval_name}"
-        file_name = f"{version} - {split_name} - {model_name} - {agent_name} - {eval_name} - results.csv"
-        file_path = f"{folder_path}/{file_name}"
-
-        # Save the results
-        self.results.to_csv(file_path, index=False)
-
-    def save_row(self, params: Parameters, row):
+    def save(self, params: Parameters, row):
         file_path = self.get_file_path(params)
         folder_path = os.path.dirname(file_path)
         lock_path = file_path + ".lock"

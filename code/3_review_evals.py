@@ -1,3 +1,4 @@
+from artifacts.artifacts import Artifacts
 from evals.eval_factory import EvalFactory
 from logs.log_reader import LogReader
 from messages.messages_writer import MessagesWriter
@@ -77,6 +78,7 @@ task_types_map = {
 
 # Create the runs
 runs = []
+artifacts = Artifacts()
 parameters_factory = ParametersFactory()
 for model_name in model_names:
     for agent_name in agent_names:
@@ -103,7 +105,7 @@ for params in runs:
         episode_ids = list(range(10, 101, 10))
 
     # Load the results
-    results_manager = ResultsManager()
+    results_manager = ResultsManager(artifacts)
     results_manager.load(params)
     results = results_manager.get_table()
 
@@ -116,8 +118,8 @@ for params in runs:
         try:
 
             # Read the log file for the episode
-            log_reader = LogReader()
-            log_text = log_reader.read(params, episode_id)
+            log_reader = LogReader(artifacts)
+            log_text = log_reader.read(params)
             log_lines = log_text.splitlines()
             log_text = "\n".join(log_lines[2:-1])
 
@@ -152,15 +154,15 @@ for params in runs:
             review = reviewer.review(task, solution, solution_steps, log_text)
 
             # Write the reviewer's messages
-            messages_writer = MessagesWriter()
+            messages_writer = MessagesWriter(artifacts)
             messages_writer.write(params, 1, "reviewer", reviewer.messages)
 
             # Add the header
             review = header + review
 
             # Write the review
-            review_writer = ReviewWriter()
-            review_writer.write(params, episode_id, review)
+            review_writer = ReviewWriter(artifacts)
+            review_writer.write(params, review)
 
             # Print the review
             # print(review)
