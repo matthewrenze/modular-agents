@@ -6,16 +6,14 @@ split_name = "train"
 
 # Set models
 model_names = [
-    # "claude-sonnet-4-6",
-    # "deepseek-v4-pro",
-    # "gemini-3.1-pro-preview",
-    # "gpt-5.2",
-    # "gpt-5.4-mini",
-    "gpt-5.4",
-    # "gpt-5.5",
-    # "glm-5.1",
-    # "kimi-k2.6",
-    # "qwen3.7-plus",
+    "claude-sonnet-4-6",
+    "gemini-3.1-pro-preview",
+    "gpt-5.2",
+    # "gpt-5.4",
+    "gpt-5.5",
+    "glm-5.1",
+    "kimi-k2.6",
+    "qwen3.7-plus",
 ]
 
 # Set agents
@@ -38,15 +36,15 @@ eval_env_names = [
     # ("tw-quick-1", "textworld"),
     # # #
     ("tw-simple-1", "textworld"),
-    ("tw-treasure-1", "textworld"),
-    ("tw-treasure-2", "textworld"),
-    ("tw-treasure-3", "textworld"),
-    ("tw-coin-1", "textworld"),
-    ("tw-coin-2", "textworld"),
-    ("tw-coin-3", "textworld"),
-    ("tw-cooking-1", "textworld"),
-    ("tw-cooking-2", "textworld"),
-    ("tw-cooking-3", "textworld"),
+    # ("tw-treasure-1", "textworld"),
+    # ("tw-treasure-2", "textworld"),
+    # ("tw-treasure-3", "textworld"),
+    # ("tw-coin-1", "textworld"),
+    # ("tw-coin-2", "textworld"),
+    # ("tw-coin-3", "textworld"),
+    # ("tw-cooking-1", "textworld"),
+    # ("tw-cooking-2", "textworld"),
+    # ("tw-cooking-3", "textworld"),
 ]
 
 # Select the episodes to run

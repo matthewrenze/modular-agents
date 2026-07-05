@@ -27,13 +27,14 @@ split_name = "train"
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 model_names = [
     # "claude-sonnet-4-6",
-    # "deepseek-v3.2"
+    # "deepseek-v4-pro",
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
-    "gpt-5.4-mini",
-    # "gpt-5.4",
-    # "glm-5-fast"
-    # "kimi-k2.5"
+    "gpt-5.4",
+    # "gpt-5.5",
+    # "glm-5.1",
+    # "kimi-k2.6",
+    # "qwen3.7-plus",
 ]
 
 # Set agents
@@ -41,8 +42,8 @@ model_names = [
 agent_names = [
     # "react-k0",
     # "react-k1",
-    # "react-kn",
-    "modular-base",
+    "react-kn",
+    # "modular-base",
     # "plus-planner",
     # "plus-summarizer",
     # "plus-memorizer",
@@ -53,20 +54,20 @@ agent_names = [
 ]
 # Set evals
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
-eval_size = 10
+eval_size = 1
 eval_env_names = [
-    ("tw-quick-1", "textworld"),
+    # ("tw-quick-1", "textworld"),
     # # #
-    # ("tw-simple-1", "textworld"),
-    # ("tw-treasure-1", "textworld"),
-    # ("tw-treasure-2", "textworld"),
-    # ("tw-treasure-3", "textworld"),
-    # ("tw-coin-1", "textworld"),
-    # ("tw-coin-2", "textworld"),
-    # ("tw-coin-3", "textworld"),
-    # ("tw-cooking-1", "textworld"),
-    # ("tw-cooking-2", "textworld"),
-    # ("tw-cooking-3", "textworld"),
+    ("tw-simple-1", "textworld"),
+    ("tw-treasure-1", "textworld"),
+    ("tw-treasure-2", "textworld"),
+    ("tw-treasure-3", "textworld"),
+    ("tw-coin-1", "textworld"),
+    ("tw-coin-2", "textworld"),
+    ("tw-coin-3", "textworld"),
+    ("tw-cooking-1", "textworld"),
+    ("tw-cooking-2", "textworld"),
+    ("tw-cooking-3", "textworld"),
 ]
 
 task_types_map = {

@@ -26,13 +26,14 @@ split_name = "train"
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
 model_names = [
     # "claude-sonnet-4-6",
-    # "deepseek-v3.2"
+    # "deepseek-v4-pro",
     # "gemini-3.1-pro-preview",
     # "gpt-5.2",
-    "gpt-5.4-mini",
-    # "gpt-5.4",
-    # "glm-5-fast"
-    # "kimi-k2.5"
+    "gpt-5.4",
+    # "gpt-5.5",
+    # "glm-5.1",
+    # "kimi-k2.6",
+    # "qwen3.7-plus",
 ]
 
 # Set agents
@@ -52,7 +53,7 @@ agent_names = [
 ]
 # Set evals
 # FIXME: *** WARNING: THIS IS THE REVIEW SCRIPT ***
-eval_size = 10
+eval_size = 1
 eval_env_names = [
     ("tw-quick-1", "textworld"),
     # # #
