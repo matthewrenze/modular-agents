@@ -44,14 +44,11 @@ class Episode:
             episode_id=episode_id)
         params.version = version
 
-        # Echo the resolved config
-        print(f"--- Running {params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
-
         # Skip if the episode already ran
         artifacts = Artifacts()
         results_manager = ResultsManager(artifacts)
         if not force and results_manager.exists(params):
-            warn(f"Episode {episode_id} already exists. Skipping (use --force to re-run).")
+            warn(f"Skipping {params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} (use --force to re-run)\n")
             return "skipped"
 
         # Remove the prior episode folder when forcing a re-run
@@ -74,7 +71,7 @@ class Episode:
         # Create the log
         renderer = RendererFactory.create()
         log = LogFactory().create(renderer, artifacts, params)
-        log.head(f"--- Starting {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
+        log.head(f"--- Start of {params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
 
         # Create the episode
         episode_row = eval.iloc[episode_id - 1].to_dict()
@@ -289,12 +286,6 @@ class Episode:
             result_row.error = error_message
             log.error(error_message)
 
-        # Log the results
-        log.info(f"Reward: {final_reward}")
-        log.info(f"Success: {final_reward == 1.0}")
-        log.head("--- End of task ---\n")
-        log.close()
-
         # Update result row
         result_row.end_time = time.time()
         result_row.sleep_time = (sleep_time * step_id) + model.wait_time
@@ -317,28 +308,25 @@ class Episode:
         result_row.total_cost = result_row.input_cost + result_row.output_cost
         result_row.reward_per_step = (final_reward / result_row.steps) if result_row.steps > 0 else 0.0
         result_row.reward_per_token = (final_reward / model.total_tokens) if model.total_tokens > 0 else 0.0
-        results_manager.save(params, result_row)
 
-        # Save the details
+        # Log the results
+        log.info(f"Success: {result_row.success}")
+        log.info(f"Reward: {result_row.reward:.2f}")
+        log.info(f"Score: {result_row.score}/{result_row.max_score}")
+        log.info(f"Steps: {result_row.steps}")
+        log.info(f"Total Tokens: {result_row.total_tokens}")
+        log.info(f"Total Cost: ${result_row.total_cost:.2f}")
+        log.info(f"Total Time: {result_row.total_time:.2f} seconds")
+        log.info(f"Reward per Step: {result_row.reward_per_step:.4f}")
+        log.info(f"Reward per Token: {result_row.reward_per_token:.6f}")
+        log.head(f"--- End of {params.version} - {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
+        log.info("")
+        log.close()
+
+        # Save the artifacts
         details_manager.save()
-
-        # Write the state
         state_writer.write(global_state, params)
-
-        # Display the episode summary
-        print(f"--- Summary for {params.split_name} - {params.model_name} - {params.agent_name} - {params.eval_name} - episode-{episode_id} ---")
-        print(f"Success: {result_row.success}")
-        print(f"Reward: {result_row.reward:.2f}")
-        print(f"Score: {result_row.score}/{result_row.max_score}")
-        print(f"Steps: {result_row.steps}")
-        print(f"Total Tokens: {result_row.total_tokens}")
-        print(f"Total Cost: ${result_row.total_cost:.2f}")
-        print(f"Total Time: {result_row.total_time:.2f} seconds")
-        print(f"Reward per Step: {result_row.reward_per_step:.4f}")
-        print(f"Reward per Token: {result_row.reward_per_token:.6f}")
-        print(f"Error: {result_row.error}")
-        print("--- END OF EPISODE ---")
-        print("")
+        results_manager.save(params, result_row)
 
         if errored:
             return "error"
