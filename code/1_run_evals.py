@@ -17,7 +17,7 @@ model_names = [
     # "glm-5.1",
     # "kimi-k2.5-turbo",
     # "kimi-k2.6",
-    # "qwen3.6-plus",
+    # "qwen3.7-plus",
 ]
 
 # Set agents

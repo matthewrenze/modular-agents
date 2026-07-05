@@ -291,7 +291,7 @@ model_order = [
     # "glm-5.1",
     "kimi-k2.5",
     # "kimi-k2.6",
-    "qwen3.6-plus",
+    "qwen3.7-plus",
 ]
 
 # Filter out any models not in the list

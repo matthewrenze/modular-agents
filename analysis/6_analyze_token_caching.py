@@ -37,7 +37,7 @@ model_order = [
     # "gpt-5.5",
     # "glm-5",
     # "kimi-k2.5",
-    # "qwen3.6-plus",
+    # "qwen3.7-plus",
 ]
 
 pastel = sns.color_palette("tab10")

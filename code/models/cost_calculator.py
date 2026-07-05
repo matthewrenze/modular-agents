@@ -16,6 +16,7 @@ class CostCalculator:
             "kimi-k2.5-turbo": {"cached": 0.10, "input": 0.60, "output": 3.00},
             "kimi-k2.6" : {"cached": 0.16, "input": 0.95, "output": 4.00},
             "qwen3.6-plus" : {"cached": 0.10, "input": 0.50, "output": 3.00},
+            "qwen3.7-plus" : {"cached": 0.08, "input": 0.40, "output": 1.60},
         }
 
     def get_input_cost(self, model, cached_tokens, input_tokens):

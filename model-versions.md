@@ -16,6 +16,7 @@
  - glm-5.1
  - kimi-k2.5 (direct model — replaces the deprecated turbo router for the next full run)
  - kimi-k2.6
- - qwen3.6-plus (API echoes the model path, e.g. `accounts/fireworks/models/qwen3p6-plus`)
+ - qwen3.7-plus (`accounts/fireworks/models/qwen3p7-plus`, verified live 2026-07-05)
+ - qwen3.6-plus (DEPRECATED — not served by Fireworks, `NOT_FOUND` as of 2026-07-05; never ran)
  - glm-5-fast (DEPRECATED — FirePass router 404s as of 2026-07-02; v5.0 data only)
  - kimi-k2p5-turbo (DEPRECATED — FirePass router 404s as of 2026-07-02; v5.0 data only)
