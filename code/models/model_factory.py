@@ -32,6 +32,12 @@ class ModelFactory():
         elif params.model_name.startswith("glm"):
             return FireworksModel(params.model_name)
 
+        elif params.model_name.startswith("minimax"):
+            return FireworksModel(params.model_name)
+
+        elif params.model_name.startswith("nemotron"):
+            return FireworksModel(params.model_name)
+
         elif params.model_name.startswith("qwen"):
             return FireworksModel(params.model_name)
 

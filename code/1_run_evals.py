@@ -6,14 +6,18 @@ split_name = "train"
 
 # Set models
 model_names = [
-    "claude-sonnet-4-6",
-    "gemini-3.1-pro-preview",
-    "gpt-5.2",
+    # "claude-sonnet-4-6",
+    # "gemini-3.1-pro-preview",
+    # "gpt-5.2",
     # "gpt-5.4",
-    "gpt-5.5",
-    "glm-5.1",
-    "kimi-k2.6",
-    "qwen3.7-plus",
+    # "gpt-5.5",
+    # "glm-5.1",
+    # "kimi-k2.6",
+    # "qwen3.7-plus",
+    # "glm-5.2",
+    # "minimax-m3",
+    # "deepseek-v4-pro",
+    # "nemotron-3-ultra",
 ]
 
 # Set agents

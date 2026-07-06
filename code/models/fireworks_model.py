@@ -15,6 +15,8 @@ class FireworksModel(Model):
 
         # Create the fireworks model name
         model_name = self.model_name.replace(".", "p")
+        if model_name == "nemotron-3-ultra":
+            model_name = "nemotron-3-ultra-nvfp4"  # only the NVFP4 variant is served serverless
         model_path = f"accounts/fireworks/models/{model_name}"
 
         # Create the parameters
@@ -28,7 +30,8 @@ class FireworksModel(Model):
         }
 
         # Set retry variables
-        retries = [10, 10, 10, 10, 10, 20, 20, 20, 20, 20, 30, 30, 30, 30, 30, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60]  # wait before each retry
+        permanent_statuses = {400, 401, 402, 403, 404, 405, 412, 413}  # retrying cannot fix these (500 is retried despite the docs; transient 500s exist)
+        retries = [10, 20, 30, 60, 180, 300, 600, 1200, 1200]  # wait before each retry
         attempts = 0
 
         while True:
@@ -62,6 +65,9 @@ class FireworksModel(Model):
 
                 return content
             except Exception as e:
+
+                if getattr(e, "status_code", None) in permanent_statuses:
+                    raise
 
                 if attempts >= len(retries):
                     raise

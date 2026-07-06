@@ -12,11 +12,14 @@
  - gemini-3.1-pro-preview (March 9, 2026 release; API echoes only the bare id)
 
 # Fireworks
- - deepseek-v4-pro
- - glm-5.1
+ - deepseek-v4-pro (`accounts/fireworks/models/deepseek-v4-pro`, 1040k context; verified on model card 2026-07-06)
+ - glm-5.1 (DROPPED 2026-07-06 — repetition collapse on long react-kn episodes; completed v6.0 data retained)
+ - glm-5.2 (`accounts/fireworks/models/glm-5p2`, 1040k context; verified on model card 2026-07-06)
  - kimi-k2.5 (direct model — replaces the deprecated turbo router for the next full run)
  - kimi-k2.6
- - qwen3.7-plus (`accounts/fireworks/models/qwen3p7-plus`, verified live 2026-07-05)
+ - minimax-m3 (`accounts/fireworks/models/minimax-m3`, 512k context; verified on model card 2026-07-06)
+ - nemotron-3-ultra (`accounts/fireworks/models/nemotron-3-ultra-nvfp4`, 262k context; serverless serves only the NVFP4-quantized "(Preview)" variant — the BF16 build is on-demand only; verified on model card 2026-07-06)
+ - qwen3.7-plus (`accounts/fireworks/models/qwen3p7-plus`, verified live 2026-07-05) (DROPPED 2026-07-06 — repetition collapse on long react-kn episodes; completed v6.0 data retained)
  - qwen3.6-plus (DEPRECATED — not served by Fireworks, `NOT_FOUND` as of 2026-07-05; never ran)
  - glm-5-fast (DEPRECATED — FirePass router 404s as of 2026-07-02; v5.0 data only)
  - kimi-k2p5-turbo (DEPRECATED — FirePass router 404s as of 2026-07-02; v5.0 data only)
