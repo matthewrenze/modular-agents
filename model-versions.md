@@ -17,6 +17,7 @@
  - glm-5.2 (`accounts/fireworks/models/glm-5p2`, 1040k context; verified on model card 2026-07-06)
  - kimi-k2.5 (direct model — replaces the deprecated turbo router for the next full run)
  - kimi-k2.6
+ - kimi-k2.7-code (`accounts/fireworks/models/kimi-k2p7-code`, 262k context; verified on model card 2026-07-06)
  - minimax-m3 (`accounts/fireworks/models/minimax-m3`, 512k context; verified on model card 2026-07-06)
  - nemotron-3-ultra (`accounts/fireworks/models/nemotron-3-ultra-nvfp4`, 262k context; serverless serves only the NVFP4-quantized "(Preview)" variant — the BF16 build is on-demand only; verified on model card 2026-07-06)
  - qwen3.7-plus (`accounts/fireworks/models/qwen3p7-plus`, verified live 2026-07-05) (DROPPED 2026-07-06 — repetition collapse on long react-kn episodes; completed v6.0 data retained)

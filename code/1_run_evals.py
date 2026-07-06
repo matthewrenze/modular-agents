@@ -13,6 +13,7 @@ model_names = [
     # "gpt-5.5",
     # "glm-5.1",
     # "kimi-k2.6",
+    # "kimi-k2.7-code",
     # "qwen3.7-plus",
     # "glm-5.2",
     # "minimax-m3",
