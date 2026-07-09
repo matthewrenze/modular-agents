@@ -3,6 +3,8 @@ import sys
 import numpy as np
 import pandas as pd
 from scipy import stats
+import glob
+from pathlib import Path
 
 
 # Set parameters
@@ -243,13 +245,10 @@ def print_model_level_results(data, group_label):
 		print(f"  sign test p-value: {format_p_value(sign_p_value)}")
 
 
-# Find all result files
+# Find all result files at the eval level: <split>/<model>/<agent>/<eval>/
 print("Finding result files...")
-result_file_paths = sorted(
-	str(path).replace("\\", "/")
-	for path in Path(input_folder_path).rglob("*results.csv")
-	if path.is_file()
-)
+result_file_paths = glob.glob(f"{input_folder_path}*/*/*/*/*results.csv")
+result_file_paths = sorted(path.replace("\\", "/") for path in result_file_paths)
 print(f"Found {len(result_file_paths):,} result files")
 
 
@@ -281,17 +280,16 @@ results["model_name"] = results["model_name"].replace(model_name_mapping)
 # Order models
 model_order = [
     "claude-sonnet-4-6",
-    # "deepseek-v4",
     "gemini-3.1-pro",
     "gpt-5.2",
-    # "gpt-5.4-mini",
     "gpt-5.4",
     "gpt-5.5",
-    "glm-5",
-    # "glm-5.1",
-    "kimi-k2.5",
-    # "kimi-k2.6",
+    "kimi-k2.7-code",
     "qwen3.7-plus",
+    "glm-5.2",
+    "minimax-m3",
+    "deepseek-v4-pro",
+    "nemotron-3-ultra",
 ]
 
 # Filter out any models not in the list

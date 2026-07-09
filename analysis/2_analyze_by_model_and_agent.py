@@ -32,9 +32,6 @@ summaries = summaries[summaries["eval_name"].str.startswith("tw-")]
 if summaries["split_name"].nunique() != 1:
     raise ValueError("Summaries contain both train and test evals.")
 
-# Remove deepseek-v4
-summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=False)]
-
 # Verify all evals have the same number of episodes
 if summaries["episodes"].nunique() != 1:
     raise ValueError("Not all evals have the same number of episodes")
@@ -68,30 +65,38 @@ summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Order models
 model_order = [
-    # "claude-sonnet-4-6",
-    # "gemini-3.1-pro",
-    # "gpt-5.2",
+    "claude-sonnet-4-6",
+    "gemini-3.1-pro",
+    "gpt-5.2",
     "gpt-5.4",
-    # "gpt-5.5",
-    # "glm-5",
-    # "kimi-k2.5",
-    # "qwen3.7-plus",
+    "gpt-5.5",
+    "kimi-k2.7-code",
+    "qwen3.7-plus",
+    "glm-5.2",
+    "minimax-m3",
+    "deepseek-v4-pro",
+    "nemotron-3-ultra",
 ]
 
-# Filter out any models not in the list
+# Filter the models
 summaries = summaries[summaries["model_name"].isin(model_order)]
 
+# Order the models
 summaries["model_name"] = pd.Categorical(
     summaries["model_name"],
     categories=model_order,
     ordered=True)
 
-# Order agents
+# Specify the agents
 agent_order = [
     "react-kn",
     "modular-full",
 ]
 
+# Filter the agents
+summaries = summaries[summaries["agent_name"].isin(agent_order)]
+
+# Order the agents
 summaries["agent_name"] = pd.Categorical(
     summaries["agent_name"],
     categories=agent_order,

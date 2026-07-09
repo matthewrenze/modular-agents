@@ -11,7 +11,7 @@ import seaborn as sns
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 version = "v6.0"
-split_name = "train"
+split_name = "test"
 model_name = "gpt-5.4"
 
 agent_names = [

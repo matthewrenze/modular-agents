@@ -29,15 +29,19 @@ model_name_mapping = {
     "glm-5-fast": "glm-5",
 }
 
+# Order models
 model_order = [
-    # "claude-sonnet-4-6",
-    # "gemini-3.1-pro",
-    # "gpt-5.2",
+    "claude-sonnet-4-6",
+    "gemini-3.1-pro",
+    "gpt-5.2",
     "gpt-5.4",
-    # "gpt-5.5",
-    # "glm-5",
-    # "kimi-k2.5",
-    # "qwen3.7-plus",
+    "gpt-5.5",
+    "kimi-k2.7-code",
+    "qwen3.7-plus",
+    "glm-5.2",
+    "minimax-m3",
+    "deepseek-v4-pro",
+    "nemotron-3-ultra",
 ]
 
 pastel = sns.color_palette("tab10")
@@ -89,7 +93,7 @@ if missing_columns:
 summaries = summaries[summaries["version"] == version].copy()
 summaries = summaries[summaries["eval_name"].str.startswith("tw-", na=False)].copy()
 summaries = summaries[summaries["agent_name"].isin(agent_order)].copy()
-summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=False)].copy()
+# summaries = summaries[~summaries["model_name"].str.startswith("deepseek-v4", na=False)].copy()
 summaries["model_name"] = summaries["model_name"].replace(model_name_mapping)
 
 # Aggregate prompt token caching stats
