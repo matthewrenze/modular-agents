@@ -33,14 +33,14 @@ agent_names = [
     # "minus-planner",
     # "minus-summarizer",
     # "minus-memorizer",
-    "modular-full"
+    # "modular-full"
 ]
 # Set evals
-eval_size = 1
+eval_size = 10
 eval_env_names = [
     # ("tw-quick-1", "textworld"),
     # # #
-    ("tw-simple-1", "textworld"),
+    # ("tw-simple-1", "textworld"),
     # ("tw-treasure-1", "textworld"),
     # ("tw-treasure-2", "textworld"),
     # ("tw-treasure-3", "textworld"),
