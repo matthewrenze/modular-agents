@@ -47,15 +47,15 @@ all_summaries = all_summaries.groupby(["version", "agent_name", "model_name"], a
     "total_steps": "sum",
     "total_tokens": "sum",
     "total_reward": "sum",
+    "avg_reward_per_step": "mean",
+    "avg_reward_per_token": "mean",
 })
 
-# Compute averages
+# Compute averages (reward-per-step/token are means of per-episode ratios, per P3-03)
 all_summaries["accuracy"] = all_summaries["successes"] / all_summaries["episodes"]
 all_summaries["avg_steps_per_episode"] = all_summaries["total_steps"] / all_summaries["episodes"]
 all_summaries["avg_tokens_per_episode"] = all_summaries["total_tokens"] / all_summaries["episodes"]
 all_summaries["avg_reward_per_episode"] = all_summaries["total_reward"] / all_summaries["episodes"]
-all_summaries["avg_reward_per_step"] = all_summaries["total_reward"] / all_summaries["total_steps"]
-all_summaries["avg_reward_per_token"] = all_summaries["total_reward"] / all_summaries["total_tokens"]
 all_summaries["avg_reward_per_m_tokens"] = all_summaries["avg_reward_per_token"] * 1_000_000
 
 # Verify all groups have same number of episodes

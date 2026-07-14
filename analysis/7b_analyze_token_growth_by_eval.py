@@ -83,8 +83,8 @@ def save_plot(file_path, **kwargs):
     for extension in ("pdf", "png"):
         plt.savefig(f"{file_stem}.{extension}", **kwargs)
 
-# Get the details file paths
-details_file_paths = list(Path(root_folder_path).rglob("*details.csv"))
+# Get the details file paths (fixed-depth glob scoped to the model: <agent>/<eval>/<episode>/)
+details_file_paths = sorted(Path(root_folder_path).glob(f"{model_name}/*/*/*/*details.csv"))
 
 # Load all the details data
 frames = []

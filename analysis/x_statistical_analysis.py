@@ -214,6 +214,7 @@ def print_model_level_results(data, group_label):
 		("total_tokens", "tokens-per-task"),
 	]
 
+	results = []
 	for metric_name, label in metrics:
 		differences = paired[(metric_name, agent_b)].astype(float) - paired[(metric_name, agent_a)].astype(float)
 		model_means = differences.groupby(level="model_name").mean()
@@ -235,14 +236,33 @@ def print_model_level_results(data, group_label):
 		else:
 			sign_p_value = stats.binomtest(min(n_positive, n_negative), n=n_nonzero, p=0.5, alternative="two-sided").pvalue
 
-		print(f"\n{label}")
-		for model_name, value in model_means.items():
+		results.append({
+			"label": label, "model_means": model_means, "mean_delta": mean_delta,
+			"ci_low": ci_low, "ci_high": ci_high, "n_positive": n_positive,
+			"n_negative": n_negative, "t_p_value": t_p_value, "sign_p_value": sign_p_value,
+		})
+
+	# Holm-Bonferroni adjustment across the family of t-tests (one per metric)
+	raw_p_values = [result["t_p_value"] for result in results]
+	sorted_indices = np.argsort(raw_p_values)
+	n_tests = len(raw_p_values)
+	running_max = 0.0
+	holm_p_values = [0.0] * n_tests
+	for rank, index in enumerate(sorted_indices):
+		adjusted = min(1.0, (n_tests - rank) * raw_p_values[index])
+		running_max = max(running_max, adjusted)
+		holm_p_values[index] = running_max
+
+	for result, holm_p_value in zip(results, holm_p_values):
+		print(f"\n{result['label']}")
+		for model_name, value in result["model_means"].items():
 			print(f"  {model_name}: {format_number(value)}")
-		print(f"  mean of per-model differences ({agent_b} - {agent_a}): {format_number(mean_delta)}")
-		print(f"  95% t-based CI: [{format_number(ci_low)}, {format_number(ci_high)}]")
-		print(f"  positive: {n_positive}, negative: {n_negative}")
-		print(f"  one-sample t-test p-value: {format_p_value(t_p_value)}")
-		print(f"  sign test p-value: {format_p_value(sign_p_value)}")
+		print(f"  mean of per-model differences ({agent_b} - {agent_a}): {format_number(result['mean_delta'])}")
+		print(f"  95% t-based CI: [{format_number(result['ci_low'])}, {format_number(result['ci_high'])}]")
+		print(f"  positive: {result['n_positive']}, negative: {result['n_negative']}")
+		print(f"  one-sample t-test p-value: {format_p_value(result['t_p_value'])}")
+		print(f"  Holm-adjusted t-test p-value (family of {n_tests}): {format_p_value(holm_p_value)}")
+		print(f"  sign test p-value: {format_p_value(result['sign_p_value'])}")
 
 
 # Find all result files at the eval level: <split>/<model>/<agent>/<eval>/
