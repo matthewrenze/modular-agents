@@ -34,7 +34,6 @@ model_names = [
     # "gpt-5.5",
     # "glm-5.1",
     # "kimi-k2.6",
-    # "qwen3.7-plus",
 ]
 
 # Set agents

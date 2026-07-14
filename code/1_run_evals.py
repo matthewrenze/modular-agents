@@ -14,7 +14,6 @@ model_names = [
     # "glm-5.1",
     # "kimi-k2.6",
     # "kimi-k2.7-code",
-    # "qwen3.7-plus",
     # "glm-5.2",
     # "minimax-m3",
     # "deepseek-v4-pro",

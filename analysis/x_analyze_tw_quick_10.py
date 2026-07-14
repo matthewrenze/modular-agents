@@ -61,7 +61,6 @@ model_order = [
     "gpt-5.5",
     # "deepseek-v4",
     "kimi-k2.5-turbo",
-    "qwen3.7-plus",
     "glm-5-fast",
     "kimi-k2.6",
     "glm-5.1",

@@ -15,7 +15,6 @@ class CostCalculator:
             "kimi-k2.7-code": {"cached": 0.19, "input": 0.95, "output": 4.00},
             "minimax-m3": {"cached": 0.06, "input": 0.30, "output": 1.20},
             "nemotron-3-ultra": {"cached": 0.12, "input": 0.60, "output": 2.40},
-            "qwen3.7-plus" : {"cached": 0.08, "input": 0.40, "output": 1.60},
         }
 
     def get_input_cost(self, model, cached_tokens, input_tokens):

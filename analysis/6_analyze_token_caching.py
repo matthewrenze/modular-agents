@@ -37,7 +37,6 @@ model_order = [
     "gpt-5.4",
     "gpt-5.5",
     "kimi-k2.7-code",
-    "qwen3.7-plus",
     "glm-5.2",
     "minimax-m3",
     "deepseek-v4-pro",

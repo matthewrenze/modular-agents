@@ -38,8 +38,5 @@ class ModelFactory():
         elif params.model_name.startswith("nemotron"):
             return FireworksModel(params.model_name)
 
-        elif params.model_name.startswith("qwen"):
-            return FireworksModel(params.model_name)
-
         else:
             raise ValueError(f"Unknown model name: {params.model_name}")

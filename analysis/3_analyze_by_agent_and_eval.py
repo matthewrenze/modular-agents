@@ -10,7 +10,6 @@ model_name = "gpt-5.4"
 # model_name = "gpt-5.4-mini"
 # model_name = "claude-sonnet-4-6"
 # model_name = "kimi-k2.5-turbo"
-# model_name = "qwen3.7-plus"
 plot_file_types = ["pdf", "png"]
 input_file_path = "../data/summaries.csv"
 output_folder_path = "../data/plots/by-agent-and-eval"
