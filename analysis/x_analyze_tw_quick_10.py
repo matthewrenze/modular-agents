@@ -62,8 +62,6 @@ model_order = [
     # "deepseek-v4",
     "kimi-k2.5-turbo",
     "glm-5-fast",
-    "kimi-k2.6",
-    "glm-5.1",
 ]
 
 summaries["model_name"] = pd.Categorical(

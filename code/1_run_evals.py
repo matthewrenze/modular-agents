@@ -11,8 +11,6 @@ model_names = [
     # "gpt-5.2",
     # "gpt-5.4",
     # "gpt-5.5",
-    # "glm-5.1",
-    # "kimi-k2.6",
     # "kimi-k2.7-code",
     # "glm-5.2",
     # "minimax-m3",
