@@ -33,9 +33,10 @@ class ClaudeModel(Model):
                     extra_body={"cache_control": {"type": "ephemeral"}},
                     messages=messages)
 
-                # Get the content (if it exists)
-                if response.content:
-                    content = response.content[0].text
+                # Get the content from the text blocks (thinking models return thinking blocks first)
+                text_blocks = [block for block in response.content if block.type == "text"]
+                if text_blocks:
+                    content = text_blocks[0].text
                 else:
                     content = ""
 
