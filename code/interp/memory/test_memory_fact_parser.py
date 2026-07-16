@@ -1,4 +1,4 @@
-from interp.memory_fact_parser import MemoryFactParser
+from interp.memory.memory_fact_parser import MemoryFactParser
 
 class TestMemoryFactParser:
 

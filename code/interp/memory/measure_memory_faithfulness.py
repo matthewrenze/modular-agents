@@ -4,11 +4,12 @@ import numpy as np
 import pandas as pd
 from artifacts.artifacts import Artifacts
 from states.reader.state_reader import StateReader
+from interp.bootstrap import micro_rate_ci
 from interp.episode_extract import EpisodeExtract
 from interp.game_truth_reader import GameTruthReader
 from interp.grid_reader import GridReader
-from interp.memory_fact_parser import MemoryFactParser
-from interp.memory_scorer import MemoryScorer
+from interp.memory.memory_fact_parser import MemoryFactParser
+from interp.memory.memory_scorer import MemoryScorer
 
 # Parameters
 version = "v6.0"
@@ -18,28 +19,12 @@ output_folder = "../data/interp"
 bootstrap_samples = 2000
 bootstrap_seed = 0
 
-def micro_rate_ci(numerators, denominators, rng):
-    # Micro-averaged rate with a clustered bootstrap CI (episodes resampled with replacement)
-    numerators, denominators = np.asarray(numerators), np.asarray(denominators)
-    total = denominators.sum()
-    if total == 0:
-        return np.nan, np.nan, np.nan
-    rate = numerators.sum() / total
-    resampled = []
-    for _ in range(bootstrap_samples):
-        index = rng.integers(0, len(numerators), len(numerators))
-        denominator = denominators[index].sum()
-        if denominator:
-            resampled.append(numerators[index].sum() / denominator)
-    low, high = np.percentile(resampled, [2.5, 97.5])
-    return rate, low, high
-
 def summarize(rows, model_name, eval_family, rng):
     link_claims = rows["link_tp"] + rows["link_fp"]
     obj_claims = rows["obj_tp"] + rows["obj_fp"]
-    link_precision = micro_rate_ci(rows["link_tp"], link_claims, rng)
-    link_recall = micro_rate_ci(rows["traversed_hits"], rows["traversed_total"], rng)
-    obj_precision = micro_rate_ci(rows["obj_tp"], obj_claims, rng)
+    link_precision = micro_rate_ci(rows["link_tp"], link_claims, rng, bootstrap_samples)
+    link_recall = micro_rate_ci(rows["traversed_hits"], rows["traversed_total"], rng, bootstrap_samples)
+    obj_precision = micro_rate_ci(rows["obj_tp"], obj_claims, rng, bootstrap_samples)
     return {"model_name": model_name, "eval_family": eval_family, "episodes": len(rows),
             "link_claims": link_claims.sum(), "link_unresolved": rows["link_unresolved"].sum(),
             "link_precision": link_precision[0], "link_precision_low": link_precision[1], "link_precision_high": link_precision[2],

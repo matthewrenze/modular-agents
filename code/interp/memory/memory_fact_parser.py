@@ -1,6 +1,6 @@
 import re
 from typing import Optional, Tuple
-from interp.memory_facts import MemoryFacts
+from interp.memory.memory_facts import MemoryFacts
 
 DIRECTIONS = {"north", "south", "east", "west"}
 UNKNOWNS = {"?", "??", "none", "unknown", "unexplored", "unvisited", "tbd", "n/a",

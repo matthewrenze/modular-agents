@@ -1,6 +1,6 @@
 from interp.game_truth import GameTruth
-from interp.memory_facts import MemoryFacts
-from interp.memory_scorer import MemoryScorer
+from interp.memory.memory_facts import MemoryFacts
+from interp.memory.memory_scorer import MemoryScorer
 
 def make_truth():
     return GameTruth(

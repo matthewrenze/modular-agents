@@ -1,7 +1,7 @@
 from typing import Optional
 from interp.game_truth import GameTruth
-from interp.memory_facts import MemoryFacts
-from interp.memory_fact_parser import clean_name
+from interp.memory.memory_facts import MemoryFacts
+from interp.memory.memory_fact_parser import clean_name
 
 class MemoryScorer:
 
