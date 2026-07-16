@@ -50,3 +50,20 @@ class TestEpisodeExtract:
         assert d3["inventory_to"] == "a coin"
         assert d3["score_from"] == 0
         assert d3["score_to"] == 1
+
+    def test_traversed_links(self):
+
+        # Create the per-step details (successful moves, a failed move, and a non-move)
+        details = pd.DataFrame([
+            {"step_id": 1, "feedback": "", "location": "Dish-Pit", "inventory": "nothing", "score": 0, "summary": "", "thought": "", "action": "go north"},
+            {"step_id": 2, "feedback": "", "location": "Steam Room", "inventory": "nothing", "score": 0, "summary": "", "thought": "", "action": "go west"},
+            {"step_id": 3, "feedback": "You can't go that way.", "location": "Steam Room", "inventory": "nothing", "score": 0, "summary": "", "thought": "", "action": "east"},
+            {"step_id": 4, "feedback": "", "location": "Closet", "inventory": "nothing", "score": 0, "summary": "", "thought": "", "action": "take coin"},
+            {"step_id": 5, "feedback": "Taken.", "location": "Closet", "inventory": "a coin", "score": 1, "summary": "", "thought": "", "action": "go north"},
+        ])
+        extract = EpisodeExtract(params=Parameters(), state=GlobalState(), details=details, last_messages={})
+
+        # Successful moves are recorded lowercase; failed moves, non-moves, and the last action are not
+        assert extract.traversed_links() == {("dish-pit", "north", "steam room"),
+                                             ("steam room", "east", "closet")}
+
