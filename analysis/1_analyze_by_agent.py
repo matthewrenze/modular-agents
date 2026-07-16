@@ -80,12 +80,12 @@ summaries["agent_name"] = pd.Categorical(
 pastel = sns.color_palette("tab10")
 palette = {
     name:
-        pastel[7] if name.startswith("react") else      # grey
+        pastel[7] if name.startswith("react") else          # grey
         pastel[0] if name.startswith("modular-base") else   # blue
-        pastel[2] if name.startswith("plus") else       # green
-        pastel[1] if name.startswith("minus") else      # orange
-        pastel[0] if name.startswith("modular-full") else    # blue
-        pastel[7]                                       # grey
+        pastel[2] if name.startswith("plus") else           # green
+        pastel[1] if name.startswith("minus") else          # orange
+        pastel[0] if name.startswith("modular-full") else   # blue
+        pastel[7]                                           # grey
     for name in agent_order
 }
 
@@ -262,7 +262,7 @@ print(markdown_table)
 sns.set_theme(
     style="whitegrid",
     font="serif",
-    font_scale=1.25,
+    font_scale=1.50,
     rc={
         "font.family": "serif",
         "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
@@ -284,7 +284,7 @@ plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 for p in ax.patches:
-    ax.annotate(f"{p.get_height():.2f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=9)
+    ax.annotate(f"{p.get_height():.2f}",(p.get_x() + p.get_width() / 2, p.get_height()), ha='center', va='bottom', fontsize=14)
 plt.tight_layout()
 save_plot(accuracy_file_name)
 plt.show()

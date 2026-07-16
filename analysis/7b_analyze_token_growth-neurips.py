@@ -118,17 +118,17 @@ all_details["cumulative_tokens"] = (
 # Create plot for accuracy
 sns.set_theme(
     style="whitegrid",
-    # font="serif",
-    font_scale=1.25,
-    # rc={
-    #     "font.family": "serif",
-    #     "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
-    #     "mathtext.fontset": "dejavuserif",
-    #     "pdf.fonttype": 42,
-    #     "ps.fonttype": 42,
-    # },
+    font="serif",
+    font_scale=1.50,
+    rc={
+        "font.family": "serif",
+        "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
+        "mathtext.fontset": "dejavuserif",
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42,
+    },
 )
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 sns.scatterplot(
     data=all_details,
     x="step_id",
@@ -140,7 +140,8 @@ sns.scatterplot(
 )
 
 # Create marginal trend lines
-projection_steps = pd.DataFrame({"step_id": np.arange(1, 201)})
+projection_steps = pd.DataFrame({"step_id": np.arange(1, 251)})
+marginal_trends = {}
 
 for agent_name in agent_names:
     agent_details = all_details[all_details["agent_name"] == agent_name]
@@ -150,6 +151,7 @@ for agent_name in agent_names:
         agent_details["total_tokens"],
         deg=trend_degree,
     ))
+    marginal_trends[agent_name] = trend_model
     projection = projection_steps.copy()
     projection["total_tokens"] = trend_model(projection["step_id"])
     projection["agent_name"] = agent_name
@@ -165,17 +167,24 @@ for agent_name in agent_names:
 
 plt.xlabel("Step")
 plt.ylabel("Tokens per Step")
-plt.xlim(0, 200)
+plt.xlim(0, 250)
 plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:,.0f}"))
-plt.legend(title="Agent")
+# plt.axvline(all_details["step_id"].max(), color="gray", linestyle=":", linewidth=1)
+plt.legend(title="Agent", loc="lower right", fontsize=14, title_fontsize=14)
 plt.tight_layout()
 save_plot(marginal_plot_file_path, dpi=300)
 plt.show()
 plt.close()
 
+# Report the marginal trend crossover (steps beyond the last observed step are extrapolated)
+max_observed_step = all_details["step_id"].max()
+marginal_diff = marginal_trends["react-kn"] - marginal_trends["modular-full"]
+marginal_crossovers = sorted(r.real for r in np.roots(marginal_diff) if abs(r.imag) < 1e-9 and r.real > 0 and marginal_diff(r.real + 1) > 0)
+print(f"Marginal trend crossover (react-kn exceeds modular-full): step {marginal_crossovers[0]:,.1f} (last observed step: {max_observed_step})")
+
 
 # Create cumulative scatter plot
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 sns.scatterplot(
     data=all_details,
     x="step_id",
@@ -187,7 +196,8 @@ sns.scatterplot(
 )
 
 # Create cumulative trend lines
-projection_steps = pd.DataFrame({"step_id": np.arange(1, 301)})
+projection_steps = pd.DataFrame({"step_id": np.arange(1, 401)})
+cumulative_trends = {}
 
 for agent_name in agent_names:
     agent_details = all_details[all_details["agent_name"] == agent_name]
@@ -197,6 +207,7 @@ for agent_name in agent_names:
         agent_details["cumulative_tokens"],
         deg=trend_degree,
     ))
+    cumulative_trends[agent_name] = trend_model
     projection = projection_steps.copy()
     projection["cumulative_tokens"] = trend_model(projection["step_id"])
     projection["agent_name"] = agent_name
@@ -212,10 +223,16 @@ for agent_name in agent_names:
 
 plt.xlabel("Step")
 plt.ylabel("Cumulative Tokens (millions)")
-plt.xlim(0, 300)
+plt.xlim(0, 400)
 plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x / 1_000_000:,.1f}"))
-plt.legend(title="Agent")
+# plt.axvline(all_details["step_id"].max(), color="gray", linestyle=":", linewidth=1)
+plt.legend(title="Agent", fontsize=14, title_fontsize=14)
 plt.tight_layout()
 save_plot(cumulative_plot_file_path, dpi=300)
 plt.show()
 plt.close()
+
+# Report the cumulative trend crossover (steps beyond the last observed step are extrapolated)
+cumulative_diff = cumulative_trends["react-kn"] - cumulative_trends["modular-full"]
+cumulative_crossovers = sorted(r.real for r in np.roots(cumulative_diff) if abs(r.imag) < 1e-9 and r.real > 0 and cumulative_diff(r.real + 1) > 0)
+print(f"Cumulative trend crossover (react-kn exceeds modular-full): step {cumulative_crossovers[0]:,.1f} (last observed step: {max_observed_step})")

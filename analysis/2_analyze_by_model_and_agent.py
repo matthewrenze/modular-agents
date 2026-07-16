@@ -335,7 +335,7 @@ print(markdown_table)
 sns.set_theme(
     style="whitegrid",
     font="serif",
-    font_scale=1.25,
+    font_scale=1.50,
     rc={
         "font.family": "serif",
         "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
@@ -358,10 +358,10 @@ plt.ylim(0.0, 1.0)
 plt.xticks(rotation=15, ha='right')
 plt.subplots_adjust(bottom=0.2)
 plt.legend(title="Agent", loc="lower right")
-for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
-    values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["accuracy"]
-    labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
-    ax.bar_label(container, labels=labels, padding=3, fontsize=9)
+# for container, agent_name in zip([c for c in ax.containers if isinstance(c, BarContainer)], agent_order):
+#     values = summaries[summaries["agent_name"] == agent_name].set_index("model_name")["accuracy"]
+#     labels = ["" if pd.isna(values.get(model_name)) else f"{values.get(model_name):.2f}" for model_name in model_order]
+#     ax.bar_label(container, labels=labels, padding=3, fontsize=11)
 plt.tight_layout()
 save_plot(f"{output_folder_path}/{accuracy_file_name}", bbox_inches='tight')
 plt.show()
