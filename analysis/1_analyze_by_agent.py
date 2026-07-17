@@ -63,12 +63,12 @@ agent_order = [
     "react-k1",
     "react-kn",
     "modular-base",
-    "plus-planner",
     "plus-summarizer",
     "plus-memorizer",
-    "minus-planner",
+    "plus-planner",
     "minus-summarizer",
     "minus-memorizer",
+    "minus-planner",
     "modular-full",
 ]
 
