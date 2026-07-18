@@ -16,7 +16,7 @@ from interp.diagnosis.record import RecordParser, FORMAT_REMINDER
 labeler_name = "gpt-5.6-sol"
 failures_path = "../data/interp/failures.csv"
 output_folder = "../data/interp/diagnosis/pre-labeler"
-limit_per_agent = 5  # 5 = first-10 checkpoint (5 per architecture); None = full sweep
+limit_per_agent = None  # 5 = first-10 checkpoint (5 per architecture); None = full sweep
 
 PROMPT_VERSION = "A2"  # A1 = uncapped bundles (first-10 checkpoint, archived); A2 = size caps (decisions section 62)
 
