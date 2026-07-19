@@ -9,6 +9,7 @@ class ClaudeModel(Model):
         super().__init__(model_name)
         self.api_key = os.environ['ANTHROPIC_KEY']
         self.client = anthropic.Anthropic(api_key=self.api_key)
+        self.max_tokens = 4096  # thinking models spend thinking tokens inside this budget
 
     def get_response(self, messages):
 
@@ -29,7 +30,7 @@ class ClaudeModel(Model):
                 # Get the response
                 response = self.client.messages.create(
                     model=self.model_name,
-                    max_tokens=4096,
+                    max_tokens=self.max_tokens,
                     extra_body={"cache_control": {"type": "ephemeral"}},
                     messages=messages)
 

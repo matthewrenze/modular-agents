@@ -3,7 +3,9 @@ class CostCalculator:
         # Note: All costs are in USD per million tokens
         self.cost_map = {
             "claude-sonnet-4-6": {"cached": 0.30, "input": 3.00, "output": 15.00},
+            "claude-sonnet-5": {"cached": 0.20, "input": 2.00, "output": 10.00},  # intro pricing through 2026-08-31, then 3.00/0.30/15.00
             "claude-opus-4-6": {"cached": 0.50, "input": 5.00, "output": 25.00},
+            "claude-opus-4-8": {"cached": 0.50, "input": 5.00, "output": 25.00},
             "claude-fable-5": {"cached": 1.00, "input": 10.00, "output": 50.00},
             "deepseek-v4-pro": {"cached": 0.145, "input": 1.74, "output": 3.48},
             "gemini-3.1-pro-preview": {"cached": 0.20, "input": 2.00, "output": 12.00},
