@@ -14,11 +14,13 @@ from interp.diagnosis.record import ExtendedRecordParser, FORMAT_REMINDER_EXTEND
 
 # Parameters
 labeler_names = ["gpt-5.6-sol", "claude-fable-5", "gemini-3.1-pro-preview"]
+if os.environ.get("LABELER"):
+    labeler_names = [os.environ["LABELER"]]  # one process per provider = safe parallelism
 failures_path = "../data/interp/failures.csv"
 output_folder = "../data/interp/diagnosis/labeler"
 limit_per_agent = None  # 5 = first-10 checkpoint (5 per architecture); None = full sweep
 
-PROMPT_VERSION = "C1"  # frozen at Gate 2 (protocol section 6, decisions section 69); bundle caps = A2
+PROMPT_VERSION = "C2"  # Gate 2 prompt + approved taxonomy amendment (decisions section 78); bundle caps = A2
 
 PROMPT_HEAD = """You are a failure analyst for LLM agents that play text-based games (TextWorld). You will receive the complete record of ONE episode in which the agent FAILED its task, together with the task's ground-truth solution. Your job is to determine the primary cause of the failure.
 
@@ -30,8 +32,13 @@ Instructions:
 - Read the entire record before concluding.
 - The primary cause is the single most decisive reason this episode failed — the thing that, had it gone right, would most likely have flipped the outcome. Hitting the step limit is an outcome, not automatically a cause: ask WHY the agent did not finish in time.
 - Choose `primary_cause` from this fixed taxonomy (use the slug exactly):
-  - lost-sequence-position — Position in the prescribed sequence drifted with no single recoverable error step identifiable in the record
-  - route-transcription-errors — A specific identifiable slip — skipped, inserted, misread, or duplicated instruction — at a nameable step
+  - position-miscount-skip — Miscounted its position in the prescribed sequence (e.g. off-by-one, or conflating step count with move count) and executed a later instruction early, skipping one that was never performed
+  - extra-move-insertion — Inserted a move the route does not contain — re-executing the just-completed instruction or extending a repeated run of identical moves by one
+  - direction-misread — At the correct sequence position, misread the next instruction's direction and executed a different, substituted direction not in the route
+  - lost-place-reanchor — Lost its place in the route text and re-anchored on a similar phrase elsewhere, jumping forward or rewinding to replay a block of instructions
+  - route-copy-corruption — The agent's stored copy of the route was corrupted — instructions dropped, duplicated, or altered during transcription, replanning, or updates — and the agent faithfully executed the corrupted copy
+  - checklist-overtick-skip — The agent's progress tracking marked route items as done that were never executed, so the following move(s) were skipped
+  - intent-action-mismatch — The agent's stated intended move and its emitted command differ; the executed action contradicts the reasoning that chose it
   - cooking-recipe-errors — Recipe execution errors: misordered steps, wrong appliance, wrong cut, or misremembered recipe details
   - capacity-misbelief-loop — Falsely assumed an inventory-capacity limit blocked progress, causing futile item swapping or perceived deadlock
   - failed-move-desync — Advanced or failed to advance the route pointer correctly after failed or blocked movement attempts
@@ -73,6 +80,9 @@ cost_calculator = CostCalculator()
 failures = pd.read_csv(failures_path)
 if limit_per_agent is not None:
     failures = failures.groupby("agent_name", sort=False).head(limit_per_agent)
+if os.environ.get("SHARD"):
+    shard, n_shards = (int(x) for x in os.environ["SHARD"].split("/"))
+    failures = failures.iloc[shard::n_shards]  # disjoint slices per process; per-episode skip logic remains the safety net
 print(f"Episodes to label: {len(failures)} x {len(labeler_names)} labelers", flush=True)
 
 # Label every episode with every labeler, skipping already-persisted keys (every sweep is resumable)

@@ -1,8 +1,10 @@
 import json
 
-TAXONOMY = ["lost-sequence-position", "route-transcription-errors", "cooking-recipe-errors",
-            "capacity-misbelief-loop", "failed-move-desync", "hallucinated-state-quit",
-            "malformed-action-output", "abandoned-prescribed-route", "other"]
+TAXONOMY = ["position-miscount-skip", "extra-move-insertion", "direction-misread",
+            "lost-place-reanchor", "route-copy-corruption", "checklist-overtick-skip",
+            "intent-action-mismatch", "cooking-recipe-errors", "capacity-misbelief-loop",
+            "failed-move-desync", "hallucinated-state-quit", "malformed-action-output",
+            "abandoned-prescribed-route", "other"]
 
 MODULES = ["summarizer", "memorizer", "planner", "reasoner", "actor"]
 

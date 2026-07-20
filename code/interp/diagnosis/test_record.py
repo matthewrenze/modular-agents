@@ -37,7 +37,7 @@ class TestRecordParser:
         assert RecordParser().parse('["desync"]') is None
 
 def extended_response(**overrides):
-    data = {"primary_cause": "route-transcription-errors", "secondary_cause": "lost-sequence-position",
+    data = {"primary_cause": "position-miscount-skip", "secondary_cause": "failed-move-desync",
             "root_cause_step": 12, "faulty_module": "planner", "confidence": 0.85,
             "corrective_action": "Execute go west at step 12.",
             "rationale": "The agent skipped instruction 12.", "evidence": ["step 12: skipped go west"]}
@@ -49,8 +49,8 @@ class TestExtendedRecordParser:
 
     def test_parses_full_valid_record(self):
         record = ExtendedRecordParser().parse(extended_response())
-        assert record == {"primary_cause": "route-transcription-errors",
-                          "secondary_cause": "lost-sequence-position",
+        assert record == {"primary_cause": "position-miscount-skip",
+                          "secondary_cause": "failed-move-desync",
                           "root_cause_step": 12, "faulty_module": "planner", "confidence": 0.85,
                           "corrective_action": "Execute go west at step 12.",
                           "rationale": "The agent skipped instruction 12.",
@@ -58,14 +58,30 @@ class TestExtendedRecordParser:
 
     def test_parses_json_in_code_fences(self):
         response = "```json\n" + extended_response() + "\n```"
-        assert ExtendedRecordParser().parse(response)["primary_cause"] == "route-transcription-errors"
+        assert ExtendedRecordParser().parse(response)["primary_cause"] == "position-miscount-skip"
 
     def test_normalizes_primary_cause_case_and_backticks(self):
-        record = ExtendedRecordParser().parse(extended_response(primary_cause="`Route-Transcription-Errors`"))
-        assert record["primary_cause"] == "route-transcription-errors"
+        record = ExtendedRecordParser().parse(extended_response(primary_cause="`Position-Miscount-Skip`"))
+        assert record["primary_cause"] == "position-miscount-skip"
+
+    def test_accepts_every_c2_taxonomy_slug(self):
+        slugs = ["position-miscount-skip", "extra-move-insertion", "direction-misread",
+                 "lost-place-reanchor", "route-copy-corruption", "checklist-overtick-skip",
+                 "intent-action-mismatch", "cooking-recipe-errors", "capacity-misbelief-loop",
+                 "failed-move-desync", "hallucinated-state-quit", "malformed-action-output",
+                 "abandoned-prescribed-route", "other"]
+        for slug in slugs:
+            assert ExtendedRecordParser().parse(extended_response(primary_cause=slug))["primary_cause"] == slug
 
     def test_returns_none_when_primary_cause_not_in_taxonomy(self):
         assert ExtendedRecordParser().parse(extended_response(primary_cause="off-by-one navigation")) is None
+
+    def test_returns_none_on_retired_c1_primary_slug(self):
+        assert ExtendedRecordParser().parse(extended_response(primary_cause="route-transcription-errors")) is None
+
+    def test_retired_c1_secondary_slug_becomes_null(self):
+        record = ExtendedRecordParser().parse(extended_response(secondary_cause="lost-sequence-position"))
+        assert record["secondary_cause"] is None
 
     def test_returns_none_when_primary_cause_missing(self):
         assert ExtendedRecordParser().parse('{"secondary_cause": "other"}') is None
