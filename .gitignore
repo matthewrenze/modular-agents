@@ -171,6 +171,10 @@ run-from-console-PROD.txt
 **/data/**
 .claude/
 
-# Audit working files (root-level only; leading slash avoids ignoring code/evals/)
+# Local-only working files (root-level only; leading slash avoids ignoring code/evals/)
 /CLAUDE.md
-/docs/
+
+# Docs are local-only except explicitly whitelisted public folders
+/docs/*
+!/docs/design/
+!/docs/samples/
