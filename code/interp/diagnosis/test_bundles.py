@@ -6,7 +6,7 @@ from states.step_state import StepState
 from states.env_state import EnvState
 from states.agent_state import AgentState
 from interp.episode_extract import EpisodeExtract
-from interp.diagnosis.bundles import LabelerBundleRenderer, truncate
+from interp.diagnosis.bundles import JudgeBundleRenderer, LabelerBundleRenderer, truncate
 
 OUTCOME = {"success": False, "score": 0, "max_score": 1, "steps": 75, "max_steps": 75, "max_steps_hit": True}
 
@@ -99,6 +99,128 @@ class TestLabelerBundleRenderer:
         assert "--- Step 74 - actor ---\nACTOR 74" in bundle
         assert bundle.index("--- Step 74 - actor ---") < bundle.index("--- Step 75 - summarizer ---")
         assert bundle.index("--- Step 75 - summarizer ---") < bundle.index("--- Step 75 - actor ---")
+
+def make_details(rows):
+    columns = ["step_id", "feedback", "location", "inventory", "score", "summary", "thought", "action"]
+    return pd.DataFrame([{column: row.get(column, "") for column in columns} for row in rows])
+
+class TestJudgeBundleRenderer:
+
+    def test_renders_task_without_solution_or_outcome(self):
+        extract = make_extract()
+        extract.details = make_details([{"step_id": 1, "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "=== TASK ===\nFind the coin." in bundle
+        assert "SOLUTION" not in bundle
+        assert "Model:" not in bundle
+        assert "Outcome:" not in bundle
+
+    def test_renders_final_plan_and_memories_when_present(self):
+        extract = make_extract(plan="- [ ] Go north", memories={"kitchen": "rooms = {north = closet}"})
+        extract.details = make_details([{"step_id": 1, "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "=== FINAL PLAN ===\n- [ ] Go north" in bundle
+        assert "=== FINAL MEMORIES ===\nkitchen: rooms = {north = closet}" in bundle
+
+    def test_skips_final_plan_and_memories_when_absent(self):
+        extract = make_extract(agent_name="react-kn")
+        extract.details = make_details([{"step_id": 1, "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "=== FINAL PLAN ===" not in bundle
+        assert "=== FINAL MEMORIES ===" not in bundle
+
+    def test_renders_agent_authored_fields_only(self):
+        extract = make_extract()
+        extract.details = make_details([
+            {"step_id": 1, "feedback": "You entered a basement.", "location": "Basement",
+             "inventory": "a coin", "score": 1, "summary": "start", "thought": "Go north.", "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "--- Step 1 ---" in bundle
+        assert "Summary: start" in bundle
+        assert "Thought: Go north." in bundle
+        assert "Action: go north" in bundle
+        assert "Feedback:" not in bundle
+        assert "Location:" not in bundle
+        assert "Inventory:" not in bundle
+        assert "Score:" not in bundle
+
+    def test_feedback_condition_adds_feedback_lines_only(self):
+        extract = make_extract()
+        extract.details = make_details([
+            {"step_id": 1, "feedback": "You entered a basement.", "location": "Basement",
+             "thought": "Go north.", "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract, include_feedback=True)
+        assert "Feedback: You entered a basement." in bundle
+        assert "Location:" not in bundle
+
+    def test_omits_empty_fields(self):
+        extract = make_extract(agent_name="react-kn")
+        extract.details = make_details([{"step_id": 1, "thought": "Go.", "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract, include_feedback=True)
+        assert "Summary:" not in bundle
+        assert "Feedback:" not in bundle
+
+    def test_caps_step_fields(self):
+        extract = make_extract()
+        extract.details = make_details([
+            {"step_id": 1, "summary": "s" * 5000, "thought": "t" * 5000, "action": "a" * 5000}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "s" * 4001 not in bundle
+        assert "t" * 4001 not in bundle
+        assert "a" * 4001 not in bundle
+        assert bundle.count("[... truncated 1000 chars ...]") == 3
+
+    def test_caps_final_plan_and_memories(self):
+        extract = make_extract(plan="p" * 40000, memories={"kitchen": "v" * 40000})
+        extract.details = make_details([{"step_id": 1, "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "p" * 30001 not in bundle
+        assert "v" * 30001 not in bundle
+        assert bundle.count("truncated") == 2
+
+    def test_evolution_condition_adds_plan_and_memory_on_change(self):
+        steps = [make_step(1, plan="- [ ] A", memory="m1", action="go north"),
+                 make_step(2, plan="- [ ] A", memory="m1", action="go west"),
+                 make_step(3, plan="- [x] A", memory="m2", action="go south"),
+                 make_step(4, is_done=True)]
+        extract = make_extract(steps=steps)
+        extract.details = make_details([{"step_id": 1, "action": "go north"},
+                                        {"step_id": 2, "action": "go west"},
+                                        {"step_id": 3, "action": "go south"}])
+        bundle = JudgeBundleRenderer().render(extract, include_evolution=True)
+        assert bundle.count("Plan:\n- [ ] A") == 1
+        assert bundle.count("Plan:\n- [x] A") == 1
+        assert bundle.count("Memory:\nm1") == 1
+        assert bundle.count("Memory:\nm2") == 1
+        assert bundle.index("Plan:\n- [x] A") > bundle.index("--- Step 3 ---")
+
+    def test_evolution_condition_stays_artifact_only(self):
+        steps = [make_step(1, feedback="You entered a basement.", plan="- [ ] A", action="go north"),
+                 make_step(2, is_done=True)]
+        extract = make_extract(steps=steps)
+        extract.details = make_details([{"step_id": 1, "feedback": "You entered a basement.",
+                                         "location": "Basement", "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract, include_evolution=True)
+        assert "Plan:\n- [ ] A" in bundle
+        assert "Feedback:" not in bundle
+        assert "Location:" not in bundle
+
+    def test_evolution_defaults_off(self):
+        steps = [make_step(1, plan="- [ ] A", memory="m1", action="go north"), make_step(2, is_done=True)]
+        extract = make_extract(steps=steps)
+        extract.details = make_details([{"step_id": 1, "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract)
+        assert "Plan:\n- [ ] A" not in bundle
+        assert "Memory:\nm1" not in bundle
+
+    def test_evolution_caps_step_plan_and_memory(self):
+        steps = [make_step(1, plan="p" * 5000, memory="m" * 5000, action="go north"), make_step(2, is_done=True)]
+        extract = make_extract(steps=steps)
+        extract.details = make_details([{"step_id": 1, "action": "go north"}])
+        bundle = JudgeBundleRenderer().render(extract, include_evolution=True)
+        assert "p" * 4001 not in bundle
+        assert "m" * 4001 not in bundle
+        assert bundle.count("[... truncated 1000 chars ...]") == 2
 
 class TestTruncate:
 

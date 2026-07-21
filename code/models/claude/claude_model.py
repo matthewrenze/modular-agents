@@ -31,6 +31,7 @@ class ClaudeModel(Model):
                 response = self.client.messages.create(
                     model=self.model_name,
                     max_tokens=self.max_tokens,
+                    timeout=3600.0,  # explicit timeout: the SDK rejects non-streaming calls whose max_tokens implies >10 min
                     extra_body={"cache_control": {"type": "ephemeral"}},
                     messages=messages)
 

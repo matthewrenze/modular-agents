@@ -15,13 +15,23 @@ def truncate(text: str, cap: int) -> str:
     half = cap // 2
     return f"{text[:half]}\n[... truncated {len(text) - cap} chars ...]\n{text[-half:]}"
 
+def render_final_artifacts(extract: EpisodeExtract) -> str:
+    # Final plan/memories exist for modular agents only; skip the sections when absent
+    sections = []
+    if extract.state.plan.strip():
+        sections.append(f"=== FINAL PLAN ===\n{truncate(extract.state.plan, FINAL_CAP)}")
+    if extract.state.memories:
+        memories = "\n".join(f"{key}: {value}" for key, value in extract.state.memories.items())
+        sections.append(f"=== FINAL MEMORIES ===\n{truncate(memories, FINAL_CAP)}")
+    return "\n\n".join(sections)
+
 class LabelerBundleRenderer:
     """Renders the full-data input bundle for the pre-labeler/labeler roles (protocol section 4)."""
 
     def render(self, extract: EpisodeExtract, solution: list, outcome: dict) -> str:
         sections = [self.render_header(extract, outcome),
                     self.render_task(extract, solution),
-                    self.render_final_artifacts(extract),
+                    render_final_artifacts(extract),
                     self.render_steps(extract),
                     self.render_messages(extract)]
         return "\n\n".join(section for section in sections if section)
@@ -43,16 +53,6 @@ class LabelerBundleRenderer:
             "",
             "=== GROUND-TRUTH SOLUTION ===",
             ", ".join(solution)])
-
-    def render_final_artifacts(self, extract: EpisodeExtract) -> str:
-        # Final plan/memories exist for modular agents only; skip the sections when absent
-        sections = []
-        if extract.state.plan.strip():
-            sections.append(f"=== FINAL PLAN ===\n{truncate(extract.state.plan, FINAL_CAP)}")
-        if extract.state.memories:
-            memories = "\n".join(f"{key}: {value}" for key, value in extract.state.memories.items())
-            sections.append(f"=== FINAL MEMORIES ===\n{truncate(memories, FINAL_CAP)}")
-        return "\n\n".join(sections)
 
     def render_steps(self, extract: EpisodeExtract) -> str:
         # Acted-on steps are step_history[:-1]; the extra terminal entry is the episode outcome
@@ -95,4 +95,44 @@ class LabelerBundleRenderer:
                                                             if name in MODULE_ORDER else len(MODULE_ORDER), name)):
                 lines.append(f"--- Step {step_id} - {module} ---")
                 lines.append(truncate(modules[module].strip(), MESSAGE_CAP))
+        return "\n".join(lines)
+
+class JudgeBundleRenderer:
+    """Renders the artifact-only judge bundle (protocol section 7): everything the agent itself
+    wrote, nothing the environment said; no solution, no outcome stats. The feedback condition
+    adds the per-step env feedback column only."""
+
+    def render(self, extract: EpisodeExtract, include_feedback: bool = False,
+               include_evolution: bool = False) -> str:
+        sections = [f"=== TASK ===\n{extract.state.task_state.task}",
+                    render_final_artifacts(extract),
+                    self.render_steps(extract, include_feedback, include_evolution)]
+        return "\n\n".join(section for section in sections if section)
+
+    def render_steps(self, extract: EpisodeExtract, include_feedback: bool,
+                     include_evolution: bool = False) -> str:
+        # details.csv rows are exactly the acted-on steps (no terminal entry — decisions section 28)
+        # The evolution condition (decisions section 99) adds the agent's per-step plan/memory
+        # snapshots from step_history, rendered on change exactly as the labeler bundle does —
+        # agent-authored artifacts only, so the bundle stays artifact-only.
+        agent_states = {step.step_id: step.agent_state for step in extract.state.step_history[:-1]}
+        lines = ["=== PER-STEP RECORD ==="]
+        prev_plan, prev_memory = "", ""
+        for row in extract.details.to_dict("records"):
+            lines.append(f"--- Step {row['step_id']} ---")
+            if include_feedback and str(row["feedback"]).strip():
+                lines.append(f"Feedback: {row['feedback']}")
+            if str(row["summary"]).strip():
+                lines.append(f"Summary: {truncate(str(row['summary']), FIELD_CAP)}")
+            if include_evolution and row["step_id"] in agent_states:
+                agent_state = agent_states[row["step_id"]]
+                if agent_state.plan and agent_state.plan != prev_plan:
+                    lines.append(f"Plan:\n{truncate(agent_state.plan, FIELD_CAP)}")
+                if agent_state.memory and agent_state.memory != prev_memory:
+                    lines.append(f"Memory:\n{truncate(agent_state.memory, FIELD_CAP)}")
+                prev_plan, prev_memory = agent_state.plan, agent_state.memory
+            if str(row["thought"]).strip():
+                lines.append(f"Thought: {truncate(str(row['thought']), FIELD_CAP)}")
+            lines.append(f"Action: {truncate(str(row['action']), FIELD_CAP)}")
+            lines.append("")
         return "\n".join(lines)
