@@ -75,6 +75,20 @@ class TestActionParser:
         response = "Here is my request:\n```json\n{\"reads\": [{\"tool\": \"read_actions\"}]}\n```"
         assert ActionParser().parse(response)["type"] == "reads"
 
+    def test_parses_read_request_with_hallucinated_continuation(self):
+        # Fable sometimes emits valid JSON then keeps generating a fake dialogue whose braces
+        # break first-to-last-brace extraction; the first balanced object is the request
+        response = ('{"reads": [{"tool": "read_actions"}]}\n\nuser Step 1: go south\n\n'
+                    'assistant {"reads": [{"tool": "read_thoughts", "from": 3}]}')
+        parsed = ActionParser().parse(response)
+        assert parsed == {"type": "reads", "reads": [{"tool": "read_actions", "from": None, "to": None}]}
+
+    def test_parses_diagnosis_with_trailing_garbage(self):
+        response = json.dumps({"diagnose": DIAGNOSIS}) + "\n\nuser Thank you. {done}"
+        parsed = ActionParser().parse(response)
+        assert parsed["type"] == "diagnose"
+        assert parsed["record"]["primary_cause"] == "direction-misread"
+
     def test_rejects_diagnosis_with_invalid_slug(self):
         bad = dict(DIAGNOSIS, primary_cause="not-a-class")
         assert ActionParser().parse(json.dumps({"diagnose": bad})) is None

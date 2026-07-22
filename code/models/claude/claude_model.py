@@ -10,6 +10,7 @@ class ClaudeModel(Model):
         self.api_key = os.environ['ANTHROPIC_KEY']
         self.client = anthropic.Anthropic(api_key=self.api_key)
         self.max_tokens = 4096  # thinking models spend thinking tokens inside this budget
+        self.timeout = 3600.0  # explicit timeout: the SDK rejects non-streaming calls whose max_tokens implies >10 min
 
     def get_response(self, messages):
 
@@ -31,7 +32,7 @@ class ClaudeModel(Model):
                 response = self.client.messages.create(
                     model=self.model_name,
                     max_tokens=self.max_tokens,
-                    timeout=3600.0,  # explicit timeout: the SDK rejects non-streaming calls whose max_tokens implies >10 min
+                    timeout=self.timeout,
                     extra_body={"cache_control": {"type": "ephemeral"}},
                     messages=messages)
 

@@ -66,6 +66,16 @@ class TestClaudeModel:
         model.get_response([{"role": "user", "content": "ping"}])
         assert captured_kwargs["timeout"] == 3600.0
 
+    def test_timeout_override(self, monkeypatch):
+        response = create_fake_response([SimpleNamespace(type="text", text="pong")])
+        captured_kwargs = {}
+        monkeypatch.setenv("ANTHROPIC_KEY", "test-key")
+        monkeypatch.setattr(anthropic, "Anthropic", lambda api_key: create_fake_client(response, captured_kwargs))
+        model = ClaudeModel("claude-fable-5")
+        model.timeout = 1200.0
+        model.get_response([{"role": "user", "content": "ping"}])
+        assert captured_kwargs["timeout"] == 1200.0
+
     def test_max_tokens_override(self, monkeypatch):
         response = create_fake_response([SimpleNamespace(type="text", text="pong")])
         captured_kwargs = {}

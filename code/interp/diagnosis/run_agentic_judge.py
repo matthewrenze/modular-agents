@@ -17,7 +17,7 @@ if os.environ.get("JUDGE"):
 failures_path = "../data/interp/failures.csv"
 exclusions_path = "../data/interp/diagnosis/exclusions.csv"
 output_folder = "../data/interp/diagnosis/agentic-judge"
-limit_per_agent = 5  # 5 = first-10 checkpoint (5 per architecture); None = full sweep
+limit_per_agent = None  # 5 = first-10 checkpoint (5 per architecture); None = full sweep
 
 PROMPT_VERSION = "E1"  # verbatim E1 prompt text lives in agentic.py (build_intro and its constants)
 
@@ -47,6 +47,7 @@ def main():
         model = ModelFactory().create(Parameters(model_name=judge_name), use_azure=False)
         if judge_name.startswith("claude"):
             model.max_tokens = 32768  # Claude thinking models spend thinking inside max_tokens (decisions sections 71/89)
+            model.timeout = 1200.0  # silent stalls burn the full timeout; legit agentic calls finish in < 8 min
         judge_cost = 0.0
         role_folder = f"{output_folder}/{judge_name}"
         os.makedirs(role_folder, exist_ok=True)

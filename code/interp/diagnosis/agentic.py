@@ -4,6 +4,38 @@ from interp.episode_extract import EpisodeExtract
 from interp.diagnosis.bundles import truncate, FIELD_CAP, FINAL_CAP
 from interp.diagnosis.record import ExtendedRecordParser, extract_json
 
+def extract_first_json(response: str) -> dict:
+    # Fallback extractor: the first balanced JSON object in the response. Rescues responses
+    # where valid JSON is followed by hallucinated continuation text containing more braces
+    # (which breaks extract_json's first-to-last-brace span). On every response extract_json
+    # accepts, the first balanced object IS that same object, so this is a strict superset.
+    start = response.find("{")
+    if start == -1:
+        return None
+    depth, in_string, escaped = 0, False, False
+    for i in range(start, len(response)):
+        char = response[i]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+        elif char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                try:
+                    data = json.loads(response[start:i + 1])
+                except json.JSONDecodeError:
+                    return None
+                return data if isinstance(data, dict) else None
+    return None
+
 MODULAR_TOOLS = ["read_summaries", "read_thoughts", "read_actions", "read_observations",
                  "read_plan_updates", "read_memory_updates", "read_plan", "read_memories", "read_steps"]
 REACT_TOOLS = ["read_thoughts", "read_actions", "read_observations", "read_steps"]
@@ -116,6 +148,8 @@ class ActionParser:
 
     def parse(self, response: str) -> dict:
         data = extract_json(response)
+        if data is None:
+            data = extract_first_json(response)
         if data is None:
             return None
         if "diagnose" in data:
