@@ -37,3 +37,35 @@ class TestCostCalculator:
         actual_cost = calculator.get_output_cost(model, reasoning_tokens, output_tokens)
         assert actual_cost == expected_cost
 
+    def test_gpt_5_6_sol_costs(self):
+        model = "gpt-5.6-sol"
+        calculator = CostCalculator()
+        input_cost = calculator.get_input_cost(model, 1_000_000, 1_000_000)
+        output_cost = calculator.get_output_cost(model, 0, 1_000_000)
+        assert input_cost == (0.50 + 5.00)
+        assert output_cost == 30.00
+
+    def test_claude_opus_4_8_costs(self):
+        model = "claude-opus-4-8"
+        calculator = CostCalculator()
+        input_cost = calculator.get_input_cost(model, 1_000_000, 1_000_000)
+        output_cost = calculator.get_output_cost(model, 0, 1_000_000)
+        assert input_cost == (0.50 + 5.00)
+        assert output_cost == 25.00
+
+    def test_claude_sonnet_5_costs(self):
+        model = "claude-sonnet-5"
+        calculator = CostCalculator()
+        input_cost = calculator.get_input_cost(model, 1_000_000, 1_000_000)
+        output_cost = calculator.get_output_cost(model, 0, 1_000_000)
+        assert input_cost == (0.20 + 2.00)
+        assert output_cost == 10.00
+
+    def test_claude_fable_5_costs(self):
+        model = "claude-fable-5"
+        calculator = CostCalculator()
+        input_cost = calculator.get_input_cost(model, 1_000_000, 1_000_000)
+        output_cost = calculator.get_output_cost(model, 0, 1_000_000)
+        assert input_cost == (1.00 + 10.00)
+        assert output_cost == 50.00
+

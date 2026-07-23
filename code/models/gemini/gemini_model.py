@@ -43,8 +43,12 @@ class GeminiModel(Model):
 
                 # Hack to prevent the "non-text parts in response" warning
                 # And hack to set STOP token (without empty string) to empty string
-                if response.candidates[0].content.parts is not None:
-                    content = response.candidates[0].content.parts[0].text
+                # Thinking models may return a thought part first, so join the
+                # non-thought text parts instead of assuming parts[0] is the text
+                parts = response.candidates[0].content.parts
+                if parts is not None:
+                    content = "".join(part.text for part in parts
+                                      if part.text and not part.thought)
                 else:
                     content = ""
 

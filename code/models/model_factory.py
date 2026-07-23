@@ -1,11 +1,11 @@
 from models.model import Model
-from models.azure_openai_model import AzureOpenAiModel
-from models.openai_model import OpenAiModel
+from models.azure_openai.azure_openai_model import AzureOpenAiModel
+from models.openai.openai_model import OpenAiModel
 from params.parameters import Parameters
-from models.claude_model import ClaudeModel
-from models.azure_model import AzureModel
-from models.gemini_model import GeminiModel
-from models.fireworks_model import FireworksModel
+from models.claude.claude_model import ClaudeModel
+from models.azure.azure_model import AzureModel
+from models.gemini.gemini_model import GeminiModel
+from models.fireworks.fireworks_model import FireworksModel
 
 class ModelFactory():
 

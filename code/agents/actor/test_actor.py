@@ -2,7 +2,7 @@ import pytest
 from params.parameters import Parameters
 from states.reader.state_reader import StateReader
 from agents.agent_factory import AgentFactory
-from models.azure_openai_model import AzureOpenAiModel
+from models.azure_openai.azure_openai_model import AzureOpenAiModel
 
 class TestActor:
 
