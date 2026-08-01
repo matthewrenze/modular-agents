@@ -22,9 +22,10 @@ class TextWorldEnv:
         json_data = json.load(open(json_file_path))
 
         # Set the env info (what info the player has access to)
+        # NOTE: admissible_commands is never read by the harness and computing it
+        # costs 10-15s/step late in tw-long-cook games, so it is not requested
         env_infos = textworld.EnvInfos(
             objective=True,
-            admissible_commands=True,
             description=True,
             inventory=True,
             feedback=True,
