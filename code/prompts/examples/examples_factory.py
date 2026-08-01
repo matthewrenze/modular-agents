@@ -3,6 +3,11 @@ from params.parameters import Parameters
 
 class ExamplesFactory:
     def create(self, params: Parameters, subagent: str):
+
+        # The modular-single agent gets combined five-section examples
+        if subagent == "modular-single":
+            return self.create_modular_single(params)
+
         content = ""
         for step in range(1, 10):
             content += f"## Example {step}\n"
@@ -87,6 +92,66 @@ class ExamplesFactory:
 
             if subagent == "actor":
                 content += self.get_part(step, "output-action")
+
+            content += "\n"
+
+        return content
+
+    def create_modular_single(self, params: Parameters):
+        content = ""
+        for step in range(1, 10):
+            content += f"## Example {step}\n"
+
+            # Add the note (if it exists)
+            note = self.get_note(step)
+            if note is not None:
+                content += note
+
+            content += "### Input\n"
+
+            # Add the task
+            content += self.get_part(0, "input-task")
+
+            # Add the history
+            if params.use_summarizer:
+                content += self.get_part(step, "input-history")
+
+            # Add the previous memories (pre-update)
+            if params.use_memorizer:
+                content += self.get_part(step, "input-memories")
+
+            # Add the previous plan (pre-update)
+            if params.use_planner:
+                content += self.get_part(step, "input-plan")
+
+            # Add the previous environment, thought, and action
+            if step > 1:
+                content += self.get_part(step - 1, "input-env")
+                content += "Agent:\n"
+                if params.use_reasoner:
+                    content += f"  Thought: {self.get_part(step - 1, 'output-thought')}"
+                content += f"  Action: {self.get_part(step - 1, 'output-action')}"
+
+            # Add the current environment
+            content += self.get_part(step, "input-env")
+
+            content += "\n### Output\n"
+
+            # Add the five labeled sections in execution order
+            if params.use_summarizer:
+                content += "## Summary\n"
+                content += self.get_part(step, "output-summary")
+            if params.use_memorizer:
+                content += "## Memory\n"
+                content += self.get_part(step, "output-memory")
+            if params.use_planner:
+                content += "## Plan\n"
+                content += self.get_part(step, "output-plan")
+            if params.use_reasoner:
+                content += "## Thought\n"
+                content += self.get_part(step, "output-thought")
+            content += "## Action\n"
+            content += self.get_part(step, "output-action")
 
             content += "\n"
 

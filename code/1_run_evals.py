@@ -30,7 +30,8 @@ agent_names = [
     # "minus-planner",
     # "minus-summarizer",
     # "minus-memorizer",
-    # "modular-full"
+    # "modular-full",
+    # "modular-single"
 ]
 # Set evals
 eval_size = 10

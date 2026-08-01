@@ -21,3 +21,4 @@ class Parameters:
     use_memorizer: bool = False
     use_reasoner: bool = False
     use_actor: bool = True
+    use_modular_single: bool = False

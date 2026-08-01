@@ -57,6 +57,28 @@ class RaisingAgent(StubAgent):
         raise RuntimeError("agent exploded")
 
 
+class ModularSingleStub(StubAgent):
+    """Returns scripted five-tuples (repeats the last one when exhausted) and
+    snapshots the plan/memories it observes at each call."""
+
+    def __init__(self, responses=None):
+        super().__init__()
+        self.responses = list(responses or [("a summary", "key: value", "- [ ] a plan", "a thought", "an action")])
+        self.calls = 0
+        self.seen_plans = []
+        self.seen_memories = []
+        self.seen_states = []
+
+    def execute(self, global_state):
+        self.calls += 1
+        self.seen_plans.append(global_state.plan)
+        self.seen_memories.append(dict(global_state.memories))
+        self.seen_states.append(global_state)
+        if len(self.responses) > 1:
+            return self.responses.pop(0)
+        return self.responses[0]
+
+
 class StubLog:
 
     def __init__(self, *args):
@@ -71,7 +93,7 @@ def run_episode(monkeypatch):
     """Runs Episode.run with a scripted env, stub agents/model, and all file writers disabled.
     solution_steps=2 clamps max_steps to steps_floor (20). Returns (status, saved result row)."""
 
-    def _run(env, agent=None, force=False):
+    def _run(env, agent=None, force=False, agent_name="react-k0"):
         agent = agent or StubAgent()
         saved = {}
         monkeypatch.setattr(episodes.episode, "sleep_time", 0)
@@ -85,7 +107,7 @@ def run_episode(monkeypatch):
         monkeypatch.setattr(DetailsManager, "save", lambda self: None)
         monkeypatch.setattr(MessagesWriter, "write", lambda self, *args: None)
         monkeypatch.setattr(StateWriter, "write", lambda self, *args: None)
-        status = Episode().run("train", "gpt-5.4", "react-k0", "textworld", "tw-simple-1", 1, force=force)
+        status = Episode().run("train", "gpt-5.4", agent_name, "textworld", "tw-simple-1", 1, force=force)
         return status, saved["row"]
 
     return _run
@@ -170,6 +192,45 @@ class TestEpisode:
         with pytest.raises(PermissionError):
             Episode().run("train", "gpt-5.4", "react-k0", "textworld", "tw-simple-1", 1, force=True)
         assert len(rmtree_calls) == 5
+
+    def test_modular_single_success_with_one_call_per_step(self, run_episode):
+        stub = ModularSingleStub()
+        status, row = run_episode(FakeEnv(done_after=3, reward=1.0), agent=stub, agent_name="modular-single")
+        assert status == "success"
+        assert row.success is True
+        # One agent call per step: the five guarded module blocks must not also execute
+        assert stub.calls == 3
+
+    def test_modular_single_populates_agent_state(self, run_episode):
+        stub = ModularSingleStub()
+        run_episode(FakeEnv(done_after=2, reward=1.0), agent=stub, agent_name="modular-single")
+        # At step 2 the stub sees step 1's recorded agent state
+        previous_agent_state = stub.seen_states[-1].step_history[-2].agent_state
+        assert previous_agent_state.summary == "a summary"
+        assert previous_agent_state.memory == "key: value"
+        assert previous_agent_state.plan == "- [ ] a plan"
+        assert previous_agent_state.thought == "a thought"
+        assert previous_agent_state.action == "an action"
+
+    def test_modular_single_empty_plan_section_preserves_prior_plan(self, run_episode):
+        stub = ModularSingleStub(responses=[
+            ("s", "", "- [ ] the plan", "t", "an action"),
+            ("s", "", "", "t", "an action"),
+            ("s", "", "NO_CHANGE", "t", "an action"),
+            ("s", "", "NO_CHANGE", "t", "an action")])
+        run_episode(FakeEnv(done_after=4, reward=1.0), agent=stub, agent_name="modular-single")
+        assert stub.seen_plans == ["", "- [ ] the plan", "- [ ] the plan", "- [ ] the plan"]
+
+    def test_modular_single_memories_accumulate(self, run_episode):
+        stub = ModularSingleStub(responses=[
+            ("s", "key 1: value 1", "", "t", "an action"),
+            ("s", "key 2: value 2", "", "t", "an action"),
+            ("s", "", "", "t", "an action")])
+        run_episode(FakeEnv(done_after=3, reward=1.0), agent=stub, agent_name="modular-single")
+        assert stub.seen_memories == [
+            {},
+            {"key 1": "value 1"},
+            {"key 1": "value 1", "key 2": "value 2"}]
 
     def test_invalid_agent_raises(self):
         with pytest.raises(ValueError):

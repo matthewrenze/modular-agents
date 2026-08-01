@@ -10,6 +10,7 @@ from agents.planner.planner import Planner
 from agents.memorizer.memorizer import Memorizer
 from agents.reasoner.reasoner import Reasoner
 from agents.actor.actor import Actor
+from agents.modular_single.modular_single import ModularSingle
 from agents.reviewer.reviewer import Reviewer
 from agents.analyzer.analyzer import Analyzer
 from prompts.system_prompt_factory import SystemPromptFactory
@@ -55,6 +56,9 @@ class AgentFactory:
 
         if subagent == "actor":
             return Actor(model, renderer, system_prompt, params)
+
+        if subagent == "modular-single":
+            return ModularSingle(model, renderer, system_prompt, params)
 
         if subagent == "reviewer":
             return Reviewer(model, renderer, system_prompt, params)

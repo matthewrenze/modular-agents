@@ -12,6 +12,7 @@ from agents.reasoner.reasoner import Reasoner
 from agents.reviewer.reviewer import Reviewer
 from agents.analyzer.analyzer import Analyzer
 from agents.actor.actor import Actor
+from agents.modular_single.modular_single import ModularSingle
 
 
 class TestAgentFactory:
@@ -26,7 +27,8 @@ class TestAgentFactory:
          ("reasoner", Reasoner, "You are the Reasoner (chain-of-thought) agent"),
          ("actor", Actor, "You are the Actor (action selector) agent"),
          ("reviewer", Reviewer, "You are the Reviewer agent"),
-         ("analyzer", Analyzer, "You are the Analyzer (review analyzer) agent")])
+         ("analyzer", Analyzer, "You are the Analyzer (review analyzer) agent"),
+         ("modular-single", ModularSingle, "## Summary")])
     def test_create_with_subagent(self, subagent, expected_class, expected_message):
         model = MockModel("")
         params = Parameters()

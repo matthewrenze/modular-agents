@@ -48,6 +48,12 @@ class ParametersFactory:
             parameters = self.plus_all(parameters)
             return parameters
 
+        # Create modular-single agent (all five functions in one call)
+        if agent_name.startswith("modular-single"):
+            parameters = self.plus_all(parameters)
+            parameters.use_modular_single = True
+            return parameters
+
         # Create baseline-plus agents
         if agent_name.startswith("plus-"):
             parameters = self.minus_all(parameters)

@@ -58,8 +58,19 @@ class TestParametersFactory:
                     and attr != "use_actor"
                     and attr != "use_react_k0"
                     and attr != "use_react_k1"
-                    and attr != "use_react_kn"):
+                    and attr != "use_react_kn"
+                    and attr != "use_modular_single"):
                 assert getattr(params, attr)
+
+    def test_create_single(self):
+        factory = ParametersFactory()
+        params = factory.create("test", "model", "modular-single", "env", "eval", 10)
+        assert params.agent_name == "modular-single"
+        assert params.use_modular_single
+        for attr in ["use_summarizer", "use_planner", "use_memorizer", "use_reasoner", "use_actor"]:
+            assert getattr(params, attr)
+        for attr in ["use_react_k0", "use_react_k1", "use_react_kn"]:
+            assert not getattr(params, attr)
 
     @pytest.mark.parametrize(
         "agent_name,true_param", [
@@ -96,7 +107,8 @@ class TestParametersFactory:
                     and attr != "use_tasker" \
                     and attr != "use_react_k0" \
                     and attr != "use_react_k1" \
-                    and attr != "use_react_kn":
+                    and attr != "use_react_kn" \
+                    and attr != "use_modular_single":
                 assert getattr(params, attr)
 
     @pytest.mark.parametrize(

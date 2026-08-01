@@ -90,6 +90,7 @@ class Episode:
         memorizer = agent_factory.create("memorizer", params, model)
         reasoner = agent_factory.create("reasoner", params, model)
         actor = agent_factory.create("actor", params, model)
+        modular_single = agent_factory.create("modular-single", params, model)
         memory_manager = MemoryManager()
         details_manager = DetailsManager(artifacts, params)
 
@@ -119,6 +120,7 @@ class Episode:
             memorizer.reset()
             reasoner.reset()
             actor.reset()
+            modular_single.reset()
 
             # Run the agent in the environment
             for step_id in range(params.max_steps + 1):
@@ -209,15 +211,38 @@ class Episode:
                     log.info(f"  Thought: {thought}")
                     log.info(f"  Action: {action}")
 
+                # Use the modular-single agent (all five functions in one call)
+                if params.use_modular_single:
+                    summary, memory_updates, new_plan, thought, action = modular_single.execute(global_state)
+                    agent_writer.write(params, step_id + 1, "modular_single", modular_single.messages)
+                    agent_state.summary = summary
+                    log.info(f"  Summary: {summary}")
+                    global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
+                    agent_state.memory = memory_updates
+                    memory_updates = renderer.render_memory_updates(memory_updates)
+                    log.info(f"  Memory:\n{memory_updates}")
+                    # An empty Plan section (parse miss) is treated as NO_CHANGE to preserve the prior plan
+                    if new_plan.strip() != "NO_CHANGE" and new_plan.strip() != "":
+                        global_state.plan = new_plan
+                        agent_state.plan = new_plan
+                    else:
+                        agent_state.plan = global_state.plan
+                    new_plan = renderer.render_plan_updates(new_plan)
+                    log.info(f"  Plan:\n{new_plan}")
+                    agent_state.thought = thought
+                    log.info(f"  Thought: {thought}")
+                    agent_state.action = action
+                    log.info(f"  Action: {action}")
+
                 # Get the summarizer's summary
-                if params.use_summarizer:
+                if params.use_summarizer and not params.use_modular_single:
                     summary = summarizer.execute(global_state)
                     agent_writer.write(params, step_id + 1, "summarizer", summarizer.messages)
                     agent_state.summary = summary
                     log.info(f"  Summary: {summary}")
 
                 # Get the memorizer's memory updates
-                if params.use_memorizer:
+                if params.use_memorizer and not params.use_modular_single:
                     memory_updates = memorizer.execute(global_state)
                     agent_writer.write(params, step_id + 1, "memorizer", memorizer.messages)
                     global_state.memories = memory_manager.execute(global_state.memories, memory_updates)
@@ -226,7 +251,7 @@ class Episode:
                     log.info(f"  Memory:\n{memory_updates}")
 
                 # Get the planner's plan
-                if params.use_planner:
+                if params.use_planner and not params.use_modular_single:
                     new_plan = planner.execute(global_state)
                     agent_writer.write(params, step_id + 1, "planner", planner.messages)
                     if new_plan.strip() != "NO_CHANGE":
@@ -238,14 +263,14 @@ class Episode:
                     log.info(f"  Plan:\n{new_plan}")
 
                 # Get the reasoner's thought
-                if params.use_reasoner:
+                if params.use_reasoner and not params.use_modular_single:
                     thought = reasoner.execute(global_state)
                     agent_writer.write(params, step_id + 1, "reasoner", reasoner.messages)
                     agent_state.thought = thought
                     log.info(f"  Thought: {thought}")
 
                 # Get the agent's action
-                if params.use_actor:
+                if params.use_actor and not params.use_modular_single:
                     action = actor.execute(global_state)
                     agent_writer.write(params, step_id + 1, "actor", actor.messages)
                     agent_state.action = action

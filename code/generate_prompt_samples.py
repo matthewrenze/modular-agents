@@ -10,7 +10,8 @@ subagents = [
     ("memorizer", "modular-full"),
     ("planner", "modular-full"),
     ("reasoner", "modular-full"),
-    ("actor", "modular-full")]
+    ("actor", "modular-full"),
+    ("modular-single", "modular-single")]
 
 # NOTE: max_steps is set per episode at runtime, so the samples keep the
 # literal {max_steps} placeholder; the sentinel survives factory replacement.
