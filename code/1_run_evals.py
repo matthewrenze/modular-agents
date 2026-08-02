@@ -22,6 +22,8 @@ model_names = [
 agent_names = [
     # "react-k0",
     # "react-k1",
+    # "react-k5",
+    # "react-k10",
     # "react-kn",
     # "modular-base",
     # "plus-planner",
@@ -30,7 +32,10 @@ agent_names = [
     # "minus-planner",
     # "minus-summarizer",
     # "minus-memorizer",
-    # "modular-full"
+    # "modular-full",
+    # "modular-k5",
+    # "modular-k10",
+    # "modular-kn"
 ]
 # Set evals
 eval_size = 10
