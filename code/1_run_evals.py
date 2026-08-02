@@ -47,6 +47,8 @@ eval_env_names = [
     # ("tw-cooking-1", "textworld"),
     # ("tw-cooking-2", "textworld"),
     # ("tw-cooking-3", "textworld"),
+    # ("tw-long-cook", "textworld"),
+    # ("tw-long-coin", "textworld"),
 ]
 
 # Select the episodes to run

@@ -24,7 +24,8 @@ from states.writer.state_writer import StateWriter
 # Set parameters
 version = "v6.0"
 steps_floor = 20
-steps_ceiling = 100
+steps_ceiling = 400
+max_steps_override = None  # when set, replaces the solution_steps * 1.5 formula
 sleep_time = 1
 use_azure = False
 
@@ -76,8 +77,11 @@ class Episode:
         # Create the episode
         episode_row = eval.iloc[episode_id - 1].to_dict()
         solution_steps = episode_row["solution_steps"]
-        max_steps = int(solution_steps * 1.5)
-        max_steps = max(steps_floor, min(steps_ceiling, max_steps))
+        if max_steps_override is not None:
+            max_steps = max_steps_override
+        else:
+            max_steps = int(solution_steps * 1.5)
+            max_steps = max(steps_floor, min(steps_ceiling, max_steps))
         params.max_steps = max_steps
 
         # Create entities

@@ -71,14 +71,16 @@ def run_episode(monkeypatch):
     """Runs Episode.run with a scripted env, stub agents/model, and all file writers disabled.
     solution_steps=2 clamps max_steps to steps_floor (20). Returns (status, saved result row)."""
 
-    def _run(env, agent=None, force=False):
+    def _run(env, agent=None, force=False, solution_steps=2, max_steps_override=None):
         agent = agent or StubAgent()
         saved = {}
         monkeypatch.setattr(episodes.episode, "sleep_time", 0)
+        if max_steps_override is not None:
+            monkeypatch.setattr(episodes.episode, "max_steps_override", max_steps_override)
         monkeypatch.setattr(LogFactory, "create", lambda self, renderer, artifacts, params: StubLog())
         monkeypatch.setattr(ResultsManager, "exists", lambda self, params: False)
         monkeypatch.setattr(ResultsManager, "save", lambda self, params, row: saved.update(row=row))
-        monkeypatch.setattr(EvalFactory, "create", lambda self, params: pd.DataFrame([{"solution_steps": 2}]))
+        monkeypatch.setattr(EvalFactory, "create", lambda self, params: pd.DataFrame([{"solution_steps": solution_steps}]))
         monkeypatch.setattr(EnvFactory, "create", lambda self, params, eval: env)
         monkeypatch.setattr(ModelFactory, "create", lambda self, params, use_azure: Model("stub-model"))
         monkeypatch.setattr(AgentFactory, "create", lambda self, name, params, model: agent)
@@ -119,6 +121,14 @@ class TestEpisode:
         assert status == "failure"
         assert row.steps == 20
         assert row.max_steps_hit is True
+
+    def test_ceiling_clamps_max_steps_to_400(self, run_episode):
+        status, row = run_episode(FakeEnv(done_after=3, reward=1.0), solution_steps=300)
+        assert row.max_steps == 400
+
+    def test_max_steps_override_replaces_formula(self, run_episode):
+        status, row = run_episode(FakeEnv(done_after=3, reward=1.0), max_steps_override=123)
+        assert row.max_steps == 123
 
     def test_win_at_max_steps(self, run_episode):
         status, row = run_episode(FakeEnv(done_after=20, reward=1.0))

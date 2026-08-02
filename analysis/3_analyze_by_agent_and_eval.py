@@ -94,7 +94,9 @@ eval_order = [
     "tw-coin-3",
     "tw-cooking-1",
     "tw-cooking-2",
-    "tw-cooking-3"
+    "tw-cooking-3",
+    "tw-long-cook",
+    "tw-long-coin"
 ]
 summaries["eval_name"] = pd.Categorical(
     summaries["eval_name"],
