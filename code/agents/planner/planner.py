@@ -27,9 +27,8 @@ class Planner(Agent):
             user_content += self.renderer.render_plan(state.plan)
             user_content += "\n"
 
-        # Add the previous agent state (action)
-        if len(state.step_history) >= 2:
-            previous_step = state.step_history[-2]
+        # Add the previous k steps' env and agent states (actions)
+        for previous_step in state.step_history[-(self.params.k + 1):-1]:
             user_content += self.renderer.render_step(previous_step, state.task_state)
             user_content += self.renderer.render_env(previous_step.env_state, state.task_state)
             user_content += self.renderer.render_agent(previous_step.agent_state)

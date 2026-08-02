@@ -22,8 +22,8 @@ class Reasoner(Agent):
             user_content += self.renderer.render_history(previous_steps)
             user_content += "\n"
 
-        # Add the last two steps
-        current_steps = state.step_history[-2:]
+        # Add the last k+1 steps
+        current_steps = state.step_history[-(self.params.k + 1):]
         for index, step in enumerate(current_steps):
             user_content += self.renderer.render_step(step, state.task_state)
             user_content += self.renderer.render_env(step.env_state, state.task_state)

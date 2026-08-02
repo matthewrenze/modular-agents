@@ -3,6 +3,7 @@ from params.parameters import Parameters
 from agents.agent import Agent
 from models.model import Model
 from agents.react_k0.react_k0 import ReactK0
+from agents.react_k.react_k import ReactK
 from agents.react_k1.react_k1 import ReactK1
 from agents.react_kn.react_kn import ReactKn
 from agents.summarizer.summarizer import Summarizer
@@ -35,6 +36,10 @@ class AgentFactory:
         if subagent == "react-k0":
             return ReactK0(model, renderer, system_prompt, params)
 
+        if subagent == "react-k":
+            return ReactK(model, renderer, system_prompt, params)
+
+        # Retained as the byte-identity oracle for ReactK at k=1
         if subagent == "react-k1":
             return ReactK1(model, renderer, system_prompt, params)
 

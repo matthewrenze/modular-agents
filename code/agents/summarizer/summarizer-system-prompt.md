@@ -53,7 +53,7 @@ You will record the action and the direct outcome using the format and rules abo
 DO NOT copy, rewrite, or extend the previous history in your response; only summarize the current step.
 
 # Memory
-Our context contains only the full state information for the previous step and the current step.
+Our context contains only the full state information for {context}.
 Environment or agent state from any earlier steps may be truncated and unavailable.
 However, we will have access to the summaries you provide for all previous steps in an episode.
 

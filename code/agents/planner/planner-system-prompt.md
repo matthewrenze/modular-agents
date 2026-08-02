@@ -12,7 +12,7 @@ You are NOT responsible for reasoning, action selection, self-reflection, storin
 {process}
 
 # Memory
-Our context contains only the full state information for the current step.
+Our context contains only the full state information for {context}.
 Full environment or agent state from any earlier steps may be truncated and unavailable.
 However, your current plan will be available to all agents at each step.
 So, your plan must contain any plan details necessary for future steps in the task.

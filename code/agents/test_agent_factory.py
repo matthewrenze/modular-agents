@@ -3,6 +3,7 @@ from params.parameters import Parameters
 from models.model import Model
 from agents.agent_factory import AgentFactory
 from agents.react_k0.react_k0 import ReactK0
+from agents.react_k.react_k import ReactK
 from agents.react_k1.react_k1 import ReactK1
 from agents.react_kn.react_kn import ReactKn
 from agents.summarizer.summarizer import Summarizer
@@ -18,6 +19,7 @@ class TestAgentFactory:
     @pytest.mark.parametrize(
         "subagent,expected_class,expected_message",
         [("react-k0", ReactK0, "You are an intelligent agent that completes multi-step tasks."),
+         ("react-k", ReactK, "You are an intelligent agent that completes multi-step tasks."),
          ("react-k1", ReactK1, "You are an intelligent agent that completes multi-step tasks."),
          ("react-kn", ReactKn, "You are an intelligent agent that completes multi-step tasks."),
          ("summarizer", Summarizer, "You are the Summarizer agent"),
@@ -39,6 +41,7 @@ class TestAgentFactory:
         assert "{actions}" not in agent.system_prompt
         assert "{max_steps}" not in agent.system_prompt
         assert "{examples}" not in agent.system_prompt
+        assert "{context}" not in agent.system_prompt
 
 class MockModel(Model):
     def get_response(self, messages):

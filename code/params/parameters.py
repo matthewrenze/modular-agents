@@ -12,9 +12,13 @@ class Parameters:
     episode_id: int = 0
     max_steps: int = 0
 
+    # Step-history window: the number of previous steps in context,
+    # in addition to the current step (k=n is stored as sys.maxsize)
+    k: int = 1
+
     # Feature toggles
     use_react_k0: bool = False
-    use_react_k1: bool = False
+    use_react_k: bool = False
     use_react_kn: bool = False
     use_summarizer: bool = False
     use_planner: bool = False

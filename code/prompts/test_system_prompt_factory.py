@@ -1,3 +1,4 @@
+import sys
 from params.parameters import Parameters
 from prompts.system_prompt_factory import SystemPromptFactory
 
@@ -35,3 +36,18 @@ class TestSystemPromptFactory:
         assert "We have 99 steps to complete each task." in system_prompt
         assert "# Examples" in system_prompt
         assert "{examples}" not in system_prompt
+
+    def test_create_context_at_k1(self):
+        factory = SystemPromptFactory()
+        assert factory.create_context(Parameters(k=1), "actor") == "the previous step and the current step"
+        assert factory.create_context(Parameters(k=1), "planner") == "the current step"
+
+    def test_create_context_at_finite_k(self):
+        factory = SystemPromptFactory()
+        assert factory.create_context(Parameters(k=5), "actor") == "the previous 5 steps and the current step"
+        assert factory.create_context(Parameters(k=5), "planner") == "the previous 5 steps and the current step"
+
+    def test_create_context_at_kn(self):
+        factory = SystemPromptFactory()
+        assert factory.create_context(Parameters(k=sys.maxsize), "actor") == "all previous steps and the current step"
+        assert factory.create_context(Parameters(k=sys.maxsize), "planner") == "all previous steps and the current step"

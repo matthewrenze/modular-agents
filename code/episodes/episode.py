@@ -83,7 +83,7 @@ class Episode:
         # Create entities
         model = model_factory.create(params, use_azure)
         react_k0 = agent_factory.create("react-k0", params, model)
-        react_k1 = agent_factory.create("react-k1", params, model)
+        react_k = agent_factory.create("react-k", params, model)
         react_kn = agent_factory.create("react-kn", params, model)
         summarizer = agent_factory.create("summarizer", params, model)
         planner = agent_factory.create("planner", params, model)
@@ -112,7 +112,7 @@ class Episode:
             # Reset the model/agents
             model.reset()
             react_k0.reset()
-            react_k1.reset()
+            react_k.reset()
             react_kn.reset()
             summarizer.reset()
             planner.reset()
@@ -191,10 +191,10 @@ class Episode:
                     log.info(f"  Thought: {thought}")
                     log.info(f"  Action: {action}")
 
-                # Use the ReAct-k1 agent
-                if params.use_react_k1:
-                    thought, action = react_k1.execute(global_state)
-                    agent_writer.write(params, step_id + 1, "react_k1", react_k1.messages)
+                # Use the finite-k ReAct agent
+                if params.use_react_k:
+                    thought, action = react_k.execute(global_state)
+                    agent_writer.write(params, step_id + 1, "react_k", react_k.messages)
                     agent_state.thought = thought
                     agent_state.action = action
                     log.info(f"  Thought: {thought}")

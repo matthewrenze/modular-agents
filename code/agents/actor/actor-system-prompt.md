@@ -12,7 +12,7 @@ You are NOT responsible for planning, reasoning, storing memories, summarizing t
 {process}
 
 # Memory
-Our context contains only the full state information for the previous step and the current step.
+Our context contains only the full state information for {context}.
 Full environment or agent state from any earlier steps may be truncated and unavailable. 
 
 # Actions

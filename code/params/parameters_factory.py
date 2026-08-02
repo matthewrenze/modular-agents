@@ -1,3 +1,5 @@
+import re
+import sys
 from params.parameters import Parameters
 
 class ParametersFactory:
@@ -18,16 +20,21 @@ class ParametersFactory:
             episode_id=episode_id,
             max_steps=0)
 
+        # Set the step-history window from the agent-name suffix (k=n → maxsize)
+        k_match = re.search(r"-k(\d+|n)$", agent_name)
+        if k_match:
+            parameters.k = sys.maxsize if k_match.group(1) == "n" else int(k_match.group(1))
+
         # Create the react-k0 agent
         if agent_name.startswith("react-k0"):
             parameters = self.minus_all(parameters)
             parameters.use_react_k0 = True
             return parameters
 
-        # Create the react-k1 agent
-        if agent_name.startswith("react-k1"):
+        # Create the finite-k react agents (react-k1, react-k5, react-k10, ...)
+        if re.fullmatch(r"react-k\d+", agent_name):
             parameters = self.minus_all(parameters)
-            parameters.use_react_k1 = True
+            parameters.use_react_k = True
             return parameters
 
         # Create the react-kn agent
@@ -45,6 +52,11 @@ class ParametersFactory:
 
         # Create modular-full agent
         if agent_name.startswith("modular-full"):
+            parameters = self.plus_all(parameters)
+            return parameters
+
+        # Create the modular k-sweep agents (modular-k5, modular-k10, modular-kn)
+        if re.fullmatch(r"modular-k(\d+|n)", agent_name):
             parameters = self.plus_all(parameters)
             return parameters
 

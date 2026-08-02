@@ -1,3 +1,4 @@
+import sys
 from params.parameters import Parameters
 from prompts.system.system_factory import SystemFactory
 from prompts.process.process_factory import ProcessFactory
@@ -30,4 +31,20 @@ class SystemPromptFactory:
         # Replace max steps
         system_prompt = system_prompt.replace("{max_steps}", str(params.max_steps))
 
+        # Add the context window sentence
+        context_content = self.create_context(params, subagent)
+        system_prompt = system_prompt.replace("{context}", context_content)
+
         return system_prompt
+
+    @staticmethod
+    def create_context(params: Parameters, subagent: str) -> str:
+        # The planner's template understates its window at k=1; that sentence is
+        # kept verbatim to preserve byte-identity with the v6.0 baselines
+        if subagent == "planner" and params.k == 1:
+            return "the current step"
+        if params.k == 1:
+            return "the previous step and the current step"
+        if params.k == sys.maxsize:
+            return "all previous steps and the current step"
+        return f"the previous {params.k} steps and the current step"
