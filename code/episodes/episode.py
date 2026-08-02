@@ -25,7 +25,7 @@ from states.writer.state_writer import StateWriter
 version = "v6.0"
 steps_floor = 20
 steps_ceiling = 400
-max_steps_override = None  # when set, replaces the solution_steps * 1.5 formula
+max_steps_override = 400  # when set, replaces the solution_steps * 1.5 formula
 sleep_time = 1
 use_azure = False
 

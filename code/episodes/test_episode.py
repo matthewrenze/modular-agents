@@ -75,8 +75,7 @@ def run_episode(monkeypatch):
         agent = agent or StubAgent()
         saved = {}
         monkeypatch.setattr(episodes.episode, "sleep_time", 0)
-        if max_steps_override is not None:
-            monkeypatch.setattr(episodes.episode, "max_steps_override", max_steps_override)
+        monkeypatch.setattr(episodes.episode, "max_steps_override", max_steps_override)
         monkeypatch.setattr(LogFactory, "create", lambda self, renderer, artifacts, params: StubLog())
         monkeypatch.setattr(ResultsManager, "exists", lambda self, params: False)
         monkeypatch.setattr(ResultsManager, "save", lambda self, params, row: saved.update(row=row))
