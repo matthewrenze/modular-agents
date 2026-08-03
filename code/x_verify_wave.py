@@ -5,7 +5,7 @@ import pandas as pd
 
 DATA = "/mnt/c/Users/Matthew/Dropbox/Professional/Research/Projects/Modular Agents/Repositories/modular-agents-kn/data"
 BACKUP = f"{DATA}/summaries-backup-pre-wave1-20260802.csv"  # any pre-wave backup holding the baseline rows
-NEW_ARMS = ["react-k10", "modular-k10"]
+NEW_ARMS = ["react-k5", "modular-k5", "react-k10", "modular-k10", "modular-kn"]
 
 new = pd.read_csv(f"{DATA}/summaries.csv")
 old = pd.read_csv(BACKUP)

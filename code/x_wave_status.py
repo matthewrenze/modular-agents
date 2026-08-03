@@ -5,8 +5,8 @@ import csv, glob, os
 from collections import defaultdict
 
 ROOT = "/mnt/c/Users/Matthew/Dropbox/Professional/Research/Projects/Modular Agents/Repositories/modular-agents-kn/data/artifacts/v6.0/test/gpt-5.4"
-ARMS = ["react-k10", "modular-k10"]
-BASE = {"react-k10": "react-k1", "modular-k10": "modular-full"}
+ARMS = ["modular-kn"]
+BASE = {"modular-kn": "modular-full"}
 EVALS = ["tw-simple-1", "tw-treasure-1", "tw-treasure-2", "tw-treasure-3",
          "tw-coin-1", "tw-coin-2", "tw-coin-3",
          "tw-cooking-1", "tw-cooking-2", "tw-cooking-3"]
